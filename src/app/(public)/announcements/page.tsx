@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { prisma } from "@/lib/prisma";
 import { ArrowRight, Calendar, Search, Tag, Megaphone } from "lucide-react";
 import Link from "next/link";

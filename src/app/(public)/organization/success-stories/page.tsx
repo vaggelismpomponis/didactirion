@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { prisma } from "@/lib/prisma";
 import { GraduationCap, Trophy, School } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
