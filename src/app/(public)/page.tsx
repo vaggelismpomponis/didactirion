@@ -41,7 +41,7 @@ export default async function Home() {
               description: "Η μεθοδολογία μας που οδηγεί τους μαθητές μας στην κορυφή.",
               icon: GraduationCap,
               gradient: "from-blue-600 to-blue-800",
-              href: "/organization/success-system",
+              href: "/organization/history",
             },
             {
               title: "Ανακοινώσεις",
