@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { prisma } from "@/lib/prisma";
 import { TeacherForm } from "@/components/admin/TeacherForm";
 import { notFound } from "next/navigation";

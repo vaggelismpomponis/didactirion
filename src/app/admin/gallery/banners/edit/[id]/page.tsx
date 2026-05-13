@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { prisma } from "@/lib/prisma";
 import { BannerForm } from "@/components/admin/BannerForm";
 import { notFound } from "next/navigation";

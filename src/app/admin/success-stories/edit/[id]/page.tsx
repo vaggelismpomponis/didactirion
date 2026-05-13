@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { prisma } from "@/lib/prisma";
 import { SuccessStoryForm } from "@/components/admin/SuccessStoryForm";
 import { notFound } from "next/navigation";

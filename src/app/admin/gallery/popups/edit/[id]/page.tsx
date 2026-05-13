@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { prisma } from "@/lib/prisma";
 import { PopupForm } from "@/components/admin/PopupForm";
 import { notFound } from "next/navigation";
