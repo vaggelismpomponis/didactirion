@@ -1,0 +1,58 @@
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+
+export async function PATCH(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const body = await request.json();
+    const { name, specialty, bio, photo, order } = body;
+
+    const teacher = await prisma.teacher.update({
+      where: { id },
+      data: {
+        name,
+        specialty,
+        bio,
+        photo,
+        order: parseInt(order) || 0,
+      },
+    });
+
+    return NextResponse.json(teacher);
+  } catch (error) {
+    console.error("Teacher Update API Error:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
+}
+
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    await prisma.teacher.delete({
+      where: { id },
+    });
+
+    return NextResponse.json({ message: "Deleted" });
+  } catch (error) {
+    console.error("Teacher Delete API Error:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
+}
