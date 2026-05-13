@@ -260,7 +260,7 @@ export default async function Home() {
           ].map((prog, i) => (
             <ScrollReveal key={i} delay={i * 0.08} className="h-full">
               <Link href={prog.href} className="group block h-full">
-                <div className="rounded-2xl bg-[#F9F9F9] p-5 sm:p-6 h-full flex flex-col justify-between aspect-square shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 border border-slate-100">
+                <div className="rounded-2xl bg-slate-50 p-5 sm:p-6 h-full flex flex-col justify-between min-h-[140px] sm:min-h-[160px] shadow-sm hover:shadow-xl hover:shadow-primary/5 hover:border-primary/30 hover:bg-white hover:-translate-y-1.5 transition-all duration-300 border border-slate-100">
                   <div>
                     <h3 className="font-black text-lg sm:text-xl mb-1 text-slate-900 group-hover:text-primary transition-colors">{prog.title}</h3>
                     <p className="text-slate-500 text-xs sm:text-sm">{prog.sub}</p>
