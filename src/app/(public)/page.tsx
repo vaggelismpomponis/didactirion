@@ -59,7 +59,7 @@ export default async function Home() {
               href: "/contact",
             },
           ].map((item, i) => (
-            <ScrollReveal key={i} delay={i * 0.1}>
+            <ScrollReveal key={i} delay={i * 0.1} className="h-full">
               <Link href={item.href} className="group block h-full">
                 <div className="bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border border-slate-100/50 overflow-hidden h-full">
                   <div className={`h-1.5 bg-gradient-to-r ${item.gradient}`} />
@@ -124,8 +124,8 @@ export default async function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {latestPosts.map((post, i) => (
-              <ScrollReveal key={post.id} delay={i * 0.1}>
-                <Link href={`/announcements/${post.slug}`} className="group block">
+              <ScrollReveal key={post.id} delay={i * 0.1} className="h-full">
+                <Link href={`/announcements/${post.slug}`} className="group block h-full">
                   <article className="card-premium overflow-hidden h-full flex flex-col">
                     <div className="aspect-video relative overflow-hidden bg-slate-100">
                       <Image
@@ -258,12 +258,12 @@ export default async function Home() {
             { title: "ΕΠΑΛ", sub: "Επαγγελματικό Λύκειο", href: "/curricula/epal" },
             { title: "Πρότυπα", sub: "Πρότυπα Σχολεία", href: "/curricula/model-schools" },
           ].map((prog, i) => (
-            <ScrollReveal key={i} delay={i * 0.08}>
-              <Link href={prog.href} className="group block">
-                <div className="rounded-2xl bg-[#F9F9F9] p-6 h-full flex flex-col justify-between min-h-[140px] shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 border border-slate-100">
+            <ScrollReveal key={i} delay={i * 0.08} className="h-full">
+              <Link href={prog.href} className="group block h-full">
+                <div className="rounded-2xl bg-[#F9F9F9] p-5 sm:p-6 h-full flex flex-col justify-between aspect-square shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 border border-slate-100">
                   <div>
-                    <h3 className="font-black text-xl mb-1 text-slate-900 group-hover:text-primary transition-colors">{prog.title}</h3>
-                    <p className="text-slate-500 text-sm">{prog.sub}</p>
+                    <h3 className="font-black text-lg sm:text-xl mb-1 text-slate-900 group-hover:text-primary transition-colors">{prog.title}</h3>
+                    <p className="text-slate-500 text-xs sm:text-sm">{prog.sub}</p>
                   </div>
                   <ArrowRight className="w-5 h-5 mt-4 text-primary opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                 </div>

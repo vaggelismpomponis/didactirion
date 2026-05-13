@@ -43,7 +43,7 @@ export default async function TeachersPage() {
             {teachers.map((teacher) => (
               <div
                 key={teacher.id}
-                className="group bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 overflow-hidden"
+                className="group bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 overflow-hidden h-full flex flex-col"
               >
                 {/* Photo */}
                 <div className="aspect-[4/5] relative overflow-hidden bg-slate-100">

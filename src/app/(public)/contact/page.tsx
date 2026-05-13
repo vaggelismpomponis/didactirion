@@ -34,7 +34,7 @@ const contactInfo = [
   {
     icon: Phone,
     title: "Τηλέφωνο",
-    lines: ["210 2448542", "697 6101693"],
+    lines: ["210 2448542"],
     href: "tel:2102448542",
   },
   {

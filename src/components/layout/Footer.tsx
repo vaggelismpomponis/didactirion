@@ -52,11 +52,11 @@ export function Footer() {
             {/* ── Brand Column ── */}
             <div className="space-y-6">
               <Link href="/" className="inline-block bg-slate-50 rounded-xl p-3 shadow-lg hover:shadow-xl transition-shadow">
-                <Image 
-                  src="/didactirion-logo.png" 
-                  alt="Διδακτήριον Logo" 
-                  width={200} 
-                  height={80} 
+                <Image
+                  src="/didactirion-logo.png"
+                  alt="Διδακτήριον Logo"
+                  width={200}
+                  height={80}
                   className="h-12 w-auto object-contain"
                 />
               </Link>
@@ -148,7 +148,7 @@ export function Footer() {
                     <div>
                       <p className="text-xs text-slate-500 font-medium uppercase tracking-wider mb-0.5">Τηλέφωνο</p>
                       <span className="text-sm text-slate-300 group-hover:text-white transition-colors">
-                        210 2448542<br />697 6101693
+                        210 2448542
                       </span>
                     </div>
                   </a>
