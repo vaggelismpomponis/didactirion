@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
@@ -59,12 +60,18 @@ function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate
       {/* Brand */}
       <div className="px-5 py-5 border-b border-white/10">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center font-black text-white text-lg shadow-lg shadow-blue-900/30">
-            D
+          <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-lg overflow-hidden p-1.5 shrink-0">
+            <Image 
+              src="/logo-main.png" 
+              alt="Διδακτήριον" 
+              width={40} 
+              height={40} 
+              className="w-full h-full object-contain"
+            />
           </div>
           <div>
-            <p className="font-heading font-black text-white text-sm leading-none">ΔΙΔΑΚΤΗΡΙΟΝ</p>
-            <p className="text-[10px] text-slate-500 mt-0.5 font-medium uppercase tracking-wider">CMS Admin</p>
+            <p className="font-heading font-black text-white text-sm leading-none tracking-tight">ΔΙΔΑΚΤΗΡΙΟΝ</p>
+            <p className="text-[10px] text-slate-500 mt-1 font-medium uppercase tracking-widest">CMS Admin</p>
           </div>
         </div>
       </div>
@@ -147,9 +154,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   if (status === "loading") {
     return (
       <div className="h-screen w-full flex items-center justify-center bg-slate-50">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-          <p className="text-slate-500 font-medium text-sm">Περιμένετε...</p>
+        <div className="flex flex-col items-center gap-6 animate-pulse">
+          <Image 
+            src="/logo-main.png" 
+            alt="Διδακτήριον" 
+            width={200} 
+            height={80} 
+            className="h-12 w-auto object-contain opacity-80"
+          />
+          <div className="w-48 h-1 bg-slate-200 rounded-full overflow-hidden">
+            <div className="h-full bg-primary animate-progress-fast" style={{ width: "60%" }} />
+          </div>
         </div>
       </div>
     );

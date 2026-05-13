@@ -220,4 +220,13 @@
   .link-underline:hover::after {
     width: 100%;
   }
+
+  /* Animations */
+  @keyframes progress-fast {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  .animate-progress-fast {
+    animation: progress-fast 1s infinite linear;
+  }
 }

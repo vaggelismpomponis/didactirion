@@ -51,13 +51,13 @@ export function Footer() {
 
             {/* ── Brand Column ── */}
             <div className="space-y-6">
-              <Link href="/" className="inline-block bg-slate-50 rounded-xl p-3 shadow-lg hover:shadow-xl transition-shadow">
+              <Link href="/" className="inline-block transition-transform hover:scale-105">
                 <Image
-                  src="/didactirion-logo.png"
+                  src="/logo-main.png"
                   alt="Διδακτήριον Logo"
-                  width={200}
-                  height={80}
-                  className="h-12 w-auto object-contain"
+                  width={280}
+                  height={112}
+                  className="h-16 w-auto object-contain"
                 />
               </Link>
 

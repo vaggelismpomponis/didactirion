@@ -84,7 +84,7 @@ export function LoadingScreen() {
               }}
             >
               <Image
-                src="/didactirion-logo.png"
+                src="/logo-main.png"
                 alt="Διδακτήριον"
                 width={760}
                 height={380}

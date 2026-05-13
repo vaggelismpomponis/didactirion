@@ -106,7 +106,7 @@ export function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center group">
             <Image 
-              src="/didactirion-logo.png" 
+              src="/logo-main.png" 
               alt="Διδακτήριον Logo" 
               width={200} 
               height={80} 
@@ -197,7 +197,7 @@ export function Header() {
                 <SheetHeader className="px-6 py-6 bg-[#fbfaf9] border-b border-slate-100 relative">
                   <SheetTitle className="flex justify-center">
                     <Image 
-                      src="/didactirion-logo.png" 
+                      src="/logo-main.png" 
                       alt="Διδακτήριον Logo" 
                       width={220} 
                       height={90} 

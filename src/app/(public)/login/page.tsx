@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -78,14 +79,14 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4 py-12">
       <div className="w-full max-w-md">
         <div className="flex justify-center mb-8">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-[#004a99] rounded-xl flex items-center justify-center text-white">
-              <GraduationCap className="w-8 h-8" />
-            </div>
-            <span className="text-2xl font-bold text-[#004a99] tracking-tight">
-              Διδακτήριον
-            </span>
-          </div>
+          <Image 
+            src="/logo-main.png" 
+            alt="Διδακτήριον" 
+            width={240} 
+            height={96} 
+            className="h-16 w-auto object-contain"
+            priority
+          />
         </div>
 
         <Card className="border-none shadow-xl">

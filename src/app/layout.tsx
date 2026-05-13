@@ -20,6 +20,11 @@ const openSans = Open_Sans({
 export const metadata: Metadata = {
   title: "Διδακτήριον - Εκπαιδευτικός Οργανισμός",
   description: "Απαίτησε την κορυφή! Φροντιστήριο Μέσης Εκπαίδευσης στις Αχαρνές.",
+  openGraph: {
+    title: "Διδακτήριον - Εκπαιδευτικός Οργανισμός",
+    description: "Απαίτησε την κορυφή! Φροντιστήριο Μέσης Εκπαίδευσης στις Αχαρνές.",
+    images: ["/logo-main.png"],
+  },
 };
 
 export default function RootLayout({
