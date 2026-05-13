@@ -66,7 +66,7 @@ export default function HistoryPage() {
             <div className="absolute inset-6 bg-primary/20 rounded-3xl blur-2xl" />
             <div className="relative rounded-3xl overflow-hidden border border-white shadow-2xl aspect-video">
               <Image
-                src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=2070"
+                src="/philosophy.png"
                 alt="Our philosophy"
                 fill
                 className="object-cover"

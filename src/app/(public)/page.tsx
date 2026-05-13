@@ -129,7 +129,7 @@ export default async function Home() {
                   <article className="card-premium overflow-hidden h-full flex flex-col">
                     <div className="aspect-video relative overflow-hidden bg-slate-100">
                       <Image
-                        src={post.image || "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=2070"}
+                        src={post.image || "/announcement-placeholder.png"}
                         alt={post.title}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-500"
@@ -169,9 +169,9 @@ export default async function Home() {
             <ScrollReveal direction="right" className="relative">
               <div className="relative aspect-square max-w-lg mx-auto">
                 <div className="absolute inset-4 rounded-3xl bg-gradient-to-br from-blue-600 to-indigo-700 opacity-30 blur-2xl" />
-                <div className="relative rounded-3xl overflow-hidden border-4 border-white/10 shadow-2xl">
+                <div className="relative h-full w-full rounded-3xl overflow-hidden border-4 border-white/10 shadow-2xl">
                   <Image
-                    src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?q=80&w=2070"
+                    src="/why-us.png"
                     alt="Students studying at Didactirion"
                     fill
                     className="object-cover"
