@@ -185,31 +185,41 @@ export default function PointsCalculator() {
           {/* ── Sidebar ── */}
           <div className="space-y-5 lg:sticky lg:top-24 lg:self-start order-1 lg:order-2">
             {/* Result card */}
-            <div className="relative overflow-hidden rounded-3xl text-white bg-gradient-to-br from-blue-600 to-blue-800 shadow-2xl">
-              <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-white/10 pointer-events-none" />
+            <div className="relative overflow-hidden rounded-3xl text-slate-900 bg-[#F9F9F9] border border-slate-100 shadow-sm">
               <div className="p-7">
-                <p className="text-white/70 text-xs font-bold uppercase tracking-widest mb-3 flex items-center gap-1">
+                <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-3 flex items-center gap-1">
                   Συνολικά Μόρια
                 </p>
-                <div className="text-6xl font-black mb-2 tracking-tight">
+                <div className="text-6xl font-black mb-2 tracking-tight text-slate-900">
                   {totalPoints !== null ? totalPoints.toLocaleString("el-GR") : "—"}
                 </div>
                 {totalPoints !== null && (
                   <div className="mt-3 flex items-center gap-2">
-                    <div className="flex-1 h-1.5 bg-white/20 rounded-full overflow-hidden">
+                    <div className="flex-1 h-1.5 bg-slate-200 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-white/70 rounded-full transition-all duration-700"
+                        className="h-full bg-slate-900 rounded-full transition-all duration-700"
                         style={{ width: `${Math.min(100, (totalPoints / 20000) * 100)}%` }}
                       />
                     </div>
-                    <p className="text-white/50 text-xs">{((totalPoints / 20000) * 100).toFixed(0)}%</p>
+                    <p className="text-slate-400 text-xs">{((totalPoints / 20000) * 100).toFixed(0)}%</p>
                   </div>
                 )}
-                <p className="text-white/40 text-[11px] mt-4 leading-relaxed">
+                <p className="text-slate-400 text-[11px] mt-4 leading-relaxed">
                   * Ενδεικτικός υπολογισμός βάσει γενικών συντελεστών.
                 </p>
               </div>
             </div>
+
+            <Button asChild variant="link" className="w-full text-xs text-slate-500 hover:text-primary h-auto py-0">
+              <a 
+                href="https://www.oefe.gr/el/normal/credits-calculation_el.aspx" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 justify-center"
+              >
+                Ακριβής υπολογισμός στο σύστημα της ΟΕΦΕ <ArrowRight className="w-3.5 h-3.5" />
+              </a>
+            </Button>
 
             {/* Notice */}
             <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 flex gap-3">
