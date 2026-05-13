@@ -1,5 +1,6 @@
 import { ArrowRight, History, Target, Lightbulb, Zap } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
 const timeline = [
@@ -64,10 +65,11 @@ export default function HistoryPage() {
           <div className="relative order-2 lg:order-1">
             <div className="absolute inset-6 bg-primary/20 rounded-3xl blur-2xl" />
             <div className="relative rounded-3xl overflow-hidden border border-white shadow-2xl aspect-video">
-              <img
+              <Image
                 src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=2070"
                 alt="Our philosophy"
-                className="object-cover w-full h-full"
+                fill
+                className="object-cover"
               />
             </div>
           </div>

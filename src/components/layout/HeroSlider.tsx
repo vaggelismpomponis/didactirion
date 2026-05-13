@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 interface Banner {
@@ -108,10 +109,12 @@ export function HeroSlider({ banners }: { banners: Banner[] }) {
           )}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-black/20 z-10" />
-          <img
+          <Image
             src={banner.image}
             alt={banner.title || ""}
-            className="absolute inset-0 w-full h-full object-cover"
+            fill
+            className="object-cover"
+            priority={index === 0}
           />
           <div className="container mx-auto px-4 relative z-20 text-white max-w-4xl">
 

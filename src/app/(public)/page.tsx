@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, BookOpen, GraduationCap, Users, Calendar, CheckCircle, Star, TrendingUp, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma";
@@ -127,10 +128,11 @@ export default async function Home() {
                 <Link href={`/announcements/${post.slug}`} className="group block">
                   <article className="card-premium overflow-hidden h-full flex flex-col">
                     <div className="aspect-video relative overflow-hidden bg-slate-100">
-                      <img
+                      <Image
                         src={post.image || "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=2070"}
                         alt={post.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
@@ -168,10 +170,11 @@ export default async function Home() {
               <div className="relative aspect-square max-w-lg mx-auto">
                 <div className="absolute inset-4 rounded-3xl bg-gradient-to-br from-blue-600 to-indigo-700 opacity-30 blur-2xl" />
                 <div className="relative rounded-3xl overflow-hidden border-4 border-white/10 shadow-2xl">
-                  <img
+                  <Image
                     src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?q=80&w=2070"
                     alt="Students studying at Didactirion"
-                    className="object-cover w-full h-full aspect-square"
+                    fill
+                    className="object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
                 </div>

@@ -1,4 +1,5 @@
 import { Image as ImageIcon } from "lucide-react";
+import Image from "next/image";
 
 const galleryImages = [
   { url: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=2070", title: "Αίθουσα Διδασκαλίας" },
@@ -31,10 +32,11 @@ export default function GalleryPage() {
               key={i} 
               className="group relative aspect-square rounded-3xl overflow-hidden shadow-lg border border-slate-100 cursor-pointer"
             >
-              <img 
+              <Image 
                 src={image.url} 
                 alt={image.title} 
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-8">
                 <div className="text-white">

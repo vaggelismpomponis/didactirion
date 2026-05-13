@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/prisma";
 import { ArrowRight, Calendar, Search, Tag, Megaphone } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -70,10 +71,11 @@ export default async function AnnouncementsPage() {
                   <Link href={`/announcements/${posts[0].slug}`} className="group block">
                     <article className="card-premium overflow-hidden">
                       <div className="aspect-[16/7] relative overflow-hidden bg-slate-100">
-                        <img
+                        <Image
                           src={posts[0].image || "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=2070"}
                           alt={posts[0].title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-700"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
                         <div className="absolute top-4 left-4">
@@ -103,10 +105,11 @@ export default async function AnnouncementsPage() {
                       <Link key={post.id} href={`/announcements/${post.slug}`} className="group block">
                         <article className="card-premium overflow-hidden h-full flex flex-col">
                           <div className="aspect-video relative overflow-hidden bg-slate-100">
-                            <img
+                            <Image
                               src={post.image || "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=2070"}
                               alt={post.title}
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                              fill
+                              className="object-cover group-hover:scale-105 transition-transform duration-500"
                             />
                             <div className="absolute top-3 left-3">
                               <Badge className="bg-white/90 text-primary hover:bg-white border-none font-bold uppercase text-[10px] tracking-wider backdrop-blur">
