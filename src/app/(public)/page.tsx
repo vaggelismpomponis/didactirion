@@ -14,7 +14,8 @@ import { ArrowRight, BookOpen, GraduationCap, Users, Calendar, CheckCircle, Star
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma";
 import { HeroSlider } from "@/components/layout/HeroSlider";
-import { AnnouncementPopup } from "@/components/layout/AnnouncementPopup";
+import { HeroFallback } from "@/components/layout/HeroFallback";
+import { AnnouncementPopupLoader } from "@/components/layout/AnnouncementPopupLoader";
 import { ScrollReveal } from "@/components/providers/ScrollReveal";
 
 async function getData() {
@@ -36,10 +37,10 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col">
-      <AnnouncementPopup popup={activePopup} />
+      <AnnouncementPopupLoader popup={activePopup} />
 
       {/* ── Hero ── */}
-      <HeroSlider banners={banners} />
+      {banners.length > 0 ? <HeroSlider banners={banners} /> : <HeroFallback />}
 
       {/* ── Feature Cards (overlapping hero) ── */}
       <section className="container mx-auto px-4 -mt-8 sm:-mt-14 md:-mt-20 relative z-30 pb-8">
@@ -183,6 +184,8 @@ export default async function Home() {
                     alt="Students studying at Didactirion"
                     fill
                     className="object-cover"
+                    sizes="(max-width: 1024px) 90vw, 512px"
+                    loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
                 </div>

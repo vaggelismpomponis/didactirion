@@ -1,4 +1,5 @@
 import { createPageMetadata } from "@/lib/seo";
+import { AuthProvider } from "@/components/providers/AuthProvider";
 
 export const metadata = createPageMetadata({
   title: "Σύνδεση Διαχείρισης",
@@ -12,5 +13,5 @@ export default function LoginLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return <AuthProvider>{children}</AuthProvider>;
 }

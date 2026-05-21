@@ -21,6 +21,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { signOut, useSession } from "next-auth/react";
+import { AuthProvider } from "@/components/providers/AuthProvider";
 import { useRouter } from "next/navigation";
 import {
   Sheet,
@@ -140,6 +141,14 @@ function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate
 }
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <AuthProvider>
+      <AdminLayoutContent>{children}</AdminLayoutContent>
+    </AuthProvider>
+  );
+}
+
+function AdminLayoutContent({ children }: { children: React.ReactNode }) {
   const { data: session, status } = useSession();
   const router = useRouter();
   const pathname = usePathname();

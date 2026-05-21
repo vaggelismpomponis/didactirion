@@ -1,45 +1,51 @@
 "use client";
 
-import { motion } from "framer-motion";
+import * as React from "react";
+import { cn } from "@/lib/utils";
 
-export function ScrollReveal({ 
-  children, 
-  delay = 0, 
+export function ScrollReveal({
+  children,
+  delay = 0,
   direction = "up",
-  className
-}: { 
-  children: React.ReactNode, 
-  delay?: number,
-  direction?: "up" | "down" | "left" | "right",
-  className?: string
+  className,
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  direction?: "up" | "down" | "left" | "right";
+  className?: string;
 }) {
-  const directions = {
-    up: { y: 40 },
-    down: { y: -40 },
-    left: { x: 40 },
-    right: { x: -40 },
-  };
+  const ref = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      el.classList.add("is-visible");
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.classList.add("is-visible");
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "-60px", threshold: 0.08 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <motion.div
-      className={className}
-      initial={{ 
-        opacity: 0, 
-        ...directions[direction] 
-      }}
-      whileInView={{ 
-        opacity: 1, 
-        x: 0, 
-        y: 0 
-      }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ 
-        duration: 0.6, 
-        delay, 
-        ease: [0.21, 0.47, 0.32, 0.98] 
-      }}
+    <div
+      ref={ref}
+      className={cn("scroll-reveal", `scroll-reveal-${direction}`, className)}
+      style={{ ["--reveal-delay" as string]: `${delay}s` }}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }

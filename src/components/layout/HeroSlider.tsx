@@ -16,10 +16,8 @@ interface Banner {
 
 export function HeroSlider({ banners }: { banners: Banner[] }) {
   const [current, setCurrent] = useState(0);
-  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    setLoaded(true);
     if (banners.length <= 1) return;
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % banners.length);
@@ -27,79 +25,8 @@ export function HeroSlider({ banners }: { banners: Banner[] }) {
     return () => clearInterval(timer);
   }, [banners.length]);
 
-  // ── Fallback Hero (no banners in DB) ──
-  if (banners.length === 0) {
-    return (
-      <section className="relative min-h-[70vh] sm:min-h-[80vh] md:min-h-[88vh] flex items-center justify-center overflow-hidden">
-        {/* Background */}
-        <div className="absolute inset-0 hero-gradient" />
-
-        {/* Decorative circles */}
-        <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-white/5 blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] rounded-full bg-white/5 blur-3xl pointer-events-none" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full border border-white/10 pointer-events-none" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border border-white/5 pointer-events-none" />
-
-        <div className="container mx-auto px-4 relative z-10 text-white text-center">
-
-
-          <h1
-            className={cn(
-              "text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tight leading-[0.9] transition-all duration-700 delay-100",
-              loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-            )}
-          >
-            Απαίτησε
-            <br />
-            <span className="text-blue-200">την κορυφή!</span>
-          </h1>
-
-          <p
-            className={cn(
-              "text-base sm:text-lg md:text-2xl mb-10 sm:mb-12 text-blue-100/80 max-w-2xl mx-auto leading-relaxed transition-all duration-700 delay-200",
-              loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-            )}
-          >
-            Ολοκληρωμένη εκπαίδευση με επίκεντρο τον μαθητή.
-            Φροντιστήριο Μέσης Εκπαίδευσης στις Αχαρνές.
-          </p>
-
-          <div
-            className={cn(
-              "flex flex-wrap items-center justify-center gap-4 transition-all duration-700 delay-300",
-              loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-            )}
-          >
-            <Button
-              size="lg"
-              asChild
-              className="bg-white text-primary hover:bg-white/90 font-bold px-8 h-14 text-base shadow-xl shadow-black/20 hover:shadow-2xl hover:shadow-black/30 transition-all"
-            >
-              <Link href="/curricula/high-school">Προγράμματα Σπουδών</Link>
-            </Button>
-            <Button
-              size="lg"
-              asChild
-              variant="outline"
-              className="border-white/60 text-white hover:text-white bg-white/10 hover:bg-white/20 font-bold px-8 h-14 text-base backdrop-blur-sm"
-            >
-              <Link href="/contact">Επικοινωνία</Link>
-            </Button>
-          </div>
-        </div>
-
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/40 text-xs">
-          <div className="w-px h-12 bg-gradient-to-b from-transparent to-white/30 animate-pulse" />
-          scroll
-        </div>
-      </section>
-    );
-  }
-
-  // ── Slider Hero ──
   return (
-    <section className="relative min-h-[70vh] sm:min-h-[80vh] md:min-h-[88vh] w-full overflow-hidden">
+    <section className="hero-lcp relative min-h-[70vh] sm:min-h-[80vh] md:min-h-[88vh] w-full overflow-hidden">
       {banners.map((banner, index) => (
         <div
           key={banner.id}
@@ -115,10 +42,11 @@ export function HeroSlider({ banners }: { banners: Banner[] }) {
             fill
             className="object-cover"
             priority={index === 0}
+            sizes="100vw"
+            quality={75}
           />
           <div className="container mx-auto px-4 relative z-20 text-white max-w-4xl">
-
-            <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-tight animate-in fade-in slide-in-from-bottom-8 duration-700 mb-4 sm:mb-6">
+            <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-tight mb-4 sm:mb-6">
               {banner.title || "Απαίτησε την κορυφή!"}
             </h1>
             {banner.link && (
@@ -132,7 +60,6 @@ export function HeroSlider({ banners }: { banners: Banner[] }) {
         </div>
       ))}
 
-      {/* Navigation Arrows */}
       {banners.length > 1 && (
         <>
           <button
@@ -150,7 +77,6 @@ export function HeroSlider({ banners }: { banners: Banner[] }) {
             <ChevronRight className="w-5 h-5" />
           </button>
 
-          {/* Dot indicators */}
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex gap-2">
             {banners.map((_, i) => (
               <button

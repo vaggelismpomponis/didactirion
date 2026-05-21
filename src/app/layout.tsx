@@ -1,21 +1,17 @@
 import type { Metadata } from "next";
-import { Rubik, Open_Sans } from "next/font/google";
+import { Open_Sans } from "next/font/google";
 import "./globals.css";
 import { Suspense } from "react";
-import { AuthProvider } from "@/components/providers/AuthProvider";
 import { LoadingScreen } from "@/components/providers/LoadingScreen";
 import { getSiteUrl } from "@/lib/site";
 
-const rubik = Rubik({
-  subsets: ["latin"],
-  variable: "--font-rubik",
-  display: "swap",
-});
-
 const openSans = Open_Sans({
   subsets: ["latin", "greek"],
+  weight: ["400", "700"],
   variable: "--font-open-sans",
   display: "swap",
+  adjustFontFallback: true,
+  preload: true,
 });
 
 const siteUrl = getSiteUrl();
@@ -55,16 +51,12 @@ export default function RootLayout({
   return (
     <html
       lang="el"
-      className={`${rubik.variable} ${openSans.variable} h-full antialiased`}
+      className={`${openSans.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col font-sans">
         <LoadingScreen />
-        <AuthProvider>
-          <Suspense fallback={null}>
-            {children}
-          </Suspense>
-        </AuthProvider>
+        <Suspense fallback={null}>{children}</Suspense>
       </body>
     </html>
   );
