@@ -1,0 +1,150 @@
+SEO Comparison & Validation Protocol (WordPress vs. Next.js)
+
+Αυτός ο οδηγός περιέχει τα εργαλεία και τη μεθοδολογία για να συγκρίνεις το ζωντανό WordPress site (https://www.didactirion.gr) με το έτοιμο Next.js site (https://didactirion.vercel.app) πριν αλλάξεις τα DNS.
+
+1. Αυτοματοποιημένο Python Script Σύγκρισης (SEO Comparator)
+
+Μπορείς να τρέξεις το παρακάτω Python script στο IDE σου. Το script επισκέπτεται τις σημαντικότερες σελίδες και των δύο sites, διαβάζει τα SEO στοιχεία και παράγει ένα αρχείο Excel/CSV (seo_comparison_report.csv) που σου δείχνει ακριβώς πού υπάρχουν αποκλίσεις.
+
+import requests
+from bs4 import BeautifulSoup
+import csv
+import time
+
+# Ορισμός των δύο URLs (Παλιό vs Νέο)
+OLD_BASE = "[https://www.didactirion.gr](https://www.didactirion.gr)"
+NEW_BASE = "[https://didactirion.vercel.app](https://didactirion.vercel.app)"
+
+# Λίστα με τα κρίσιμα slugs που εμφανίζονται στο Google Search (από τα screenshots σου)
+PAGES_TO_CHECK = [
+    "/",                                        # Αρχική Σελίδα
+    "/oi-kathigites-mas-kai-oi/",               # Οι καθηγητές μας
+    "/epitychontes/",                           # Επιτυχόντες
+    "/programma-diagonismaton-sch-etous-2022-2023/", # Πρόγραμμα Διαγωνισμάτων (ή το νέο αντίστοιχο)
+    "/ypologismos-morion/",                     # Υπολογισμός Μορίων
+    "/g-lykeiou/",                              # Γ' Λυκείου
+    "/fysiki/",                                 # Φυσική (Sitelink)
+    "/genika-themata-arthra/"                   # Γενικά Θέματα - Άρθρα
+]
+
+def fetch_seo_tags(base_url, path):
+    url = f"{base_url.rstrip('/')}{path}"
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+    try:
+        response = requests.get(url, headers=headers, timeout=10)
+        if response.status_code != 200:
+            return {"status": response.status_code, "title": "N/A", "description": "N/A", "h1": "N/A", "canonical": "N/A"}
+        
+        soup = BeautifulSoup(response.content, 'html.parser')
+        
+        # Title Tag
+        title = soup.title.string.strip() if soup.title else "Missing"
+        
+        # Meta Description
+        desc_tag = soup.find('meta', attrs={'name': 'description'}) or soup.find('meta', attrs={'property': 'og:description'})
+        description = desc_tag['content'].strip() if desc_tag else "Missing"
+        
+        # H1 Tag (Παίρνουμε το πρώτο H1)
+        h1_tag = soup.find('h1')
+        h1 = h1_tag.get_text().strip() if h1_tag else "Missing"
+        
+        # Canonical Link
+        canonical_tag = soup.find('link', rel='canonical')
+        canonical = canonical_tag['href'].strip() if canonical_tag else "Missing"
+        
+        return {
+            "status": response.status_code,
+            "title": title,
+            "description": description,
+            "h1": h1,
+            "canonical": canonical
+        }
+    except Exception as e:
+        return {"status": "Error", "title": str(e), "description": "Error", "h1": "Error", "canonical": "Error"}
+
+# Εκτέλεση του ελέγχου
+results = []
+print("Έναρξη ελέγχου SEO Migration... \n")
+
+for path in PAGES_TO_CHECK:
+    print(f"Έλεγχος σελίδας: {path}")
+    old_data = fetch_seo_tags(OLD_BASE, path)
+    new_data = fetch_seo_tags(NEW_BASE, path)
+    
+    # Σύγκριση και καταγραφή
+    results.append({
+        "Path": path,
+        "Old Status": old_data["status"],
+        "New Status": new_data["status"],
+        "Title Match": "YES" if old_data["title"] == new_data["title"] else "NO",
+        "Old Title": old_data["title"],
+        "New Title": new_data["title"],
+        "Desc Match": "YES" if old_data["description"] == new_data["description"] else "NO",
+        "Old Desc": old_data["description"],
+        "New Desc": new_data["description"],
+        "H1 Match": "YES" if old_data["h1"] == new_data["h1"] else "NO",
+        "Old H1": old_data["h1"],
+        "New H1": new_data["h1"],
+        "Canonical Match (Domain Ignored)": "YES" if path in new_data["canonical"] else "NO (Verify domain prefix)",
+        "New Canonical": new_data["canonical"]
+    })
+    time.sleep(1) # Καθυστέρηση για αποφυγή rate limiting
+
+# Αποθήκευση σε CSV
+keys = results[0].keys()
+with open('seo_comparison_report.csv', 'w', newline='', encoding='utf-8-sig') as f:
+    dict_writer = csv.DictWriter(f, keys)
+    dict_writer.writeheader()
+    dict_writer.writerows(results)
+
+print("\nΟ έλεγχος ολοκληρώθηκε! Το αρχείο 'seo_comparison_report.csv' δημιουργήθηκε με επιτυχία.")
+
+
+2. Μη αυτόματος έλεγχος (Manual Sitelink Verification)
+
+Η Google έχει ήδη αποθηκεύσει στη μνήμη της (indexed) συγκεκριμένα Sitelinks για το didactirion.gr (όπως είδαμε στα screenshot σου). Πρέπει να κάνεις click σε αυτά τα 6-7 βασικά sitelinks στο Google Search και να επιβεβαιώσεις ότι:
+
+Το URL δομή παραμένει 1:1. Αν το παλιό site είχε URL didactirion.gr/oi-kathigites-mas-kai-oi/ και στο Next.js το έκανες didactirion.vercel.app/teachers/, πρέπει οπωσδήποτε να προσθέσεις 301 redirect στο next.config.js:
+
+module.exports = {
+  async redirects() {
+    return [
+      {
+        source: '/oi-kathigites-mas-kai-oi/',
+        destination: '/teachers',
+        permanent: true, // Αυτό στέλνει σήμα 301 (Permanent Redirect) στην Google
+      },
+    ]
+  },
+}
+
+
+Δεν υπάρχει 404 στην αρχική σελίδα του Vercel. Δοκίμασε να πλοηγηθείς σε όλο το μενού του Next.js site σου. Κάθε link πρέπει να δουλεύει χωρίς να κολλάει ή να βγάζει σφάλμα.
+
+3. Έλεγχος με το Screaming Frog (Η επαγγελματική μέθοδος)
+
+Αν θέλεις να κάνεις έλεγχο σε όλες τις σελίδες (όχι μόνο στις 8 βασικές):
+
+Κατέβασε το δωρεάν εργαλείο Screaming Frog SEO Spider.
+
+Κάνε crawl το Next.js site σου: https://didactirion.vercel.app.
+
+Πήγαινε στην καρτέλα Bulk Export -> Response Codes -> Success (2xx) HTML.
+
+Εξήγαγε τη λίστα με τα URLs.
+
+Στη συνέχεια, χρησιμοποίησε τη λειτουργία Mode -> List στο Screaming Frog, βάλε τα αντίστοιχα URLs του παλιού site (www.didactirion.gr) και σύγκρινε αν ανταποκρίνονται με 200 OK ή αν κάποιο βγάζει 404.
+
+4. Τελική Λίστα Ελέγχου (Pre-Flight Checklist)
+
+Πριν αλλάξεις τα DNS στον καταχωρητή σου, βεβαιώσου ότι έχεις τσεκάρει τα εξής:
+
+[ ] Next.js Canonical Tags: Δείχνουν στο https://www.didactirion.gr/ και όχι στο vercel.app; (Πολύ σημαντικό για να μην θεωρήσει η Google το Vercel URL ως το κύριο site).
+
+[ ] Sitemap.xml: Είναι προσβάσιμο στο https://didactirion.vercel.app/sitemap.xml και περιέχει τα σωστά URLs χωρίς το domain του vercel;
+
+[ ] Robots.txt: Είναι προσβάσιμο στο https://didactirion.vercel.app/robots.txt και δεν έχει Disallow: /;
+
+[ ] Google Analytics / Facebook Pixel: Έχεις μεταφέρει τα σωστά IDs/Scripts στον κώδικα του Next.js;

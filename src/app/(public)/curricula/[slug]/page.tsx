@@ -1,7 +1,9 @@
+import type { Metadata } from "next";
 import { CheckCircle2, GraduationCap, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { createPageMetadata } from "@/lib/seo";
 
 const curriculaData: Record<string, any> = {
   "junior-high": {
@@ -75,6 +77,23 @@ const curriculaData: Record<string, any> = {
     details: "Η εισαγωγή στα Πρότυπα σχολεία απαιτεί ιδιαίτερη προετοιμασία. Το πρόγραμμά μας βοηθά τους μαθητές της ΣΤ' Δημοτικού και της Γ' Γυμνασίου να αναπτύξουν τις απαραίτητες δεξιότητες.",
   },
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const data = curriculaData[slug];
+  if (!data) {
+    return { title: "Πρόγραμμα Σπουδών" };
+  }
+  return createPageMetadata({
+    title: data.title,
+    description: data.description,
+    path: `/curricula/${slug}`,
+  });
+}
 
 export default async function CurriculumPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

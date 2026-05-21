@@ -4,6 +4,7 @@ import "./globals.css";
 import { Suspense } from "react";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { LoadingScreen } from "@/components/providers/LoadingScreen";
+import { getSiteUrl } from "@/lib/site";
 
 const rubik = Rubik({
   subsets: ["latin"],
@@ -17,13 +18,32 @@ const openSans = Open_Sans({
   display: "swap",
 });
 
+const siteUrl = getSiteUrl();
+
 export const metadata: Metadata = {
-  title: "Διδακτήριον - Εκπαιδευτικός Οργανισμός",
-  description: "Απαίτησε την κορυφή! Φροντιστήριο Μέσης Εκπαίδευσης στις Αχαρνές.",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "Διδακτήριον - Εκπαιδευτικός Οργανισμός",
+    template: "%s | Διδακτήριον",
+  },
+  description:
+    "Απαίτησε την κορυφή! Φροντιστήριο Μέσης Εκπαίδευσης στις Αχαρνές.",
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "Διδακτήριον - Εκπαιδευτικός Οργανισμός",
-    description: "Απαίτησε την κορυφή! Φροντιστήριο Μέσης Εκπαίδευσης στις Αχαρνές.",
+    description:
+      "Απαίτησε την κορυφή! Φροντιστήριο Μέσης Εκπαίδευσης στις Αχαρνές.",
+    url: siteUrl,
+    siteName: "Διδακτήριον",
+    locale: "el_GR",
+    type: "website",
     images: ["/logo-main.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 

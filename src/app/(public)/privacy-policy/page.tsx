@@ -1,4 +1,11 @@
+import { createPageMetadata } from "@/lib/seo";
 import { Shield, Lock, Eye, Database, Globe, Cookie, Handshake, Info } from "lucide-react";
+
+export const metadata = createPageMetadata({
+  title: "Πολιτική Απορρήτου",
+  description: "Πολιτική απορρήτου και προστασίας προσωπικών δεδομένων Διδακτήριον.",
+  path: "/privacy-policy",
+});
 
 export default function PrivacyPolicyPage() {
   return (

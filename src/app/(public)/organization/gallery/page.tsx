@@ -1,4 +1,11 @@
+import { createPageMetadata } from "@/lib/seo";
 import { Image as ImageIcon } from "lucide-react";
+
+export const metadata = createPageMetadata({
+  title: "Φωτογραφικό Υλικό",
+  description: "Στιγμές από τη ζωή και τις δραστηριότητες του Διδακτήριον.",
+  path: "/organization/gallery",
+});
 import Image from "next/image";
 
 const galleryImages = [

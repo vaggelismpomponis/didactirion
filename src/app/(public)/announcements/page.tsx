@@ -1,6 +1,14 @@
 export const dynamic = "force-dynamic";
 
+import { createPageMetadata } from "@/lib/seo";
 import { prisma } from "@/lib/prisma";
+
+export const metadata = createPageMetadata({
+  title: "Ανακοινώσεις & Άρθρα",
+  description:
+    "Νέα, ανακοινώσεις και άρθρα από το Διδακτήριον: εξετάσεις, προγράμματα και εκπαιδευτικές ενημερώσεις.",
+  path: "/announcements",
+});
 import { ArrowRight, Calendar, Search, Tag, Megaphone } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";

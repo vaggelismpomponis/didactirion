@@ -1,11 +1,33 @@
 export const dynamic = "force-dynamic";
 
+import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
+import { createPageMetadata } from "@/lib/seo";
 import { Calendar, Tag, ArrowLeft, Share2 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await prisma.post.findUnique({ where: { slug } });
+  if (!post || !post.published) {
+    return { title: "Ανακοίνωση" };
+  }
+  const description =
+    post.content.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 160) ||
+    post.title;
+  return createPageMetadata({
+    title: post.title,
+    description,
+    path: `/announcements/${slug}`,
+  });
+}
 
 export default async function AnnouncementDetailPage({
   params,

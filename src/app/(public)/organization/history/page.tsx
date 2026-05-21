@@ -1,4 +1,12 @@
+import { createPageMetadata } from "@/lib/seo";
 import { ArrowRight, History, Target, Lightbulb, Zap } from "lucide-react";
+
+export const metadata = createPageMetadata({
+  title: "Ιστορία & Φιλοσοφία",
+  description:
+    "Η ιστορία, η φιλοσοφία και το όραμα του Διδακτήριον από το 2009: σύγχρονη εκπαίδευση και ολιγομελή τμήματα στις Αχαρνές.",
+  path: "/organization/history",
+});
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";

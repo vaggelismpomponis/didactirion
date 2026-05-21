@@ -1,8 +1,10 @@
+import type { Metadata } from "next";
 import { Info, ExternalLink, Download, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { createPageMetadata } from "@/lib/seo";
 
 const examsData: Record<string, any> = {
   "new-high-school": {
@@ -58,6 +60,23 @@ const examsData: Record<string, any> = {
     ],
   },
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const data = examsData[slug];
+  if (!data) {
+    return { title: "Εξετάσεις" };
+  }
+  return createPageMetadata({
+    title: data.title,
+    description: data.description,
+    path: `/exams/${slug}`,
+  });
+}
 
 export default async function ExamPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

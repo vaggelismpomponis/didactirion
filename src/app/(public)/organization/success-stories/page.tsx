@@ -1,6 +1,14 @@
 export const dynamic = "force-dynamic";
 
+import { createPageMetadata } from "@/lib/seo";
 import { prisma } from "@/lib/prisma";
+
+export const metadata = createPageMetadata({
+  title: "Επιτυχόντες",
+  description:
+    "Ιστορίες επιτυχίας μαθητών του Διδακτήριον: εισαγωγές σε πανεπιστήμια και σχολές ανά έτος.",
+  path: "/organization/success-stories",
+});
 import { GraduationCap, Trophy, School } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 

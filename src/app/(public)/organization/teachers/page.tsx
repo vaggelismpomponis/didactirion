@@ -1,6 +1,14 @@
 export const dynamic = "force-dynamic";
 
+import { createPageMetadata } from "@/lib/seo";
 import { prisma } from "@/lib/prisma";
+
+export const metadata = createPageMetadata({
+  title: "Οι Καθηγητές μας",
+  description:
+    "Γνωρίστε την έμπειρη εκπαιδευτική ομάδα του Διδακτήριον: καθηγητές με πάθος για τη διδασκαλία και την επιτυχία κάθε μαθητή.",
+  path: "/organization/teachers",
+});
 import { User, GraduationCap, Mail } from "lucide-react";
 
 async function getTeachers() {

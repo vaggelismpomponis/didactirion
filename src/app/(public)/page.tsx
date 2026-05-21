@@ -1,6 +1,14 @@
 export const dynamic = "force-dynamic";
 
+import { createPageMetadata } from "@/lib/seo";
 import Link from "next/link";
+
+export const metadata = createPageMetadata({
+  title: "Φροντιστήριο Μέσης Εκπαίδευσης Διδακτήριον",
+  description:
+    "Απαίτησε την κορυφή! Φροντιστήριο Μέσης Εκπαίδευσης στις Αχαρνές. Προγράμματα Γυμνασίου & Λυκείου, Πανελλαδικές, υπολογισμός μορίων.",
+  path: "/",
+});
 import Image from "next/image";
 import { ArrowRight, BookOpen, GraduationCap, Users, Calendar, CheckCircle, Star, TrendingUp, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
