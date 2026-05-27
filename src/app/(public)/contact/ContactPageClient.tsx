@@ -287,7 +287,7 @@ export function ContactPageClient() {
         <div className="container mx-auto px-4">
           <div className="bg-white rounded-3xl p-4 shadow-xl border border-slate-200 overflow-hidden h-[450px] relative">
              <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3138.167237070104!2d23.754162976767472!3d38.11874287189912!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14a1a3bf604753ad%3A0x6b4028e9323c14!2zzp_Pgc6_zr3PhM65z4PPhM6uz4HOuc6_IM6UzrnOtM6xzrrPhM6uz4HOuc6_zr0!5e0!3m2!1sel!2sgr!4v1716820000000!5m2!1sel!2sgr"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3138.167237070104!2d23.754162976767472!3d38.11874287189912!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14a1a3bf604753ad%3A0x6b4028e9323c14!2zzpvOtc-Jz4YuIM6Yz4HOsc66zr_OvM6xzrrOtc60z4zOvc-Jzr0gOTcsIM6Rz4fOsc-Bzr3Orc-CIDEzNiA3Mg!5e0!3m2!1sel!2sgr!4v1716820000000!5m2!1sel!2sgr"
               width="100%"
               height="100%"
               style={{ border: 0 }}
