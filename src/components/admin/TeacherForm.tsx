@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { ImageUpload } from "./ImageUpload";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -134,11 +135,10 @@ export function TeacherForm({ initialData }: TeacherFormProps) {
               name="photo"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>URL Φωτογραφίας</FormLabel>
+                  <FormLabel>Φωτογραφία Καθηγητή</FormLabel>
                   <FormControl>
-                    <Input placeholder="https://..." {...field} />
+                    <ImageUpload value={field.value || ""} onChange={field.onChange} />
                   </FormControl>
-                  <FormDescription>Προσωρινά χρησιμοποιούμε URLs.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

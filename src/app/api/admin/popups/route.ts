@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { title, content, image, active } = body;
+    const { title, content, image, active, delay, duration } = body;
 
     // If this popup is set to active, deactivate all other popups
     if (active) {
@@ -27,13 +27,18 @@ export async function POST(request: Request) {
         content,
         image,
         active: !!active,
+        delay: delay !== undefined ? Number(delay) : 2,
+        duration: duration !== undefined ? Number(duration) : 10,
       },
     });
 
     return NextResponse.json(popup, { status: 201 });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Popup API Error:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ 
+      error: "Internal Server Error", 
+      message: error?.message || String(error) 
+    }, { status: 500 });
   }
 }
 

@@ -26,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ImageUpload } from "./ImageUpload";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -192,9 +193,9 @@ export function PostForm({ initialData }: PostFormProps) {
             name="image"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>URL Κεντρικής Εικόνας</FormLabel>
+                <FormLabel>Κεντρική Εικόνα</FormLabel>
                 <FormControl>
-                  <Input placeholder="https://..." {...field} />
+                  <ImageUpload value={field.value || ""} onChange={field.onChange} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

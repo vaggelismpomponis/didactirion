@@ -19,17 +19,22 @@ import { AnnouncementPopupLoader } from "@/components/layout/AnnouncementPopupLo
 import { ScrollReveal } from "@/components/providers/ScrollReveal";
 
 async function getData() {
-  const [banners, activePopup, latestPosts] = await Promise.all([
-    prisma.banner.findMany({ where: { active: true }, orderBy: { order: "asc" } }),
-    prisma.popup.findFirst({ where: { active: true } }),
-    prisma.post.findMany({
-      where: { published: true },
-      orderBy: { createdAt: "desc" },
-      take: 3,
-    }),
-  ]);
+  try {
+    const [banners, activePopup, latestPosts] = await Promise.all([
+      prisma.banner.findMany({ where: { active: true }, orderBy: { order: "asc" } }),
+      prisma.popup.findFirst({ where: { active: true } }),
+      prisma.post.findMany({
+        where: { published: true },
+        orderBy: { createdAt: "desc" },
+        take: 3,
+      }),
+    ]);
 
-  return { banners, activePopup, latestPosts };
+    return { banners, activePopup, latestPosts };
+  } catch (error) {
+    console.error("Database connection error in getData:", error);
+    return { banners: [], activePopup: null, latestPosts: [] };
+  }
 }
 
 export default async function Home() {
@@ -94,7 +99,7 @@ export default async function Home() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
             {[
-              { value: "25+", label: "Χρόνια Εμπειρίας", icon: TrendingUp },
+              { value: "17+", label: "Χρόνια Εμπειρίας", icon: TrendingUp },
               { value: "2.000+", label: "Απόφοιτοι Μαθητές", icon: GraduationCap },
               { value: "98%", label: "Ποσοστό Επιτυχίας", icon: Award },
               { value: "4-5", label: "Μαθητές ανά Τμήμα", icon: Star },
@@ -191,7 +196,7 @@ export default async function Home() {
                 </div>
                 {/* Badge overlay */}
                 <div className="absolute -bottom-3 -right-3 sm:-bottom-4 sm:-right-4 bg-white rounded-2xl p-3 sm:p-5 shadow-2xl border border-slate-100">
-                  <div className="text-3xl sm:text-4xl font-black text-primary">25+</div>
+                  <div className="text-3xl sm:text-4xl font-black text-primary">17+</div>
                   <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">Χρόνια<br />Εμπειρίας</div>
                 </div>
                 <div className="absolute -top-3 -left-3 sm:-top-4 sm:-left-4 bg-white rounded-2xl p-3 sm:p-4 shadow-2xl border border-slate-100 flex items-center gap-2">

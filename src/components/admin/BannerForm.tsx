@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import { ImageUpload } from "./ImageUpload";
 
 const formSchema = z.object({
   title: z.string().optional().or(z.literal("")),
@@ -97,9 +98,9 @@ export function BannerForm({ initialData }: BannerFormProps) {
             name="image"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>URL Εικόνας</FormLabel>
+                <FormLabel>Εικόνα Banner</FormLabel>
                 <FormControl>
-                  <Input placeholder="https://..." {...field} />
+                  <ImageUpload value={field.value || ""} onChange={field.onChange} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

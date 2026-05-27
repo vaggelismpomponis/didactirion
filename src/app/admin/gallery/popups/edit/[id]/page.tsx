@@ -7,10 +7,11 @@ import { notFound } from "next/navigation";
 export default async function EditPopupPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const popup = await prisma.popup.findUnique({
-    where: { id: params.id },
+    where: { id },
   });
 
   if (!popup) {

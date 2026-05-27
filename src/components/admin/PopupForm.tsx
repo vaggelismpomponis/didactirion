@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { ImageUpload } from "./ImageUpload";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -27,6 +28,8 @@ const formSchema = z.object({
   content: z.string().optional().or(z.literal("")),
   image: z.string().optional().or(z.literal("")),
   active: z.boolean().default(false),
+  delay: z.coerce.number().int().nonnegative().default(2),
+  duration: z.coerce.number().int().nonnegative().default(10),
 });
 
 interface PopupFormProps {
@@ -44,6 +47,8 @@ export function PopupForm({ initialData }: PopupFormProps) {
       content: "",
       image: "",
       active: false,
+      delay: 2,
+      duration: 10,
     },
   });
 
@@ -61,13 +66,16 @@ export function PopupForm({ initialData }: PopupFormProps) {
         body: JSON.stringify(values),
       });
 
-      if (!response.ok) throw new Error("Something went wrong");
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || errorData.error || "Something went wrong");
+      }
 
       router.push("/admin/gallery");
       router.refresh();
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      alert("Σφάλμα κατά την αποθήκευση.");
+      alert(`Σφάλμα κατά την αποθήκευση: ${error.message || error}`);
     } finally {
       setIsLoading(false);
     }
@@ -114,14 +122,46 @@ export function PopupForm({ initialData }: PopupFormProps) {
             name="image"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>URL Εικόνας (Προαιρετικά)</FormLabel>
+                <FormLabel>Εικόνα Popup (Προαιρετικά)</FormLabel>
                 <FormControl>
-                  <Input placeholder="https://..." {...field} />
+                  <ImageUpload value={field.value || ""} onChange={field.onChange} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormField
+              control={form.control}
+              name="delay"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Καθυστέρηση Εμφάνισης (δευτ.)</FormLabel>
+                  <FormControl>
+                    <Input type="number" {...field} />
+                  </FormControl>
+                  <FormDescription>Πόσα δευτερόλεπτα μετά τη φόρτωση θα εμφανιστεί.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="duration"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Διάρκεια Εμφάνισης (δευτ.)</FormLabel>
+                  <FormControl>
+                    <Input type="number" {...field} />
+                  </FormControl>
+                  <FormDescription>Πότε θα κλείσει αυτόματα (0 = χειροκίνητο κλείσιμο).</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
           <FormField
             control={form.control}

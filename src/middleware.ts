@@ -4,17 +4,20 @@ import { getToken } from "next-auth/jwt";
 import { getLegacyDestination } from "@/lib/legacy-path-map";
 
 export async function middleware(request: NextRequest) {
-  const legacy = getLegacyDestination(request.nextUrl.pathname);
-  if (legacy) {
+  const currentPath = request.nextUrl.pathname;
+  const legacy = getLegacyDestination(currentPath);
+
+  // Avoid redirecting if we are already at the destination
+  if (legacy && legacy !== currentPath && legacy !== currentPath + "/" && currentPath !== legacy + "/") {
     if (legacy.startsWith("http")) {
-      return NextResponse.redirect(legacy, 301);
+      return NextResponse.redirect(new URL(legacy), 301);
     }
     const url = request.nextUrl.clone();
     url.pathname = legacy;
     return NextResponse.redirect(url, 301);
   }
 
-  if (request.nextUrl.pathname.startsWith("/admin")) {
+  if (currentPath.startsWith("/admin")) {
     const token = await getToken({
       req: request,
       secret: process.env.NEXTAUTH_SECRET,

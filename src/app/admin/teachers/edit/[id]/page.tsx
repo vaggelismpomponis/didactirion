@@ -7,10 +7,11 @@ import { notFound } from "next/navigation";
 export default async function EditTeacherPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const teacher = await prisma.teacher.findUnique({
-    where: { id: params.id },
+    where: { id },
   });
 
   if (!teacher) {
@@ -27,3 +28,4 @@ export default async function EditTeacherPage({
     </div>
   );
 }
+

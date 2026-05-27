@@ -17,6 +17,7 @@ import {
   FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { ImageUpload } from "./ImageUpload";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -143,11 +144,10 @@ export function SuccessStoryForm({ initialData }: SuccessStoryFormProps) {
               name="photo"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>URL Φωτογραφίας</FormLabel>
+                  <FormLabel>Φωτογραφία Μαθητή (Προαιρετικά)</FormLabel>
                   <FormControl>
-                    <Input placeholder="https://..." {...field} />
+                    <ImageUpload value={field.value || ""} onChange={field.onChange} />
                   </FormControl>
-                  <FormDescription>Προαιρετικά.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
