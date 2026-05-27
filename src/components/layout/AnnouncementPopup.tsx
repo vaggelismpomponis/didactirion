@@ -1,14 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { X, Clock } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 
 interface Popup {
   id: string;
@@ -20,79 +14,128 @@ interface Popup {
 }
 
 export function AnnouncementPopup({ popup }: { popup: Popup | null }) {
-  const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
 
-  // Customizable Delay before showing the popup
+  // Ensure we are on the client
   useEffect(() => {
-    if (popup) {
-      const delayMs = (popup.delay ?? 2) * 1000;
-      const timer = setTimeout(() => {
-        setOpen(true);
-      }, delayMs);
-      return () => clearTimeout(timer);
-    }
-  }, [popup]);
+    setMounted(true);
+  }, []);
 
-  // Countdown & Auto-Close Timer
+  // Delay before showing the popup
   useEffect(() => {
-    if (open && popup && popup.duration > 0) {
-      setTimeLeft(popup.duration);
+    if (!popup || !mounted) return;
 
-      const interval = setInterval(() => {
-        setTimeLeft((prev) => {
-          if (prev <= 1) {
-            clearInterval(interval);
-            setOpen(false);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
+    const delayMs = (popup.delay ?? 2) * 1000;
+    const timer = setTimeout(() => {
+      setVisible(true);
+      setTimeLeft(popup.duration ?? 0);
+    }, delayMs);
 
-      return () => clearInterval(interval);
-    }
-  }, [open, popup]);
+    return () => clearTimeout(timer);
+  }, [popup, mounted]);
 
-  if (!popup) return null;
+  // Auto-close countdown
+  useEffect(() => {
+    if (!visible || !popup || popup.duration <= 0) return;
 
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent 
-        className="fixed top-6 left-[50%] translate-x-[-50%] translate-y-0 sm:max-w-[500px] p-0 overflow-hidden border-none rounded-3xl shadow-2xl z-50 transition-all duration-300 focus:outline-none"
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          setVisible(false);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [visible, popup]);
+
+  const handleClose = useCallback(() => setVisible(false), []);
+
+  if (!popup || !mounted || !visible) return null;
+
+  return createPortal(
+    <>
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 z-[9998] bg-black/40 backdrop-blur-sm"
+        onClick={handleClose}
+        aria-hidden="true"
+      />
+
+      {/* Popup panel - positioned at the TOP */}
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="announcement-popup-title"
+        className="fixed top-6 left-1/2 -translate-x-1/2 z-[9999] w-full max-w-[500px] mx-auto rounded-3xl overflow-hidden shadow-2xl bg-white border border-slate-100"
+        style={{ maxWidth: "min(500px, calc(100vw - 2rem))" }}
       >
+        {/* Image */}
         {popup.image && (
-          <div className="aspect-video relative">
-            <img src={popup.image} alt={popup.title} className="w-full h-full object-cover" />
+          <div className="aspect-video relative w-full overflow-hidden">
+            <img
+              src={popup.image}
+              alt={popup.title}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
           </div>
         )}
-        <div className="p-8 space-y-4">
-          <DialogHeader className="flex flex-row items-center justify-between gap-4 space-y-0">
-            <DialogTitle className="text-xl md:text-2xl font-bold text-slate-900 leading-tight">
+
+        {/* Content */}
+        <div className="p-7 space-y-4">
+          {/* Header row */}
+          <div className="flex items-start justify-between gap-4">
+            <h2
+              id="announcement-popup-title"
+              className="text-xl md:text-2xl font-black text-slate-900 leading-tight flex-1"
+            >
               {popup.title}
-            </DialogTitle>
-            {popup.duration > 0 && timeLeft > 0 && (
-              <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-600 border border-blue-100 px-2 py-0.5 rounded-lg shrink-0">
-                <Clock className="w-3 h-3 animate-pulse" />
-                {timeLeft}δ
-              </span>
-            )}
-          </DialogHeader>
+            </h2>
+
+            <div className="flex items-center gap-2 shrink-0">
+              {popup.duration > 0 && timeLeft > 0 && (
+                <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-600 border border-blue-100 px-2 py-1 rounded-lg">
+                  <Clock className="w-3 h-3 animate-pulse" />
+                  {timeLeft}s
+                </span>
+              )}
+              <button
+                type="button"
+                onClick={handleClose}
+                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 hover:text-slate-900 transition-colors"
+                aria-label="Κλείσιμο"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* Body text */}
           {popup.content && (
             <p className="text-slate-600 leading-relaxed text-sm md:text-base">
               {popup.content}
             </p>
           )}
-          <div className="pt-2">
-            <Button 
-              onClick={() => setOpen(false)} 
-              className="w-full h-11 text-base font-bold bg-primary hover:bg-primary/95 text-white rounded-xl shadow-md transition-all duration-300 active:scale-95"
-            >
-              {popup.duration > 0 && timeLeft > 0 ? `Κλείσιμο (${timeLeft}s)` : "Κλείσιμο"}
-            </Button>
-          </div>
+
+          {/* Close button */}
+          <button
+            type="button"
+            onClick={handleClose}
+            className="w-full h-11 rounded-xl bg-primary text-white font-bold text-sm hover:bg-primary/90 active:scale-[0.98] transition-all duration-200 shadow-md shadow-primary/20"
+          >
+            {popup.duration > 0 && timeLeft > 0
+              ? `Κλείσιμο (${timeLeft}s)`
+              : "Κλείσιμο"}
+          </button>
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </>,
+    document.body
   );
 }
