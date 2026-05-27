@@ -12,15 +12,25 @@ export default async function EditTeacherPage({
 }) {
   const { id: slug } = await params;
   
-  // Try finding by raw ID first (in case of old bookmarks/direct DB links)
+  // 1. Try finding by raw slug first (in case it's a direct ID)
   let teacher = await prisma.teacher.findUnique({
     where: { id: slug },
   });
 
-  // If not found by raw ID, search by slugified name
+  // 2. Try extracting the ID if the URL is in the "name--id" format
   if (!teacher) {
+    const parts = slug.split("--");
+    const extractedId = parts.length > 1 ? parts[parts.length - 1] : slug;
+    teacher = await prisma.teacher.findUnique({
+      where: { id: extractedId },
+    });
+  }
+
+  // 3. Try finding by pure slugified name (in case the ID is absent)
+  if (!teacher) {
+    const pureSlug = slug.split("--")[0];
     const teachers = await prisma.teacher.findMany();
-    teacher = teachers.find((t) => slugifyName(t.name) === slug) || null;
+    teacher = teachers.find((t) => slugifyName(t.name) === pureSlug) || null;
   }
 
   if (!teacher) {
