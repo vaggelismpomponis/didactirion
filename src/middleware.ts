@@ -5,16 +5,26 @@ import { getLegacyDestination } from "@/lib/legacy-path-map";
 
 export async function middleware(request: NextRequest) {
   const currentPath = request.nextUrl.pathname;
+  
+  // Skip middleware for known static routes to prevent potential loops
+  if (currentPath === "/contact" || currentPath === "/organization/history") {
+    return NextResponse.next();
+  }
+
   const legacy = getLegacyDestination(currentPath);
 
-  // Avoid redirecting if we are already at the destination
-  if (legacy && legacy !== currentPath && legacy !== currentPath + "/" && currentPath !== legacy + "/") {
-    if (legacy.startsWith("http")) {
-      return NextResponse.redirect(new URL(legacy), 301);
+  if (legacy) {
+    const normalizedLegacy = legacy.startsWith("http") ? legacy : legacy.replace(/\/+$/, "");
+    const normalizedCurrent = currentPath.replace(/\/+$/, "");
+    
+    if (normalizedLegacy !== normalizedCurrent && normalizedLegacy !== "" && normalizedCurrent !== "") {
+      if (legacy.startsWith("http")) {
+        return NextResponse.redirect(new URL(legacy), 301);
+      }
+      const url = request.nextUrl.clone();
+      url.pathname = legacy;
+      return NextResponse.redirect(url, 301);
     }
-    const url = request.nextUrl.clone();
-    url.pathname = legacy;
-    return NextResponse.redirect(url, 301);
   }
 
   if (currentPath.startsWith("/admin")) {

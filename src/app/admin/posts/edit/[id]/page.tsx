@@ -7,11 +7,21 @@ import { notFound } from "next/navigation";
 export default async function EditPostPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const post = await prisma.post.findUnique({
-    where: { id: params.id },
+  const { id } = await params;
+
+  // Try finding by raw ID first
+  let post = await prisma.post.findUnique({
+    where: { id },
   });
+
+  // If not found by raw ID, search by slug
+  if (!post) {
+    post = await prisma.post.findUnique({
+      where: { slug: id },
+    });
+  }
 
   if (!post) {
     notFound();

@@ -27,6 +27,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { slugifyName } from "@/lib/teacher-slug";
 import Link from "next/link";
 
 async function getSuccessStories() {
@@ -143,7 +144,7 @@ export default async function SuccessStoriesPage() {
                           <DropdownMenuLabel className="text-xs text-slate-500">Ενέργειες</DropdownMenuLabel>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem asChild className="gap-2 text-sm">
-                            <Link href={`/admin/success-stories/edit/${story.id}`}>
+                            <Link href={`/admin/success-stories/edit/${slugifyName(story.name)}`}>
                               <Edit className="w-3.5 h-3.5" /> Επεξεργασία
                             </Link>
                           </DropdownMenuItem>

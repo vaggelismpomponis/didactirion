@@ -149,7 +149,7 @@ export default async function PostsPage() {
                             </Link>
                           </DropdownMenuItem>
                           <DropdownMenuItem asChild className="gap-2 text-sm">
-                            <Link href={`/admin/posts/edit/${post.id}`}>
+                            <Link href={`/admin/posts/edit/${post.slug}`}>
                               <Edit className="w-3.5 h-3.5" /> Επεξεργασία
                             </Link>
                           </DropdownMenuItem>

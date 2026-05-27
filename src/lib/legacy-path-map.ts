@@ -30,7 +30,7 @@ const LEGACY_PATH_MAP: Record<string, string> = {
   "μαθήματα-video-conference": "http://www.eclass.didactirion.gr/",
   "πανελλαδικές-εξετάσεις": "/exams/panhellenic",
   "πανελλαδικές-εξετάσεις-2023": "/exams/panhellenic",
-  "το-νέο-λύκειο": "/exams/new-high-school",
+  // "το-νέο-λύκειο": "/exams/new-high-school",
   "προγραμμα-διαγωνισμάτων": "/exams/panhellenic",
   "programma-diagonismaton-sch-etous-2022-2023": "/exams/panhellenic",
   "θέματα-οεφε": "/exams/oefe",

@@ -5,48 +5,39 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createPageMetadata } from "@/lib/seo";
+import { getPageContent, mergeContent } from "@/lib/page-content";
+import { ExamsPreviewSync } from "./ExamsPreviewSync";
 
-const examsData: Record<string, any> = {
-  "new-high-school": {
-    title: "Το Νέο Λύκειο",
-    description: "Όλα όσα πρέπει να γνωρίζετε για τις αλλαγές στο σύστημα του Λυκείου.",
-    image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=2073",
-    content: `Το σύστημα του Νέου Λυκείου εισάγει σημαντικές αλλαγές στον τρόπο αξιολόγησης και εισαγωγής στην Τριτοβάθμια Εκπαίδευση. 
-    Στο Διδακτήριον, παρακολουθούμε στενά κάθε αλλαγή και προσαρμόζουμε το εκπαιδευτικό μας έργο ώστε οι μαθητές μας να είναι πάντα ενημερωμένοι και προετοιμασμένοι.`,
-    sections: [
-      { title: "Τράπεζα Θεμάτων", text: "Η αξιολόγηση στις προαγωγικές εξετάσεις γίνεται με επιλογή θεμάτων από την κεντρική Τράπεζα." },
-      { title: "Ελάχιστη Βάση Εισαγωγής", text: "Καθορίζεται από κάθε τμήμα πανεπιστημίου και επηρεάζει τη συμπλήρωση του μηχανογραφικού." },
-    ],
-  },
+export const examsDefaults: Record<string, any> = {
   "panhellenic": {
     title: "Πανελλαδικές Εξετάσεις",
     description: "Ο οδηγός σας για τις κρισιμότερες εξετάσεις της μαθητικής ζωής.",
     image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=2070",
-    content: `Οι Πανελλαδικές Εξετάσεις αποτελούν τον τελικό σταθμό της προετοιμασίας των μαθητών μας. 
-    Παρέχουμε αναλυτικές πληροφορίες για το πρόγραμμα, την ύλη, τις βάσεις και τις σχολές.`,
+    content: `Οι Πανελλαδικές Εξετάσεις αποτελούν τον τελικό σταθμό της προετοιμασίας των μαθητών μας. Παρέχουμε αναλυτικές πληροφορίες για το πρόγραμμα, την ύλη, τις βάσεις και τις σχολές.`,
     links: [
       { label: "Υπουργείο Παιδείας", url: "https://minedu.gov.gr" },
       { label: "Μηχανογραφικό Δελτίο", url: "#" },
     ],
+    sections: [],
   },
   "question-bank": {
     title: "Τράπεζα Θεμάτων",
     description: "Πρόσβαση και ανάλυση των θεμάτων από το ΙΕΠ.",
     image: "https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?q=80&w=2070",
-    content: `Η Τράπεζα Θεμάτων είναι πλέον βασικό μέρος της εξεταστικής διαδικασίας. 
-    Στο φροντιστήριό μας, έχουμε κατηγοριοποιήσει και αναλύσει όλα τα θέματα ανά μάθημα και κεφάλαιο.`,
+    content: `Η Τράπεζα Θεμάτων είναι πλέον βασικό μέρος της εξεταστικής διαδικασίας. Στο φροντιστήριό μας, έχουμε κατηγοριοποιήσει και αναλύσει όλα τα θέματα ανά μάθημα και κεφάλαιο.`,
     features: ["Λυμένες ασκήσεις", "SOS θέματα", "Προσομοιώσεις"],
+    sections: [],
   },
   "oefe": {
     title: "Θέματα ΟΕΦΕ",
     description: "Τα διαγωνίσματα της Ομοσπονδίας Εκπαιδευτικών Φροντιστών Ελλάδος.",
     image: "https://images.unsplash.com/photo-1517842645767-c639042777db?q=80&w=2070",
-    content: `Τα θέματα της ΟΕΦΕ αποτελούν το υψηλότερο επίπεδο προσομοίωσης για τις Πανελλαδικές. 
-    Εδώ θα βρείτε αρχεία θεμάτων και απαντήσεων των τελευταίων ετών.`,
+    content: `Τα θέματα της ΟΕΦΕ αποτελούν το υψηλότερο επίπεδο προσομοίωσης για τις Πανελλαδικές. Εδώ θα βρείτε αρχεία θεμάτων και απαντήσεων των τελευταίων ετών.`,
     downloads: [
       { name: "Θέματα 2025", type: "PDF" },
       { name: "Θέματα 2024", type: "PDF" },
     ],
+    sections: [],
   },
   "career-guide": {
     title: "Οδηγός Σταδιοδρομίας",
@@ -67,27 +58,27 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const data = examsData[slug];
-  if (!data) {
-    return { title: "Εξετάσεις" };
-  }
+  const defaults = examsDefaults[slug];
+  if (!defaults) return { title: "Εξετάσεις" };
   return createPageMetadata({
-    title: data.title,
-    description: data.description,
+    title: defaults.title,
+    description: defaults.description,
     path: `/exams/${slug}`,
   });
 }
 
 export default async function ExamPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const data = examsData[slug];
+  const defaults = examsDefaults[slug];
+  if (!defaults) notFound();
 
-  if (!data) {
-    notFound();
-  }
+  const dbContent = await getPageContent(`exams/${slug}`);
+  const data = mergeContent(defaults, dbContent);
 
   return (
     <div className="flex flex-col gap-12 pb-16">
+      <ExamsPreviewSync pageKey={`exams/${slug}`} slug={slug} />
+
       <section className="bg-slate-900 text-white py-14 sm:py-20 relative overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <img src={data.image} alt="" className="w-full h-full object-cover" />
@@ -107,12 +98,10 @@ export default async function ExamPage({ params }: { params: Promise<{ slug: str
           <div className="bg-white p-5 sm:p-8 md:p-12 rounded-none border border-slate-100 shadow-sm space-y-8">
             <div className="prose prose-slate max-w-none">
               <h2 className="text-2xl font-bold text-slate-900">Πληροφορίες & Οδηγός</h2>
-              <p className="text-lg text-slate-600 leading-relaxed">
-                {data.content}
-              </p>
+              <p className="text-lg text-slate-600 leading-relaxed">{data.content}</p>
             </div>
 
-            {data.sections && (
+            {data.sections && data.sections.length > 0 && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-8 border-t">
                 {data.sections.map((section: any, i: number) => (
                   <div key={i} className="space-y-2">
@@ -125,7 +114,7 @@ export default async function ExamPage({ params }: { params: Promise<{ slug: str
               </div>
             )}
 
-            {data.links && (
+            {data.links && data.links.length > 0 && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-8 border-t">
                 {data.links.map((link: any, i: number) => (
                   <Button key={i} variant="outline" asChild className="justify-between h-14 rounded-none border-slate-200">
@@ -137,7 +126,7 @@ export default async function ExamPage({ params }: { params: Promise<{ slug: str
               </div>
             )}
 
-            {data.downloads && (
+            {data.downloads && data.downloads.length > 0 && (
               <div className="space-y-3 pt-8 border-t">
                 <h4 className="font-bold text-slate-900 mb-4">Αρχεία για Λήψη</h4>
                 {data.downloads.map((doc: any, i: number) => (

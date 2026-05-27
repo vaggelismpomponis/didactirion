@@ -17,6 +17,7 @@ import {
   Menu,
   ExternalLink,
   ChevronRight,
+  PenSquare,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -51,6 +52,12 @@ const sidebarLinks = [
     group: "Επικοινωνία",
     items: [
       { name: "Μηνύματα", href: "/admin/messages", icon: MessageSquare },
+    ],
+  },
+  {
+    group: "Ιστοσελίδα",
+    items: [
+      { name: "Διαχείρηση Περιεχομένου", href: "/admin/content", icon: PenSquare },
     ],
   },
 ];

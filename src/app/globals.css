@@ -333,3 +333,20 @@
     display: none;
   }
 }
+
+/* ── Premium Tab Triggers ── */
+.tab-trigger-premium {
+  color: #64748b; /* slate-500 */
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tab-trigger-premium:hover:not([data-selected]) {
+  color: #1e293b; /* slate-800 */
+  background-color: rgba(241, 245, 249, 0.6); /* slate-100/60 */
+}
+
+.tab-trigger-premium[data-selected] {
+  background-color: #004a99 !important; /* var(--primary) */
+  color: #ffffff !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 74, 153, 0.15), 0 2px 4px -1px rgba(0, 74, 153, 0.1) !important;
+}

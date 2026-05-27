@@ -47,7 +47,7 @@ const navigation = [
   {
     title: "Εξετάσεις",
     children: [
-      { title: "Το Νέο Λύκειο", href: "/exams/new-high-school", desc: "Νέο σύστημα Λυκείου 2024" },
+      // { title: "Το Νέο Λύκειο", href: "/exams/new-high-school", desc: "Νέο σύστημα Λυκείου 2024" },
       { title: "Πανελλαδικές", href: "/exams/panhellenic", desc: "Πληροφορίες & Στρατηγικές" },
       { title: "Τράπεζα Θεμάτων", href: "/exams/question-bank", desc: "Επίλυση θεμάτων" },
       { title: "Θέματα ΟΕΦΕ", href: "/exams/oefe", desc: "Θέματα πανελλαδικών εξετάσεων" },

@@ -39,6 +39,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import Link from "next/link";
+import { slugifyName } from "@/lib/teacher-slug";
 
 type Banner = {
   id: string;
@@ -57,6 +58,8 @@ type Popup = {
   content: string | null;
   image: string | null;
   active: boolean;
+  delay: number;
+  duration: number;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -129,13 +132,13 @@ export function GalleryListClient({ initialBanners, initialPopups }: GalleryList
         <TabsList className="bg-white border border-slate-200 h-9 p-1 rounded-xl mb-5">
           <TabsTrigger
             value="banners"
-            className="text-xs font-heading font-semibold rounded-lg data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:shadow-sm px-4 cursor-pointer"
+            className="tab-trigger-premium text-xs font-heading font-semibold rounded-lg px-4 cursor-pointer"
           >
             <ImageIcon className="w-3.5 h-3.5 mr-1.5" /> Banners ({initialBanners.length})
           </TabsTrigger>
           <TabsTrigger
             value="popups"
-            className="text-xs font-heading font-semibold rounded-lg data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:shadow-sm px-4 cursor-pointer"
+            className="tab-trigger-premium text-xs font-heading font-semibold rounded-lg px-4 cursor-pointer"
           >
             Popups ({initialPopups.length})
           </TabsTrigger>
@@ -219,7 +222,7 @@ export function GalleryListClient({ initialBanners, initialPopups }: GalleryList
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-40">
                               <DropdownMenuItem asChild className="gap-2 text-sm cursor-pointer">
-                                <Link href={`/admin/gallery/banners/edit/${banner.id}`}>
+                                <Link href={`/admin/gallery/banners/edit/${banner.title ? slugifyName(banner.title) : `banner-${banner.order || banner.id.slice(-6)}`}`}>
                                   <Edit className="w-3.5 h-3.5" /> Επεξεργασία
                                 </Link>
                               </DropdownMenuItem>
@@ -263,6 +266,8 @@ export function GalleryListClient({ initialBanners, initialPopups }: GalleryList
                   <TableRow className="bg-slate-50/50 hover:bg-slate-50/50 border-b border-slate-100">
                     <TableHead className="font-heading font-semibold text-slate-600 text-xs uppercase tracking-wider">Τίτλος</TableHead>
                     <TableHead className="font-heading font-semibold text-slate-600 text-xs uppercase tracking-wider">Κατάσταση</TableHead>
+                    <TableHead className="font-heading font-semibold text-slate-600 text-xs uppercase tracking-wider hidden md:table-cell">Καθυστέρηση</TableHead>
+                    <TableHead className="font-heading font-semibold text-slate-600 text-xs uppercase tracking-wider hidden md:table-cell">Διάρκεια</TableHead>
                     <TableHead className="font-heading font-semibold text-slate-600 text-xs uppercase tracking-wider">Δημιουργία</TableHead>
                     <TableHead className="w-14" />
                   </TableRow>
@@ -270,7 +275,7 @@ export function GalleryListClient({ initialBanners, initialPopups }: GalleryList
                 <TableBody>
                   {initialPopups.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={4} className="py-16 text-center">
+                      <TableCell colSpan={6} className="py-16 text-center">
                         <div className="flex flex-col items-center gap-3">
                           <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-300">
                             <ImageIcon className="w-6 h-6" />
@@ -296,6 +301,16 @@ export function GalleryListClient({ initialBanners, initialPopups }: GalleryList
                             </Badge>
                           )}
                         </TableCell>
+                        <TableCell className="text-slate-500 text-xs hidden md:table-cell">
+                          <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-700 border border-amber-100 rounded-md px-1.5 py-0.5 font-medium">
+                            {popup.delay}s
+                          </span>
+                        </TableCell>
+                        <TableCell className="text-slate-500 text-xs hidden md:table-cell">
+                          <span className="inline-flex items-center gap-1 bg-violet-50 text-violet-700 border border-violet-100 rounded-md px-1.5 py-0.5 font-medium">
+                            {popup.duration > 0 ? `${popup.duration}s` : "∞"}
+                          </span>
+                        </TableCell>
                         <TableCell className="text-slate-500 text-xs">
                           {new Date(popup.createdAt).toLocaleDateString("el-GR")}
                         </TableCell>
@@ -308,7 +323,7 @@ export function GalleryListClient({ initialBanners, initialPopups }: GalleryList
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-40">
                               <DropdownMenuItem asChild className="gap-2 text-sm cursor-pointer">
-                                <Link href={`/admin/gallery/popups/edit/${popup.id}`}>
+                                <Link href={`/admin/gallery/popups/edit/${slugifyName(popup.title)}`}>
                                   <Edit className="w-3.5 h-3.5" /> Επεξεργασία
                                 </Link>
                               </DropdownMenuItem>

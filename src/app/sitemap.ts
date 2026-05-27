@@ -25,7 +25,7 @@ const STATIC_ROUTES: Array<{
     changeFrequency: "monthly",
     priority: 0.75,
   },
-  { path: "/exams/new-high-school", changeFrequency: "monthly", priority: 0.8 },
+  // { path: "/exams/new-high-school", changeFrequency: "monthly", priority: 0.8 },
   { path: "/exams/panhellenic", changeFrequency: "monthly", priority: 0.85 },
   { path: "/exams/question-bank", changeFrequency: "monthly", priority: 0.75 },
   { path: "/exams/oefe", changeFrequency: "monthly", priority: 0.75 },

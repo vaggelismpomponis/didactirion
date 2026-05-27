@@ -39,6 +39,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { buildTeacherSlug } from "@/lib/teacher-slug";
 
 type Teacher = {
   id: string;
@@ -191,7 +192,7 @@ export function TeachersListClient({ initialTeachers }: TeachersListClientProps)
                           <DropdownMenuLabel className="text-xs text-slate-500">Ενέργειες</DropdownMenuLabel>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem asChild className="gap-2 text-sm cursor-pointer">
-                            <Link href={`/admin/teachers/edit/${teacher.id}`}>
+                            <Link href={`/admin/teachers/edit/${buildTeacherSlug(teacher.name, teacher.id)}`}>
                               <Edit className="w-3.5 h-3.5" /> Επεξεργασία
                             </Link>
                           </DropdownMenuItem>
