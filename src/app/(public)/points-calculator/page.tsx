@@ -69,12 +69,12 @@ export default function PointsCalculator() {
       <section className="relative py-20 overflow-hidden">
         <div className="absolute inset-0 hero-gradient" />
         <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-white/5 blur-3xl pointer-events-none" />
-        <div className="container mx-auto px-4 relative z-10 text-white">
+        <div className="container mx-auto px-4 relative z-10 text-white text-center flex flex-col items-center justify-center">
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-3 leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-3 leading-tight mx-auto">
             Υπολογισμός Μορίων
           </h1>
-          <p className="text-lg text-blue-100/80 max-w-xl leading-relaxed">
+          <p className="text-lg text-blue-100/80 max-w-xl leading-relaxed mx-auto">
             Υπολογίστε τα μόρια σας για τις Πανελλαδικές Εξετάσεις εύκολα και γρήγορα.
           </p>
         </div>

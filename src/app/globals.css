@@ -65,9 +65,9 @@
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: oklch(0.82 0.01 240);
+  --input: oklch(0.82 0.01 240);
+  --ring: oklch(0.60 0.01 240);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -80,8 +80,8 @@
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-border: oklch(0.82 0.01 240);
+  --sidebar-ring: oklch(0.60 0.01 240);
 }
 
 .dark {
@@ -100,8 +100,8 @@
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
+  --border: oklch(1 0 0 / 25%);
+  --input: oklch(1 0 0 / 30%);
   --ring: oklch(0.556 0 0);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
@@ -114,7 +114,7 @@
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-border: oklch(1 0 0 / 20%);
   --sidebar-ring: oklch(0.556 0 0);
 }
 
@@ -124,6 +124,31 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* Make form fields stand out beautifully with crisp borders by default */
+  input:not(:focus), 
+  textarea:not(:focus), 
+  select:not(:focus), 
+  [data-slot="input"]:not(:focus), 
+  [data-slot="textarea"]:not(:focus), 
+  [data-slot="select-trigger"]:not(:focus), 
+  .admin-input:not(:focus),
+  .border-slate-200:not(:focus) {
+    border-color: oklch(0.82 0.01 240) !important;
+  }
+
+  .dark {
+    input:not(:focus), 
+    textarea:not(:focus), 
+    select:not(:focus), 
+    [data-slot="input"]:not(:focus), 
+    [data-slot="textarea"]:not(:focus), 
+    [data-slot="select-trigger"]:not(:focus), 
+    .admin-input:not(:focus),
+    .border-slate-200:not(:focus) {
+      border-color: oklch(0.40 0.01 240) !important;
+    }
   }
   
   button,
@@ -349,4 +374,73 @@
   background-color: #004a99 !important; /* var(--primary) */
   color: #ffffff !important;
   box-shadow: 0 4px 6px -1px rgba(0, 74, 153, 0.15), 0 2px 4px -1px rgba(0, 74, 153, 0.1) !important;
-}
+}
+
+/* ── Admin Design System ── */
+
+/* Admin card container */
+.admin-card {
+  @apply bg-white rounded-2xl border border-slate-100 shadow-sm;
+}
+
+/* Admin table row hover */
+.admin-table-row {
+  @apply border-b border-slate-50 hover:bg-slate-50/60 transition-colors duration-150;
+}
+
+/* Sidebar active item glow */
+@keyframes sidebar-glow {
+  0%, 100% { box-shadow: 0 0 12px rgba(59,130,246,0.25); }
+  50% { box-shadow: 0 0 24px rgba(59,130,246,0.45); }
+}
+.sidebar-active-glow {
+  animation: sidebar-glow 2.5s ease-in-out infinite;
+}
+
+/* Skeleton loader shimmer */
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 0.5rem;
+}
+
+/* Admin stat card gradient accents */
+.stat-card-blue   { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); }
+.stat-card-violet { background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); }
+.stat-card-emerald{ background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); }
+.stat-card-amber  { background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); }
+
+/* Form section divider */
+.form-section-divider {
+  @apply relative my-6;
+}
+.form-section-divider::before {
+  content: '';
+  @apply absolute inset-x-0 top-1/2 h-px bg-slate-100;
+}
+
+/* Admin badge variants */
+.admin-badge-success {
+  @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200;
+}
+.admin-badge-draft {
+  @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-500 border border-slate-200;
+}
+.admin-badge-warning {
+  @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200;
+}
+.admin-badge-info {
+  @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200;
+}
+
+/* Input focus ring consistent style */
+.admin-input {
+  @apply h-10 rounded-xl border-slate-200 bg-white text-slate-900 placeholder:text-slate-400
+         focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-150;
+}
+

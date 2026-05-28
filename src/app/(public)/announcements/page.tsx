@@ -33,12 +33,12 @@ export default async function AnnouncementsPage() {
       <section className="relative py-24 overflow-hidden">
         <div className="absolute inset-0 hero-gradient" />
         <div className="absolute -top-24 -right-24 w-[450px] h-[450px] rounded-full bg-white/5 blur-3xl pointer-events-none" />
-        <div className="container mx-auto px-4 relative z-10 text-white">
+        <div className="container mx-auto px-4 relative z-10 text-white text-center flex flex-col items-center justify-center">
 
-          <h1 className="text-3xl sm:text-4xl md:text-6xl font-black tracking-tight mb-4 leading-tight max-w-3xl">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-black tracking-tight mb-4 leading-tight max-w-3xl mx-auto">
             Ανακοινώσεις & Νέα
           </h1>
-          <p className="text-xl text-blue-100/80 max-w-2xl leading-relaxed">
+          <p className="text-xl text-blue-100/80 max-w-2xl leading-relaxed mx-auto">
             Ενημερωθείτε για νέα του φροντιστηρίου, εγγραφές, εξετάσεις και εκπαιδευτικά άρθρα.
           </p>
         </div>

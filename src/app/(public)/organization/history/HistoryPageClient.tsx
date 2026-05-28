@@ -32,11 +32,11 @@ export function HistoryPageClient({ initialContent }: { initialContent: HistoryC
         <div className="absolute inset-0 hero-gradient" />
         <div className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full bg-white/5 blur-3xl pointer-events-none" />
         <div className="absolute -bottom-20 -left-20 w-80 h-80 rounded-full bg-white/5 blur-3xl pointer-events-none" />
-        <div className="container mx-auto px-4 relative z-10 text-white">
-          <h1 className="text-3xl sm:text-4xl md:text-6xl font-black tracking-tight mb-5 max-w-3xl leading-tight">
+        <div className="container mx-auto px-4 relative z-10 text-white text-center flex flex-col items-center justify-center">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-black tracking-tight mb-5 max-w-3xl leading-tight mx-auto">
             {content.hero_title}
           </h1>
-          <p className="text-xl text-blue-100/80 max-w-2xl leading-relaxed">
+          <p className="text-xl text-blue-100/80 max-w-2xl leading-relaxed mx-auto">
             {content.hero_subtitle}
           </p>
         </div>

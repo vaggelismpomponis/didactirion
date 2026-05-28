@@ -94,11 +94,11 @@ export function ContactPageClient() {
       <section className="relative py-24 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900" />
         <div className="absolute top-0 right-0 w-1/2 h-full bg-blue-500/10 blur-3xl rounded-full" />
-        <div className="container mx-auto px-4 relative z-10 text-white">
-          <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-6">
+        <div className="container mx-auto px-4 relative z-10 text-white text-center flex flex-col items-center justify-center">
+          <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-6 mx-auto">
             Επικοινωνία
           </h1>
-          <p className="text-xl text-blue-100/80 max-w-2xl leading-relaxed">
+          <p className="text-xl text-blue-100/80 max-w-2xl leading-relaxed mx-auto">
             Είμαστε εδώ για να απαντήσουμε σε κάθε σας απορία. Επικοινωνήστε μαζί μας
             μέσω της φόρμας ή των στοιχείων παρακάτω.
           </p>

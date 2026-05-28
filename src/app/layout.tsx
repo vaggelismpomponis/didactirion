@@ -54,7 +54,7 @@ export default function RootLayout({
       className={`${openSans.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col font-sans">
+      <body className="min-h-full flex flex-col font-sans" suppressHydrationWarning>
         <LoadingScreen />
         <Suspense fallback={null}>{children}</Suspense>
       </body>
