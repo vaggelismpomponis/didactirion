@@ -14,25 +14,27 @@ import {
   Sparkles,
   BarChart3,
   CheckCircle2,
+  Bell,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
 async function getDashboardData() {
-  const [posts, teachers, successStories, messages] = await Promise.all([
+  const [posts, teachers, successStories, messages, popups] = await Promise.all([
     prisma.post.count(),
     prisma.teacher.count(),
     prisma.successStory.count(),
     prisma.contactMessage.count({ where: { isRead: false } }),
+    prisma.popup.count(),
   ]);
-  return { posts, teachers, successStories, messages };
+  return { posts, teachers, successStories, messages, popups };
 }
 
 const quickActions = [
   { label: "Νέα Ανακοίνωση", href: "/admin/posts/new", icon: FileText, color: "bg-blue-600", shadow: "shadow-blue-200" },
   { label: "Προσθήκη Καθηγητή", href: "/admin/teachers/new", icon: Users, color: "bg-violet-600", shadow: "shadow-violet-200" },
-  { label: "Νέο Banner", href: "/admin/gallery/banners/new", icon: ImageIcon, color: "bg-sky-600", shadow: "shadow-sky-200" },
+  { label: "Νέο Popup", href: "/admin/gallery/popups/new", icon: Bell, color: "bg-sky-600", shadow: "shadow-sky-200" },
   { label: "Επιτυχόντας", href: "/admin/success-stories/new", icon: GraduationCap, color: "bg-emerald-600", shadow: "shadow-emerald-200" },
 ];
 
@@ -40,7 +42,7 @@ const recentActivity = [
   { title: "Νέα ανακοίνωση: Θερινά Τμήματα 2026", time: "Πριν 2 ώρες", type: "post" },
   { title: "Προσθήκη καθηγητή: Ιωάννης Παπαδόπουλος", time: "Πριν 5 ώρες", type: "teacher" },
   { title: "Νέο μήνυμα από: Μαρία Κ.", time: "Εχθές, 18:30", type: "message" },
-  { title: "Ενημέρωση Banner αρχικής σελίδας", time: "Εχθές, 14:00", type: "media" },
+  { title: "Νέο Popup αρχικής σελίδας", time: "Εχθές, 14:00", type: "popup" },
   { title: "Νέος επιτυχών: Νίκος Παπάς — ΑΠΘ", time: "3 μέρες πριν", type: "success" },
 ];
 
@@ -48,12 +50,12 @@ const typeConfig: Record<string, { color: string; label: string }> = {
   post: { color: "bg-blue-500", label: "Ανακοίνωση" },
   teacher: { color: "bg-violet-500", label: "Καθηγητής" },
   message: { color: "bg-amber-500", label: "Μήνυμα" },
-  media: { color: "bg-teal-500", label: "Media" },
+  popup: { color: "bg-teal-500", label: "Popup" },
   success: { color: "bg-emerald-500", label: "Επιτυχών" },
 };
 
 export default async function AdminDashboard() {
-  const { posts, teachers, successStories, messages } = await getDashboardData();
+  const { posts, teachers, successStories, messages, popups } = await getDashboardData();
 
   const now = new Date();
   const hour = now.getHours();
@@ -309,7 +311,7 @@ export default async function AdminDashboard() {
             { label: "Ανακοινώσεις", href: "/admin/posts", icon: FileText, count: posts, color: "group-hover:text-blue-600", hoverBg: "group-hover:bg-blue-50", hoverBorder: "group-hover:border-blue-200" },
             { label: "Καθηγητές", href: "/admin/teachers", icon: Users, count: teachers, color: "group-hover:text-violet-600", hoverBg: "group-hover:bg-violet-50", hoverBorder: "group-hover:border-violet-200" },
             { label: "Επιτυχόντες", href: "/admin/success-stories", icon: GraduationCap, count: successStories, color: "group-hover:text-emerald-600", hoverBg: "group-hover:bg-emerald-50", hoverBorder: "group-hover:border-emerald-200" },
-            { label: "Gallery", href: "/admin/gallery", icon: ImageIcon, color: "group-hover:text-sky-600", hoverBg: "group-hover:bg-sky-50", hoverBorder: "group-hover:border-sky-200" },
+            { label: "Popups", href: "/admin/gallery", icon: Bell, count: popups, color: "group-hover:text-sky-600", hoverBg: "group-hover:bg-sky-50", hoverBorder: "group-hover:border-sky-200" },
           ].map((item) => (
             <Link key={item.label} href={item.href} className="group">
               <div className={`bg-white border border-slate-100 rounded-2xl p-4 text-center hover:shadow-md ${item.hoverBorder} hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between`}>

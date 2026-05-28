@@ -46,7 +46,7 @@ const sidebarLinks = [
       { name: "Ανακοινώσεις", href: "/admin/posts", icon: FileText },
       { name: "Καθηγητές", href: "/admin/teachers", icon: Users },
       { name: "Επιτυχόντες", href: "/admin/success-stories", icon: GraduationCap },
-      { name: "Gallery & Banners", href: "/admin/gallery", icon: ImageIcon },
+      { name: "Popups", href: "/admin/gallery", icon: Bell },
     ],
   },
   {
@@ -292,19 +292,6 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
           </div>
 
           <div className="flex items-center gap-2">
-            {/* Notification bell */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="relative text-slate-400 hover:text-slate-700 hover:bg-slate-100 w-9 h-9 rounded-xl"
-            >
-              <Bell className="w-4 h-4" />
-              <span className="absolute top-2 right-2 w-1.5 h-1.5 bg-red-500 rounded-full border border-white" />
-            </Button>
-
-            {/* Divider */}
-            <div className="w-px h-6 bg-slate-100 mx-1" />
-
             {/* User avatar (topbar, desktop) */}
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-700 flex items-center justify-center text-white font-black text-[11px] shadow-sm uppercase ring-2 ring-blue-100">
