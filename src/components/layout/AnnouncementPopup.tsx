@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { X, Clock } from "lucide-react";
+import { parseMarkdownToHtml } from "@/lib/markdown";
 
 interface Popup {
   id: string;
@@ -118,9 +119,10 @@ export function AnnouncementPopup({ popup }: { popup: Popup | null }) {
 
           {/* Body text */}
           {popup.content && (
-            <p className="text-slate-600 leading-relaxed text-sm md:text-base">
-              {popup.content}
-            </p>
+            <div 
+              dangerouslySetInnerHTML={{ __html: parseMarkdownToHtml(popup.content) }} 
+              className="text-slate-600 leading-relaxed text-sm md:text-base space-y-2"
+            />
           )}
 
           {/* Close button */}
