@@ -26,6 +26,9 @@ export const examsDefaults: Record<string, any> = {
     image: "https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?q=80&w=2070",
     content: `Η Τράπεζα Θεμάτων είναι πλέον βασικό μέρος της εξεταστικής διαδικασίας. Στο φροντιστήριό μας, έχουμε κατηγοριοποιήσει και αναλύσει όλα τα θέματα ανά μάθημα και κεφάλαιο.`,
     features: ["Λυμένες ασκήσεις", "SOS θέματα", "Προσομοιώσεις"],
+    links: [
+      { label: "Επίσημη Ιστοσελίδα (ΙΕΠ)", url: "https://trapeza.iep.edu.gr/" },
+    ],
     sections: [],
   },
   "oefe": {
