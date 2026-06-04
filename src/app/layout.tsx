@@ -51,7 +51,7 @@ export default function RootLayout({
   return (
     <html
       lang="el"
-      className={`${openSans.variable} h-full antialiased`}
+      className={`${openSans.variable} ${openSans.className} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col font-sans" suppressHydrationWarning>

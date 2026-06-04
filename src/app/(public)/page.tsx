@@ -1,4 +1,4 @@
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 import { createPageMetadata } from "@/lib/seo";
 import Link from "next/link";
@@ -13,10 +13,18 @@ import Image from "next/image";
 import { ArrowRight, BookOpen, GraduationCap, Users, Calendar, CheckCircle, Star, TrendingUp, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma";
-import { HeroSlider } from "@/components/layout/HeroSlider";
-import { HeroFallback } from "@/components/layout/HeroFallback";
 import { AnnouncementPopupLoader } from "@/components/layout/AnnouncementPopupLoader";
+import { HeroFallback } from "@/components/layout/HeroFallback";
 import { ScrollReveal } from "@/components/providers/ScrollReveal";
+import dynamic from "next/dynamic";
+
+const HeroSlider = dynamic(
+  () => import("@/components/layout/HeroSlider").then((m) => m.HeroSlider),
+  {
+    ssr: true,
+    loading: () => <HeroFallback />,
+  }
+);
 
 async function getData() {
   try {

@@ -15,8 +15,8 @@ interface Popup {
   title: string;
   content: string | null;
   image: string | null;
-  delay: number;
-  duration: number;
+  delay?: number | null;
+  duration?: number | null;
 }
 
 export function AnnouncementPopupLoader({ popup }: { popup: Popup | null }) {

@@ -10,8 +10,8 @@ interface Popup {
   title: string;
   content: string | null;
   image: string | null;
-  delay: number;
-  duration: number;
+  delay?: number | null;
+  duration?: number | null;
 }
 
 export function AnnouncementPopup({ popup }: { popup: Popup | null }) {
@@ -39,7 +39,8 @@ export function AnnouncementPopup({ popup }: { popup: Popup | null }) {
 
   // Auto-close countdown
   useEffect(() => {
-    if (!visible || !popup || popup.duration <= 0) return;
+    const duration = popup?.duration ?? 0;
+    if (!visible || !popup || duration <= 0) return;
 
     const interval = setInterval(() => {
       setTimeLeft((prev) => {
@@ -100,7 +101,7 @@ export function AnnouncementPopup({ popup }: { popup: Popup | null }) {
             </h2>
 
             <div className="flex items-center gap-2 shrink-0">
-              {popup.duration > 0 && timeLeft > 0 && (
+              {(popup.duration ?? 0) > 0 && timeLeft > 0 && (
                 <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-600 border border-blue-100 px-2 py-1 rounded-lg">
                   <Clock className="w-3 h-3 animate-pulse" />
                   {timeLeft}s
@@ -131,7 +132,7 @@ export function AnnouncementPopup({ popup }: { popup: Popup | null }) {
             onClick={handleClose}
             className="w-full h-11 rounded-xl bg-primary text-white font-bold text-sm hover:bg-primary/90 active:scale-[0.98] transition-all duration-200 shadow-md shadow-primary/20"
           >
-            {popup.duration > 0 && timeLeft > 0
+            {(popup.duration ?? 0) > 0 && timeLeft > 0
               ? `Κλείσιμο (${timeLeft}s)`
               : "Κλείσιμο"}
           </button>
