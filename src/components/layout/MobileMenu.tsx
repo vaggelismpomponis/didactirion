@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
 import { Phone, ChevronDown, ChevronRight, X, ExternalLink } from "lucide-react";
@@ -26,6 +27,11 @@ interface MobileMenuProps {
 
 export function MobileMenu({ isOpen, setIsOpen, navigation }: MobileMenuProps) {
   const [expandedSection, setExpandedSection] = React.useState<string | null>(null);
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Lock body scroll when menu is open
   React.useEffect(() => {
@@ -60,26 +66,28 @@ export function MobileMenu({ isOpen, setIsOpen, navigation }: MobileMenuProps) {
         </div>
       </button>
 
-      {/* Backdrop */}
-      <div
-        className={cn(
-          "fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300",
-          isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-        )}
-        onClick={() => setIsOpen(false)}
-        aria-hidden="true"
-      />
+      {mounted && createPortal(
+        <>
+          {/* Backdrop */}
+          <div
+            className={cn(
+              "fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300",
+              isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+            )}
+            onClick={() => setIsOpen(false)}
+            aria-hidden="true"
+          />
 
-      {/* Menu Panel */}
-      <div
-        className={cn(
-          "fixed inset-y-0 right-0 z-50 w-[min(340px,88vw)] flex flex-col bg-white shadow-2xl transition-transform duration-300 ease-out",
-          isOpen ? "translate-x-0" : "translate-x-full"
-        )}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Μενού πλοήγησης"
-      >
+          {/* Menu Panel */}
+          <div
+            className={cn(
+              "fixed inset-y-0 right-0 z-[100] w-[min(340px,88vw)] flex flex-col bg-white shadow-2xl transition-transform duration-300 ease-out",
+              isOpen ? "translate-x-0" : "translate-x-full"
+            )}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Μενού πλοήγησης"
+          >
         {/* ── Header ── */}
         <div className="relative shrink-0 px-5 pt-5 pb-4 border-b border-slate-100 bg-gradient-to-br from-slate-50 to-white">
           <div className="flex items-center justify-between">
@@ -248,6 +256,9 @@ export function MobileMenu({ isOpen, setIsOpen, navigation }: MobileMenuProps) {
           </a>
         </div>
       </div>
+        </>,
+        document.body
+      )}
     </>
   );
 }

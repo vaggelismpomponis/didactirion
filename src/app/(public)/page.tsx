@@ -122,7 +122,7 @@ export default async function Home() {
       {latestPosts.length > 0 && (
         <section className="container mx-auto px-4 py-20">
           <ScrollReveal>
-            <div className="flex flex-col md:flex-row items-end justify-between gap-4 mb-12">
+            <div className="flex flex-col items-center text-center md:flex-row md:items-end md:text-left justify-between gap-4 mb-12">
               <div className="space-y-3">
 
                 <h2 className="text-3xl md:text-4xl font-black text-slate-900">Τελευταία Νέα</h2>
@@ -183,7 +183,7 @@ export default async function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
             {/* Image side */}
             <ScrollReveal direction="right" className="relative">
-              <div className="relative aspect-square max-w-lg mx-auto">
+              <div className="relative aspect-[4/3] lg:aspect-square max-w-lg mx-auto">
                 <div className="absolute inset-4 rounded-3xl bg-gradient-to-br from-blue-600 to-indigo-700 opacity-30 blur-2xl" />
                 <div className="relative h-full w-full rounded-3xl overflow-hidden border-4 border-white/10 shadow-2xl">
                   <Image
@@ -197,16 +197,7 @@ export default async function Home() {
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
                 </div>
                 {/* Badge overlay */}
-                <div className="absolute -bottom-3 -right-3 sm:-bottom-4 sm:-right-4 bg-white rounded-2xl p-3 sm:p-5 shadow-2xl border border-slate-100">
-                  <div className="text-3xl sm:text-4xl font-black text-primary">17+</div>
-                  <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">Χρόνια<br />Εμπειρίας</div>
-                </div>
-                <div className="absolute -top-3 -left-3 sm:-top-4 sm:-left-4 bg-white rounded-2xl p-3 sm:p-4 shadow-2xl border border-slate-100 flex items-center gap-2">
-                  <div className="flex -space-x-2">
-                    {[1,2,3].map(n => (
-                      <div key={n} className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 border-2 border-white" />
-                    ))}
-                  </div>
+                <div className="absolute top-2 left-2 sm:-top-4 sm:-left-4 bg-white rounded-2xl p-3 sm:p-4 shadow-2xl border border-slate-100 flex items-center gap-2">
                   <div>
                     <div className="text-xs font-black text-slate-900">2.000+</div>
                     <div className="text-[11px] text-slate-500">Απόφοιτοι</div>
@@ -247,11 +238,11 @@ export default async function Home() {
                 ))}
               </ul>
 
-              <div className="pt-2 flex flex-wrap gap-4">
-                <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90 font-bold px-8 h-12 shadow-xl">
+              <div className="pt-2 flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
+                <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90 font-bold px-8 h-12 shadow-xl w-full sm:w-auto">
                   <Link href="/organization/history">Μάθετε για εμάς</Link>
                 </Button>
-                <Button asChild size="lg" variant="outline" className="border-white/60 text-white hover:text-white bg-white/10 hover:bg-white/20 font-bold px-8 h-12">
+                <Button asChild size="lg" variant="outline" className="border-white/60 text-white hover:text-white bg-white/10 hover:bg-white/20 font-bold px-8 h-12 w-full sm:w-auto">
                   <Link href="/organization/teachers">Η ομάδα μας</Link>
                 </Button>
               </div>
