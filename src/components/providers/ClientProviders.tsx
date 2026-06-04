@@ -1,22 +1,12 @@
-"use client";
-
-import * as React from "react";
-import dynamic from "next/dynamic";
-
-const PageTransition = dynamic(
-  () => import("./PageTransition").then((mod) => mod.PageTransition),
-  { ssr: false }
-);
-
-const ScrollReveal = dynamic(
-  () => import("./ScrollReveal").then((mod) => mod.ScrollReveal),
-  { ssr: false }
-);
-
+/**
+ * ClientProviders – thin pass-through wrapper.
+ *
+ * The previous implementation dynamically imported PageTransition and
+ * ScrollReveal here, which caused a BAILOUT_TO_CLIENT_SIDE_RENDERING for
+ * everything inside <main>. Individual page sections already use their own
+ * <ScrollReveal> instances so wrapping the entire tree was redundant and
+ * prevented SSR of the page body.
+ */
 export function ClientProviders({ children }: { children: React.ReactNode }) {
-  return (
-    <PageTransition>
-      <ScrollReveal>{children}</ScrollReveal>
-    </PageTransition>
-  );
+  return <>{children}</>;
 }

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 /** Server-rendered hero so LCP text paints without waiting for client JS. */
 export function HeroFallback() {
   return (
-    <section className="hero-lcp relative min-h-[70vh] sm:min-h-[80vh] md:min-h-[88vh] flex items-center justify-center overflow-hidden">
+    <section className="hero-lcp relative min-h-[70vh] sm:min-h-[80vh] md:min-h-[88vh] flex items-center justify-center overflow-hidden" role="banner" aria-label="Κύριο banner">
       <div className="absolute inset-0 hero-gradient" />
 
       <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-white/5 max-sm:hidden blur-3xl pointer-events-none" />

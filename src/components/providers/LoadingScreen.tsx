@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import Image from "next/image";
 
 const STORAGE_KEY = "didactirion-splash-seen";
 const SPLASH_MS = 550;
@@ -38,13 +37,15 @@ export function LoadingScreen() {
       role="presentation"
     >
       <div className="loading-screen-logo">
-        <Image
+        {/* Plain <img> avoids pulling in the next/image client chunk */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
           src="/logo-main.png"
           alt=""
           width={380}
           height={190}
-          fetchPriority="low"
           style={{ width: "100%", height: "auto" }}
+          fetchPriority="low"
         />
       </div>
       <div className="loading-screen-progress" aria-hidden="true">

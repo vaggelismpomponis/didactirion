@@ -117,7 +117,7 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-1">
-            <NavigationMenu>
+            <NavigationMenu aria-label="Κύριο μενού">
               <NavigationMenuList>
                 {navigation.map((item) => (
                   <NavigationMenuItem key={item.title}>

@@ -147,6 +147,8 @@ export default async function Home() {
                         alt={post.title}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        loading="lazy"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
@@ -207,7 +209,7 @@ export default async function Home() {
                   </div>
                   <div>
                     <div className="text-xs font-black text-slate-900">2.000+</div>
-                    <div className="text-[10px] text-slate-400">Απόφοιτοι</div>
+                    <div className="text-[11px] text-slate-500">Απόφοιτοι</div>
                   </div>
                 </div>
               </div>

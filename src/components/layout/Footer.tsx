@@ -42,7 +42,7 @@ const tools = [
 
 export function Footer() {
   return (
-    <footer className="relative overflow-hidden">
+    <footer className="relative overflow-hidden" aria-label="Υποσέλιδο">
 
       {/* ── Main footer body ── */}
       <div className="bg-slate-900 text-slate-200">
@@ -57,6 +57,7 @@ export function Footer() {
                   alt="Διδακτήριον Logo"
                   width={280}
                   height={112}
+                  sizes="280px"
                   className="h-16 w-auto object-contain"
                 />
               </Link>

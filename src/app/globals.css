@@ -270,17 +270,21 @@
   }
 
   /* Scroll reveal (CSS + lightweight IntersectionObserver) */
+  /* Start visible by default to avoid CLS; JS adds .scroll-reveal-init */
   .scroll-reveal {
-    opacity: 0;
     transition:
       opacity 0.55s cubic-bezier(0.21, 0.47, 0.32, 0.98),
       transform 0.55s cubic-bezier(0.21, 0.47, 0.32, 0.98);
     transition-delay: var(--reveal-delay, 0s);
   }
-  .scroll-reveal-up { transform: translateY(2.5rem); }
-  .scroll-reveal-down { transform: translateY(-2.5rem); }
-  .scroll-reveal-left { transform: translateX(2.5rem); }
-  .scroll-reveal-right { transform: translateX(-2.5rem); }
+  /* Only hide elements once JS has initialised them */
+  .scroll-reveal:not(.is-visible) {
+    opacity: 0;
+  }
+  .scroll-reveal-up:not(.is-visible) { transform: translateY(1.5rem); }
+  .scroll-reveal-down:not(.is-visible) { transform: translateY(-1.5rem); }
+  .scroll-reveal-left:not(.is-visible) { transform: translateX(1.5rem); }
+  .scroll-reveal-right:not(.is-visible) { transform: translateX(-1.5rem); }
   .scroll-reveal.is-visible {
     opacity: 1;
     transform: none;
