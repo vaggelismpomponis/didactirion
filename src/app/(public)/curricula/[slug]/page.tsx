@@ -8,6 +8,7 @@ import { notFound } from "next/navigation";
 import { createPageMetadata } from "@/lib/seo";
 import { getPageContent, mergeContent } from "@/lib/page-content";
 import { CurriculaPreviewSync } from "./CurriculaPreviewSync";
+import { ScrollReveal } from "@/components/providers/ScrollReveal";
 
 export const curriculaDefaults: Record<string, any> = {
   "junior-high": {
@@ -110,7 +111,7 @@ export default async function CurriculumPage({ params }: { params: Promise<{ slu
   const data = mergeContent(defaults, dbContent);
 
   return (
-    <div className="flex flex-col gap-16 pb-16">
+    <div className="flex flex-col">
       <CurriculaPreviewSync pageKey={`curricula/${slug}`} slug={slug} initialData={data} defaults={defaults} />
       <CurriculumView data={data} slug={slug} />
     </div>
@@ -120,100 +121,144 @@ export default async function CurriculumPage({ params }: { params: Promise<{ slu
 function CurriculumView({ data, slug }: { data: any; slug: string }) {
   return (
     <>
-      {/* Hero Section */}
-      <section className="relative h-[280px] sm:h-[340px] md:h-[400px] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-[#004a99]/80 z-10" />
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url('${data.image}')` }}
-        />
-        <div className="container mx-auto px-4 relative z-20 text-white text-center">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 tracking-tight animate-in fade-in slide-in-from-bottom-8 duration-700">
+      {/* ── Hero ── */}
+      <section className="relative py-24 overflow-hidden">
+        <div className="absolute inset-0 hero-gradient" />
+        <div className="absolute -top-24 -right-24 w-[450px] h-[450px] rounded-full bg-white/5 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-20 -left-20 w-80 h-80 rounded-full bg-white/5 blur-3xl pointer-events-none" />
+        <div className="container mx-auto px-4 relative z-10 text-white text-center flex flex-col items-center justify-center">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-black tracking-tight mb-5 leading-tight max-w-3xl mx-auto">
             {data.title}
           </h1>
-          <p className="text-xl text-blue-50 max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700 delay-150">
+          <p className="text-xl text-blue-100/80 max-w-2xl leading-relaxed mx-auto">
             {data.description}
           </p>
         </div>
       </section>
 
-      <section className="container mx-auto px-4 py-8 sm:py-12">
+      {/* ── Main Content ── */}
+      <section className="container mx-auto px-4 py-12 sm:py-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
           <div className="lg:col-span-2 space-y-8 order-1">
-            <div className="prose prose-slate max-w-none">
-              <h2 className="text-3xl font-bold text-slate-900 mb-6">Πληροφορίες Προγράμματος</h2>
-              <p className="text-lg text-slate-600 leading-relaxed">{data.details}</p>
-            </div>
+            <ScrollReveal>
+              <div className="prose prose-slate max-w-none">
+                <h2 className="text-3xl font-black text-slate-900 mb-6">Πληροφορίες Προγράμματος</h2>
+                <p className="text-lg text-slate-600 leading-relaxed">{data.details}</p>
+              </div>
+            </ScrollReveal>
 
             {data.subjects && (
-              <div className="mt-12 space-y-8">
-                <h3 className="text-2xl font-bold text-slate-900">Πρόγραμμα Μαθημάτων</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {data.subjects.map((group: any, i: number) => (
-                    <div key={i} className="bg-slate-50 p-6 rounded-2xl border border-slate-100 shadow-sm">
-                      <h4 className="font-bold text-[#004a99] mb-4 flex items-center gap-2">
-                        <span className="w-2 h-2 bg-[#004a99] rounded-full" />
-                        {group.grade}
-                      </h4>
-                      <ul className="space-y-2">
-                        {(Array.isArray(group.items) ? group.items : []).map((item: string, j: number) => (
-                          <li key={j} className="text-slate-600 text-sm flex items-center gap-2">
-                            <ArrowRight className="w-3 h-3 text-slate-400" />
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
+              <ScrollReveal>
+                <div className="mt-12 space-y-8">
+                  <h3 className="text-2xl font-black text-slate-900">Πρόγραμμα Μαθημάτων</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {data.subjects.map((group: any, i: number) => (
+                      <ScrollReveal key={i} delay={i * 0.08}>
+                        <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-lg hover:border-primary/20 transition-all duration-300">
+                          <h4 className="font-bold text-primary mb-4 flex items-center gap-2">
+                            <span className="w-2 h-2 bg-primary rounded-full" />
+                            {group.grade}
+                          </h4>
+                          <ul className="space-y-2">
+                            {(Array.isArray(group.items) ? group.items : []).map((item: string, j: number) => (
+                              <li key={j} className="text-slate-600 text-sm flex items-center gap-2">
+                                <ArrowRight className="w-3 h-3 text-slate-400" />
+                                {item}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </ScrollReveal>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              </ScrollReveal>
             )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-8">
-              {(Array.isArray(data.features) ? data.features : []).map((feature: any, i: number) => {
-                const text = typeof feature === "object" ? feature.text : feature;
-                return (
-                  <div key={i} className="flex items-center gap-3 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm">
-                    <CheckCircle2 className="w-6 h-6 text-green-500 shrink-0" />
-                    <span className="font-bold text-slate-900">{text}</span>
-                  </div>
-                );
-              })}
-            </div>
+            <ScrollReveal>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-8">
+                {(Array.isArray(data.features) ? data.features : []).map((feature: any, i: number) => {
+                  const text = typeof feature === "object" ? feature.text : feature;
+                  return (
+                    <div key={i} className="flex items-center gap-3 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-300">
+                      <CheckCircle2 className="w-6 h-6 text-green-500 shrink-0" />
+                      <span className="font-bold text-slate-900">{text}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </ScrollReveal>
           </div>
 
+          {/* ── Sidebar ── */}
           <div className="space-y-6 order-2">
-            <div className="bg-[#004a99] p-8 rounded-3xl text-white shadow-xl">
-              <GraduationCap className="w-12 h-12 mb-6" />
-              <h3 className="text-2xl font-bold mb-4">Ενδιαφέρεστε;</h3>
-              <p className="text-blue-100 mb-8">
-                Κλείστε ένα ραντεβού για να συζητήσουμε τις ανάγκες σας και να βρούμε το ιδανικό πρόγραμμα.
-              </p>
-              <Button asChild className="w-full bg-white text-[#004a99] hover:bg-blue-50 font-bold h-12">
-                <Link href="/contact">Επικοινωνία</Link>
-              </Button>
-            </div>
+            <ScrollReveal>
+              <div className="relative overflow-hidden rounded-3xl shadow-xl">
+                <div className="absolute inset-0 hero-gradient" />
+                <div className="absolute -bottom-8 -right-8 w-32 h-32 rounded-full bg-white/10 pointer-events-none" />
+                <div className="relative p-8 text-white">
+                  <GraduationCap className="w-12 h-12 mb-6" />
+                  <h3 className="text-2xl font-black mb-4">Ενδιαφέρεστε;</h3>
+                  <p className="text-blue-100/80 mb-8 leading-relaxed">
+                    Κλείστε ένα ραντεβού για να συζητήσουμε τις ανάγκες σας και να βρούμε το ιδανικό πρόγραμμα.
+                  </p>
+                  <Button asChild className="w-full bg-white text-primary hover:bg-white/90 font-bold h-12 shadow-lg">
+                    <Link href="/contact">Επικοινωνία</Link>
+                  </Button>
+                </div>
+              </div>
+            </ScrollReveal>
 
-            <div className="bg-slate-50 p-8 rounded-3xl border border-slate-100">
-              <h4 className="font-bold text-slate-900 mb-4">Άλλα Προγράμματα</h4>
-              <ul className="space-y-3">
-                {Object.keys(curriculaDefaults)
-                  .filter((s) => s !== slug)
-                  .map((s) => (
-                    <li key={s}>
-                      <Link
-                        href={`/curricula/${s}`}
-                        className="flex items-center justify-between text-slate-600 hover:text-[#004a99] font-medium transition-colors p-2 rounded-lg hover:bg-white"
-                      >
-                        {curriculaDefaults[s].title}
-                        <ArrowRight className="w-4 h-4" />
-                      </Link>
-                    </li>
-                  ))}
-              </ul>
-            </div>
+            <ScrollReveal delay={0.1}>
+              <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
+                <h4 className="font-black text-slate-900 mb-4">Άλλα Προγράμματα</h4>
+                <ul className="space-y-3">
+                  {Object.keys(curriculaDefaults)
+                    .filter((s) => s !== slug)
+                    .map((s) => (
+                      <li key={s}>
+                        <Link
+                          href={`/curricula/${s}`}
+                          className="flex items-center justify-between text-slate-600 hover:text-primary font-medium transition-colors p-2 rounded-xl hover:bg-primary/5"
+                        >
+                          {curriculaDefaults[s].title}
+                          <ArrowRight className="w-4 h-4" />
+                        </Link>
+                      </li>
+                    ))}
+                </ul>
+              </div>
+            </ScrollReveal>
           </div>
         </div>
+      </section>
+
+      {/* ── Bottom CTA ── */}
+      <section className="container mx-auto px-4 pb-20">
+        <ScrollReveal>
+          <div className="relative overflow-hidden rounded-3xl">
+            <div className="absolute inset-0 hero-gradient" />
+            <div className="absolute -bottom-16 -right-16 w-64 h-64 rounded-full bg-white/10 pointer-events-none" />
+            <div className="relative p-6 sm:p-10 md:p-14 text-white flex flex-col md:flex-row items-center justify-between gap-8">
+              <div className="space-y-3 text-center md:text-left">
+                <h2 className="text-3xl md:text-4xl font-black">Ξεκινήστε σήμερα!</h2>
+                <p className="text-blue-100/80 max-w-xl leading-relaxed">
+                  Επικοινωνήστε μαζί μας για να σχεδιάσουμε μαζί το εκπαιδευτικό σας μέλλον.
+                </p>
+              </div>
+              <Button
+                asChild
+                size="lg"
+                className="bg-white text-primary hover:bg-white/90 font-bold px-8 shadow-xl shadow-black/20 shrink-0"
+                style={{ height: "3.25rem" }}
+              >
+                <Link href="/contact" className="flex items-center gap-2">
+                  Εγγραφή Τώρα <ArrowRight className="w-5 h-5" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </ScrollReveal>
       </section>
     </>
   );

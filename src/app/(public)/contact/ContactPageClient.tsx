@@ -30,21 +30,30 @@ const contactInfo = [
     title: "Διεύθυνση",
     content: "Θρακομακεδόνων 97",
     subContent: "Αχαρναί, 136 71",
-    color: "bg-blue-50 text-blue-600",
+    accent: "from-blue-500 to-blue-600",
+    bgLight: "bg-blue-50",
+    textColor: "text-blue-600",
+    href: "https://www.google.com/maps/search/?api=1&query=Φροντιστήριο+Διδακτήριον+Θρακομακεδόνων+97+Αχαρναί",
   },
   {
     icon: Phone,
     title: "Τηλέφωνο",
     content: "210 2448542",
     subContent: "Δευτέρα - Παρασκευή, 15:00 - 22:00",
-    color: "bg-green-50 text-green-600",
+    accent: "from-emerald-500 to-emerald-600",
+    bgLight: "bg-emerald-50",
+    textColor: "text-emerald-600",
+    href: "tel:2102448542",
   },
   {
     icon: Mail,
     title: "Email",
     content: "info@didactirion.gr",
     subContent: "Θα χαρούμε να σας εξυπηρετήσουμε",
-    color: "bg-purple-50 text-purple-600",
+    accent: "from-violet-500 to-violet-600",
+    bgLight: "bg-violet-50",
+    textColor: "text-violet-600",
+    href: "mailto:info@didactirion.gr",
   },
 ];
 
@@ -94,6 +103,7 @@ export function ContactPageClient() {
       <section className="relative py-24 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900" />
         <div className="absolute top-0 right-0 w-1/2 h-full bg-blue-500/10 blur-3xl rounded-full" />
+        <div className="absolute -bottom-20 -left-20 w-80 h-80 rounded-full bg-primary/10 blur-[80px] pointer-events-none" />
         <div className="container mx-auto px-4 relative z-10 text-white text-center flex flex-col items-center justify-center">
           <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-6 mx-auto">
             Επικοινωνία
@@ -105,33 +115,51 @@ export function ContactPageClient() {
         </div>
       </section>
 
-      <section className="py-20 -mt-10">
+      {/* ── Contact Info Cards (overlapping hero) ── */}
+      <section className="container mx-auto px-4 -mt-10 relative z-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+          {contactInfo.map((info, idx) => (
+            <a
+              key={idx}
+              href={info.href}
+              target={idx === 0 ? "_blank" : undefined}
+              rel={idx === 0 ? "noopener noreferrer" : undefined}
+              className="group bg-white rounded-2xl p-6 shadow-xl shadow-slate-900/5 flex items-start gap-4 border border-slate-100 hover:border-slate-200 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
+            >
+              <div
+                className={`w-12 h-12 rounded-xl bg-gradient-to-br ${info.accent} flex items-center justify-center text-white shadow-lg shrink-0`}
+              >
+                <info.icon className="w-5 h-5" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400 mb-1">
+                  {info.title}
+                </p>
+                <p className="font-bold text-slate-900 group-hover:text-primary transition-colors">
+                  {info.content}
+                </p>
+                <p className="text-slate-500 text-sm mt-0.5 truncate">{info.subContent}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Main Content ── */}
+      <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Info Column */}
-            <div className="lg:col-span-1 space-y-6">
-              {contactInfo.map((info, idx) => (
-                <div
-                  key={idx}
-                  className="bg-white rounded-2xl p-6 shadow-xl shadow-blue-900/5 flex items-start gap-4 border border-slate-100 hover:border-primary/20 transition-colors"
-                >
-                  <div className={`p-3 rounded-xl ${info.color}`}>
-                    <info.icon className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-slate-800">{info.title}</h3>
-                    <p className="text-slate-900 font-medium">{info.content}</p>
-                    <p className="text-slate-500 text-sm mt-0.5">{info.subContent}</p>
-                  </div>
-                </div>
-              ))}
-
-              <div className="bg-slate-900 rounded-3xl p-8 text-white relative overflow-hidden">
+            {/* ── Sidebar ── */}
+            <div className="lg:col-span-1 space-y-6 order-2 lg:order-1">
+              {/* Schedule card */}
+              <div className="bg-slate-900 rounded-3xl p-7 text-white relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 blur-3xl rounded-full" />
                 <div className="relative z-10">
-                  <div className="flex items-center gap-2 mb-6">
-                    <Clock className="w-5 h-5 text-primary" />
-                    <h3 className="text-lg font-bold">Ώρες Γραμματείας</h3>
+                  <div className="flex items-center gap-2.5 mb-6">
+                    <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center">
+                      <Clock className="w-4 h-4 text-blue-300" />
+                    </div>
+                    <h3 className="text-base font-bold">Ώρες Γραμματείας</h3>
                   </div>
                   <div className="space-y-4">
                     {schedule.map((item, idx) => (
@@ -139,34 +167,54 @@ export function ContactPageClient() {
                         key={idx}
                         className="flex justify-between items-center border-b border-white/10 pb-3 last:border-0 last:pb-0"
                       >
-                        <span className="text-white/60">{item.day}</span>
-                        <span className="font-medium">{item.hours}</span>
+                        <span className="text-white/50 text-sm">{item.day}</span>
+                        <span className={`text-sm font-bold ${item.hours === "Κλειστά" ? "text-slate-500" : "text-white"}`}>
+                          {item.hours}
+                        </span>
                       </div>
                     ))}
                   </div>
                 </div>
               </div>
+
+              {/* Quick contact CTA */}
+              <div className="bg-gradient-to-br from-primary/[0.06] to-primary/[0.02] rounded-2xl p-6 border border-primary/10">
+                <h4 className="font-bold text-slate-900 mb-2">Προτιμάτε τηλεφωνικά;</h4>
+                <p className="text-sm text-slate-500 mb-4 leading-relaxed">
+                  Καλέστε μας απευθείας και θα σας εξυπηρετήσουμε άμεσα.
+                </p>
+                <a
+                  href="tel:2102448542"
+                  className="inline-flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-primary/90 transition-colors shadow-md shadow-primary/20"
+                >
+                  <Phone className="w-4 h-4" />
+                  210 2448542
+                </a>
+              </div>
             </div>
 
-            {/* Form Column */}
-            <div className="lg:col-span-2">
-              <div className="bg-white rounded-3xl p-8 md:p-12 shadow-2xl shadow-blue-900/5 border border-slate-100">
+            {/* ── Form Column ── */}
+            <div className="lg:col-span-2 order-1 lg:order-2">
+              <div className="bg-white rounded-3xl p-7 sm:p-10 md:p-12 shadow-xl shadow-slate-200/50 border border-slate-100 relative overflow-hidden">
+                {/* Subtle accent line */}
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-primary to-indigo-500" />
+
                 {isSubmitted ? (
                   <div className="text-center py-12">
-                    <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <div className="w-20 h-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-100">
                       <CheckCircle2 className="w-10 h-10" />
                     </div>
-                    <h2 className="text-3xl font-bold text-slate-900 mb-4">
+                    <h2 className="text-3xl font-black text-slate-900 mb-4">
                       Ευχαριστούμε!
                     </h2>
-                    <p className="text-slate-600 text-lg mb-8">
+                    <p className="text-slate-500 text-lg mb-8 max-w-md mx-auto">
                       Το μήνυμά σας στάλθηκε με επιτυχία. Θα επικοινωνήσουμε μαζί σας το
                       συντομότερο δυνατό.
                     </p>
                     <Button
                       variant="outline"
                       onClick={() => setIsSubmitted(false)}
-                      className="rounded-full px-8"
+                      className="rounded-xl px-8 h-12 border-slate-200 hover:border-primary hover:text-primary"
                     >
                       <RotateCcw className="w-4 h-4 mr-2" />
                       Αποστολή νέου μηνύματος
@@ -175,7 +223,7 @@ export function ContactPageClient() {
                 ) : (
                   <>
                     <div className="mb-10">
-                      <h2 className="text-3xl font-bold text-slate-900 mb-2">
+                      <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mb-2">
                         Στείλτε μας ένα μήνυμα
                       </h2>
                       <p className="text-slate-500">
@@ -188,17 +236,19 @@ export function ContactPageClient() {
                         onSubmit={form.handleSubmit(onSubmit)}
                         className="space-y-6"
                       >
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                           <FormField
                             control={form.control}
                             name="name"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Ονοματεπώνυμο</FormLabel>
+                                <FormLabel className="text-slate-700 font-bold text-xs uppercase tracking-wider">
+                                  Ονοματεπώνυμο
+                                </FormLabel>
                                 <FormControl>
                                   <Input
                                     placeholder="π.χ. Ιωάννης Παπαδόπουλος"
-                                    className="rounded-xl border-slate-200 h-12 focus:ring-primary/20"
+                                    className="rounded-xl border-slate-200 h-12 bg-slate-50 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"
                                     {...field}
                                   />
                                 </FormControl>
@@ -211,11 +261,13 @@ export function ContactPageClient() {
                             name="email"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Email</FormLabel>
+                                <FormLabel className="text-slate-700 font-bold text-xs uppercase tracking-wider">
+                                  Email
+                                </FormLabel>
                                 <FormControl>
                                   <Input
                                     placeholder="π.χ. info@example.gr"
-                                    className="rounded-xl border-slate-200 h-12 focus:ring-primary/20"
+                                    className="rounded-xl border-slate-200 h-12 bg-slate-50 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"
                                     {...field}
                                   />
                                 </FormControl>
@@ -229,14 +281,16 @@ export function ContactPageClient() {
                           name="subject"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Θέμα</FormLabel>
+                              <FormLabel className="text-slate-700 font-bold text-xs uppercase tracking-wider">
+                                Θέμα
+                              </FormLabel>
                               <FormControl>
                                 <Input
                                   placeholder="Πώς μπορούμε να βοηθήσουμε;"
-                                  className="rounded-xl border-slate-200 h-12 focus:ring-primary/20"
+                                  className="rounded-xl border-slate-200 h-12 bg-slate-50 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"
                                   {...field}
                                 />
-                                </FormControl>
+                              </FormControl>
                               <FormMessage />
                             </FormItem>
                           )}
@@ -246,11 +300,13 @@ export function ContactPageClient() {
                           name="message"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Μήνυμα</FormLabel>
+                              <FormLabel className="text-slate-700 font-bold text-xs uppercase tracking-wider">
+                                Μήνυμα
+                              </FormLabel>
                               <FormControl>
                                 <Textarea
                                   placeholder="Περιγράψτε το μήνυμά σας..."
-                                  className="min-h-[150px] rounded-xl border-slate-200 focus:ring-primary/20"
+                                  className="min-h-[140px] rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"
                                   {...field}
                                 />
                               </FormControl>
@@ -260,7 +316,7 @@ export function ContactPageClient() {
                         />
                         <Button
                           type="submit"
-                          className="w-full bg-primary hover:bg-primary/90 text-white h-14 rounded-xl text-lg font-bold group"
+                          className="w-full bg-primary hover:bg-primary/90 text-white h-14 rounded-xl text-base font-bold group shadow-lg shadow-primary/20 transition-all"
                           disabled={isSubmitting}
                         >
                           {isSubmitting ? (
@@ -268,7 +324,7 @@ export function ContactPageClient() {
                           ) : (
                             <>
                               Αποστολή Μηνύματος
-                              <Send className="w-5 h-5 ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                              <Send className="w-4 h-4 ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                             </>
                           )}
                         </Button>
@@ -282,31 +338,31 @@ export function ContactPageClient() {
         </div>
       </section>
 
-      {/* Map Section */}
-      <section className="py-20 bg-slate-50">
-        <div className="container mx-auto px-4">
-          <div className="bg-white rounded-3xl p-4 shadow-xl border border-slate-200 overflow-hidden h-[450px] relative">
-             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3138.167237070104!2d23.754162976767472!3d38.11874287189912!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14a1a3bf604753ad%3A0x6b4028e9323c14!2zzpvOtc-Jz4YuIM6Yz4HOsc66zr_OvM6xzrrOtc60z4zOvc-Jzr0gOTcsIM6Rz4fOsc-Bzr3Orc-CIDEzNiA3Mg!5e0!3m2!1sel!2sgr!4v1716820000000!5m2!1sel!2sgr"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              className="rounded-2xl"
-            />
-          </div>
+      {/* ── Map Section (full-bleed) ── */}
+      <section className="relative">
+        {/* Top gradient fade */}
+        <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-white to-transparent z-10 pointer-events-none" />
+        <div className="h-[400px] md:h-[500px] relative">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3138.167237070104!2d23.754162976767472!3d38.11874287189912!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14a1a3bf604753ad%3A0x6b4028e9323c14!2zzpvOtc-Jz4YuIM6Yz4HOsc66zr_OvM6xzrrOtc60z4zOvc-Jzr0gOTcsIM6Rz4fOsc-Bzr3Orc-CIDEzNiA3Mg!5e0!3m2!1sel!2sgr!4v1716820000000!5m2!1sel!2sgr"
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
         </div>
       </section>
 
-      {/* Bottom CTA */}
+      {/* ── Bottom CTA ── */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <div className="bg-primary rounded-[3rem] p-12 text-center text-white relative overflow-hidden">
+          <div className="relative overflow-hidden rounded-3xl">
+            <div className="absolute inset-0 hero-gradient" />
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 blur-3xl rounded-full" />
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-900/20 blur-3xl rounded-full" />
-            <div className="relative z-10 max-w-2xl mx-auto">
+            <div className="relative z-10 p-8 sm:p-12 md:p-16 text-center text-white max-w-2xl mx-auto">
               <h2 className="text-3xl md:text-5xl font-black mb-6 leading-tight">
                 Θέλετε να ξεκινήσετε το ταξίδι σας μαζί μας;
               </h2>
@@ -314,9 +370,15 @@ export function ContactPageClient() {
                 Κλείστε ένα ραντεβού για ενημέρωση και ανακαλύψτε πώς μπορούμε να
                 βοηθήσουμε στην επίτευξη των στόχων σας.
               </p>
-              <Button size="lg" variant="secondary" className="rounded-full px-12 h-14 text-lg font-bold">
-                Κλείστε Ραντεβού
-                <ArrowRight className="w-5 h-5 ml-2" />
+              <Button
+                size="lg"
+                asChild
+                className="bg-white text-primary hover:bg-white/90 rounded-xl px-10 h-14 text-lg font-bold shadow-xl shadow-black/20"
+              >
+                <a href="tel:2102448542">
+                  Κλείστε Ραντεβού
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </a>
               </Button>
             </div>
           </div>

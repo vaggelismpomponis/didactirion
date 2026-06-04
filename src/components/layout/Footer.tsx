@@ -1,7 +1,9 @@
+"use client";
+
 import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, Phone, MapPin, Clock, ExternalLink } from "lucide-react";
+import { Mail, Phone, MapPin, Clock, ExternalLink, ChevronUp } from "lucide-react";
 
 const Facebook = (props: React.SVGProps<SVGSVGElement>) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
@@ -14,13 +16,6 @@ const Instagram = (props: React.SVGProps<SVGSVGElement>) => (
     <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
     <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-  </svg>
-);
-
-const Youtube = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-    <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.56 49.56 0 0 1-16.2 0A2 2 0 0 1 2.5 17" />
-    <path d="m10 15 5-3-5-3z" />
   </svg>
 );
 
@@ -40,17 +35,42 @@ const tools = [
   { label: "StudyBot AI", href: "https://studybot.employ.edu.gr/login" },
 ];
 
+const schedule = [
+  { day: "Δευτέρα – Παρασκευή", hours: "15:00 – 22:00", active: true },
+  { day: "Σάββατο", hours: "09:00 – 16:00", active: true },
+  { day: "Κυριακή", hours: "Κλειστά", active: false },
+];
+
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
 export function Footer() {
   return (
     <footer className="relative overflow-hidden" aria-label="Υποσέλιδο">
+      {/* ── Gradient top border ── */}
+      <div className="h-1 bg-gradient-to-r from-blue-600 via-primary to-blue-800" />
 
       {/* ── Main footer body ── */}
-      <div className="bg-slate-900 text-slate-200">
-        <div className="container mx-auto px-4 pt-4 pb-12 md:pt-8 md:pb-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
+      <div className="relative bg-slate-900 text-slate-200">
+        {/* Dot pattern overlay */}
+        <div
+          className="absolute inset-0 opacity-[0.03] pointer-events-none"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)",
+            backgroundSize: "24px 24px",
+          }}
+        />
+        {/* Gradient accent blobs */}
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-800/5 rounded-full blur-[100px] pointer-events-none" />
 
-            {/* ── Brand Column ── */}
-            <div className="space-y-6">
+        <div className="container mx-auto px-4 pt-14 pb-10 md:pt-16 md:pb-14 relative z-10">
+          {/* ── Top tier: Brand + Links + Platforms ── */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8">
+            {/* Brand column */}
+            <div className="lg:col-span-4 space-y-6">
               <Link href="/" className="inline-block transition-transform hover:scale-105">
                 <Image
                   src="/logo-main.png"
@@ -62,56 +82,44 @@ export function Footer() {
                 />
               </Link>
 
-              <p className="text-sm text-slate-400 leading-relaxed">
-                Από το 2009, ο εκπαιδευτικός οργανισμός που οδηγεί τους μαθητές στην κορυφή με σύγχρονη μεθοδολογία και ολιγομελή τμήματα.
+              <p className="text-sm text-slate-400 leading-relaxed max-w-xs">
+                Από το 2009, ο εκπαιδευτικός οργανισμός που οδηγεί τους μαθητές στην κορυφή
+                με σύγχρονη μεθοδολογία και ολιγομελή τμήματα.
               </p>
 
-              {/* Social Icons */}
+              {/* Social */}
               <div className="flex items-center gap-3">
                 {[
-                  { href: "https://www.facebook.com/didactirion", icon: Facebook, label: "Facebook", target: "_blank", rel: "noopener noreferrer" },
-                  { href: "https://www.instagram.com/didactirion.gr/", icon: Instagram, label: "Instagram", target: "_blank", rel: "noopener noreferrer" },
-                ].map(({ href, icon: Icon, label, target, rel }) => (
-                  <Link
+                  { href: "https://www.facebook.com/didactirion", icon: Facebook, label: "Facebook" },
+                  { href: "https://www.instagram.com/didactirion.gr/", icon: Instagram, label: "Instagram" },
+                ].map(({ href, icon: Icon, label }) => (
+                  <a
                     key={label}
                     href={href}
                     aria-label={label}
-                    target={target}
-                    rel={rel}
-                    className="w-9 h-9 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-primary hover:border-primary transition-all"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 rounded-xl bg-white/[0.07] border border-white/10 flex items-center justify-center text-slate-400 hover:bg-primary hover:border-primary hover:text-white transition-all duration-200"
                   >
                     <Icon className="w-4 h-4" />
-                  </Link>
-                ))}
-              </div>
-
-              {/* Tools */}
-              <div className="space-y-2 pt-2 border-t border-slate-800">
-                <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Εργαλεία</p>
-                {tools.map((t) => (
-                  <Link
-                    key={t.label}
-                    href={t.href}
-                    className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors group"
-                  >
-                    <ExternalLink className="w-3 h-3 opacity-50 group-hover:opacity-100" />
-                    {t.label}
-                  </Link>
+                  </a>
                 ))}
               </div>
             </div>
 
-            {/* ── Quick Links ── */}
-            <div className="space-y-5">
-              <h3 className="text-sm font-heading font-bold text-white uppercase tracking-widest">Γρήγοροι Σύνδεσμοι</h3>
-              <ul className="space-y-2.5">
+            {/* Quick Links */}
+            <div className="lg:col-span-3 space-y-5">
+              <h3 className="text-xs font-bold text-white uppercase tracking-[0.15em]">
+                Γρήγοροι Σύνδεσμοι
+              </h3>
+              <ul className="space-y-2">
                 {quickLinks.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm text-slate-400 hover:text-white flex items-center gap-2 group transition-colors"
+                      className="text-sm text-slate-400 hover:text-white flex items-center gap-2.5 group transition-colors duration-200"
                     >
-                      <span className="w-1 h-1 rounded-full bg-primary opacity-60 group-hover:opacity-100 group-hover:scale-150 transition-all" />
+                      <span className="w-1 h-1 rounded-full bg-primary/60 group-hover:bg-primary group-hover:scale-150 transition-all duration-200" />
                       {link.label}
                     </Link>
                   </li>
@@ -119,106 +127,155 @@ export function Footer() {
               </ul>
             </div>
 
-            {/* ── Contact ── */}
-            <div className="space-y-5">
-              <h3 className="text-sm font-heading font-bold text-white uppercase tracking-widest">Επικοινωνία</h3>
-              <ul className="space-y-4">
-                <li>
+            {/* Contact column */}
+            <div className="lg:col-span-3 space-y-5">
+              <h3 className="text-xs font-bold text-white uppercase tracking-[0.15em]">
+                Επικοινωνία
+              </h3>
+              <div className="space-y-4">
+                {[
+                  {
+                    icon: MapPin,
+                    label: "Διεύθυνση",
+                    content: "Θρακομακεδόνων 97, Αχαρναί, 13672",
+                    href: "https://www.google.com/maps/search/?api=1&query=Φροντιστήριο+Διδακτήριον+Θρακομακεδόνων+97+Αχαρναί",
+                  },
+                  {
+                    icon: Phone,
+                    label: "Τηλέφωνο",
+                    content: "210 2448542",
+                    href: "tel:2102448542",
+                  },
+                  {
+                    icon: Mail,
+                    label: "Email",
+                    content: "info@didactirion.gr",
+                    href: "mailto:info@didactirion.gr",
+                  },
+                ].map(({ icon: Icon, label, content, href }) => (
                   <a
-                    href="https://www.google.com/maps/search/?api=1&query=Φροντιστήριο+Διδακτήριον+Θρακομακεδόνων+97+Αχαρναί"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    key={label}
+                    href={href}
+                    target={label === "Διεύθυνση" ? "_blank" : undefined}
+                    rel={label === "Διεύθυνση" ? "noopener noreferrer" : undefined}
                     className="flex items-start gap-3 group"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-slate-900 shrink-0 mt-0.5 group-hover:bg-primary group-hover:text-white transition-all">
-                      <MapPin className="w-4 h-4" />
+                    <div className="w-8 h-8 rounded-lg bg-white/[0.07] border border-white/10 flex items-center justify-center text-slate-400 shrink-0 mt-0.5 group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-all duration-200">
+                      <Icon className="w-3.5 h-3.5" />
                     </div>
                     <div>
-                      <p className="text-xs text-slate-500 font-medium uppercase tracking-wider mb-0.5">Διεύθυνση</p>
-                      <span className="text-sm text-slate-300 group-hover:text-white transition-colors">
-                        Θρακομακεδόνων 97, Αχαρναί, 13672
+                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.12em] mb-0.5">
+                        {label}
+                      </p>
+                      <span className="text-sm text-slate-300 group-hover:text-white transition-colors duration-200">
+                        {content}
                       </span>
                     </div>
                   </a>
-                </li>
-                <li>
-                  <a href="tel:2102448542" className="flex items-start gap-3 group">
-                    <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-slate-900 shrink-0 group-hover:bg-primary group-hover:text-white transition-all">
-                      <Phone className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <p className="text-xs text-slate-500 font-medium uppercase tracking-wider mb-0.5">Τηλέφωνο</p>
-                      <span className="text-sm text-slate-300 group-hover:text-white transition-colors">
-                        210 2448542
-                      </span>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a href="mailto:info@didactirion.gr" className="flex items-start gap-3 group">
-                    <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-slate-900 shrink-0 group-hover:bg-primary group-hover:text-white transition-all">
-                      <Mail className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <p className="text-xs text-slate-500 font-medium uppercase tracking-wider mb-0.5">Email</p>
-                      <span className="text-sm text-slate-300 group-hover:text-white transition-colors">
-                        info@didactirion.gr
-                      </span>
-                    </div>
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* ── Hours ── */}
-            <div className="space-y-5">
-              <h3 className="text-sm font-heading font-bold text-white uppercase tracking-widest">Ωράριο</h3>
-              <div className="space-y-3">
-                {[
-                  { day: "Δευτέρα – Παρασκευή", hours: "15:00 – 22:00" },
-                  { day: "Σάββατο", hours: "09:00 – 16:00" },
-                  { day: "Κυριακή", hours: "Κλειστά" },
-                ].map((item) => (
-                  <div key={item.day} className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-slate-900 shrink-0">
-                      <Clock className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <p className="text-xs font-medium text-slate-400">{item.day}</p>
-                      <p className={`text-sm font-bold ${item.hours === "Κλειστά" ? "text-slate-600" : "text-white"}`}>{item.hours}</p>
-                    </div>
-                  </div>
                 ))}
               </div>
+            </div>
 
-              {/* CTA */}
-              <div className="mt-4 pt-4 border-t border-slate-800">
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center gap-2 bg-white hover:bg-slate-100 border border-white text-slate-900 rounded-xl px-5 py-3 text-sm font-bold transition-all shadow-lg shadow-white/5"
-                >
-                  Κλείστε ραντεβού
-                  <span className="text-lg leading-none">→</span>
-                </Link>
+            {/* Hours + Platforms column */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Hours */}
+              <div className="space-y-4">
+                <h3 className="text-xs font-bold text-white uppercase tracking-[0.15em]">
+                  Ωράριο
+                </h3>
+                <div className="space-y-2.5">
+                  {schedule.map((item) => (
+                    <div key={item.day} className="flex items-center justify-between gap-2">
+                      <span className="text-xs text-slate-500 shrink-0">{item.day}</span>
+                      <span
+                        className={`text-xs font-bold ${
+                          item.active ? "text-white" : "text-slate-600"
+                        }`}
+                      >
+                        {item.hours}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Divider */}
+              <div className="h-px bg-white/[0.06]" />
+
+              {/* Platforms */}
+              <div className="space-y-3">
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.15em]">
+                  Πλατφόρμες
+                </p>
+                <div className="flex flex-col gap-2">
+                  {tools.map((t) => (
+                    <a
+                      key={t.label}
+                      href={t.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-between px-3 py-2 rounded-lg bg-white/[0.04] border border-white/[0.06] text-sm text-slate-400 hover:text-white hover:bg-white/[0.08] hover:border-white/[0.12] transition-all duration-200 group"
+                    >
+                      {t.label}
+                      <ExternalLink className="w-3 h-3 opacity-40 group-hover:opacity-100 transition-opacity" />
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
+          </div>
+
+          {/* ── CTA row ── */}
+          <div className="mt-12 p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-white/[0.04] to-white/[0.02] border border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-5">
+            <div>
+              <h4 className="text-base font-bold text-white mb-1">
+                Κλείστε ραντεβού ενημέρωσης
+              </h4>
+              <p className="text-sm text-slate-400">
+                Ανακαλύψτε πώς μπορούμε να βοηθήσουμε τον μαθητή σας.
+              </p>
+            </div>
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 bg-white hover:bg-slate-100 text-slate-900 rounded-xl px-6 py-3 text-sm font-bold transition-all duration-200 shadow-lg shadow-white/5 shrink-0"
+            >
+              Επικοινωνία
+              <span className="text-lg leading-none">→</span>
+            </Link>
           </div>
         </div>
 
         {/* ── Bottom bar ── */}
-        <div className="border-t border-slate-800">
-          <div className="container mx-auto px-4 py-5 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-slate-600">
-            <p>© {new Date().getFullYear()} Διδακτήριον. Με επιφύλαξη παντός δικαιώματος.</p>
-            <div className="flex items-center gap-4">
-              <Link href="/privacy-policy" className="hover:text-slate-400 transition-colors">Πολιτική Απορρήτου</Link>
-              <span>·</span>
-              <Link href="/contact" className="hover:text-slate-400 transition-colors">Επικοινωνία</Link>
-              <span>·</span>
-              <Link href="/admin" className="hover:text-slate-400 transition-colors">Διαχείριση</Link>
+        <div className="border-t border-white/[0.06] relative z-10">
+          <div className="container mx-auto px-4 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p className="text-xs text-slate-600">
+              © {new Date().getFullYear()} Διδακτήριον. Με επιφύλαξη παντός δικαιώματος.
+            </p>
+            <div className="flex items-center gap-4 text-xs text-slate-600">
+              <Link href="/privacy-policy" className="hover:text-slate-400 transition-colors">
+                Πολιτική Απορρήτου
+              </Link>
+              <span className="text-slate-700">·</span>
+              <Link href="/contact" className="hover:text-slate-400 transition-colors">
+                Επικοινωνία
+              </Link>
+              <span className="text-slate-700">·</span>
+              <Link href="/admin" className="hover:text-slate-400 transition-colors">
+                Διαχείριση
+              </Link>
             </div>
           </div>
         </div>
       </div>
+
+      {/* ── Back to top ── */}
+      <button
+        onClick={scrollToTop}
+        className="absolute bottom-20 right-6 sm:right-8 z-20 w-10 h-10 rounded-xl bg-white/[0.08] border border-white/[0.1] flex items-center justify-center text-slate-400 hover:bg-primary hover:border-primary hover:text-white transition-all duration-200 backdrop-blur-sm"
+        aria-label="Επιστροφή στην κορυφή"
+      >
+        <ChevronUp className="w-4 h-4" />
+      </button>
     </footer>
   );
 }

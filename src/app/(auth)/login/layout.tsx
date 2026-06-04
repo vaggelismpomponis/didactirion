@@ -8,7 +8,7 @@ export const metadata = createPageMetadata({
   noIndex: true,
 });
 
-export default function LoginLayout({
+export default function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
