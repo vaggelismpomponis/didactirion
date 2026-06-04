@@ -16,15 +16,7 @@ import { prisma } from "@/lib/prisma";
 import { AnnouncementPopupLoader } from "@/components/layout/AnnouncementPopupLoader";
 import { HeroFallback } from "@/components/layout/HeroFallback";
 import { ScrollReveal } from "@/components/providers/ScrollReveal";
-import dynamic from "next/dynamic";
-
-const HeroSlider = dynamic(
-  () => import("@/components/layout/HeroSlider").then((m) => m.HeroSlider),
-  {
-    ssr: true,
-    loading: () => <HeroFallback />,
-  }
-);
+import { HeroSlider } from "@/components/layout/HeroSlider";
 
 async function getData() {
   try {

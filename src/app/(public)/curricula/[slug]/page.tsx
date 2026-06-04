@@ -1,3 +1,5 @@
+export const revalidate = 3600;
+
 import type { Metadata } from "next";
 import { CheckCircle2, GraduationCap, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";

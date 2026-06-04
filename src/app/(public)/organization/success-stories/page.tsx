@@ -1,4 +1,4 @@
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 import { createPageMetadata } from "@/lib/seo";
 import { prisma } from "@/lib/prisma";

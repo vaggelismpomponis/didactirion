@@ -1,13 +1,13 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { PageTransition } from "@/components/providers/PageTransition";
+import { ClientProviders } from "@/components/providers/ClientProviders";
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Header />
       <main className="min-h-screen">
-        <PageTransition>{children}</PageTransition>
+        <ClientProviders>{children}</ClientProviders>
       </main>
       <Footer />
     </>

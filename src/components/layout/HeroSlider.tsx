@@ -41,9 +41,10 @@ export function HeroSlider({ banners }: { banners: Banner[] }) {
             alt={banner.title || ""}
             fill
             className="object-cover"
-            priority={index === 0}
-            sizes="100vw"
-            quality={75}
+            priority={true}
+            fetchPriority="high"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 75vw, 50vw"
+            quality={85}
           />
           <div className="container mx-auto px-4 relative z-20 text-white max-w-4xl">
             <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-tight mb-4 sm:mb-6">
