@@ -1,5 +1,6 @@
 export const revalidate = 60;
 
+import { Suspense } from "react";
 import { createPageMetadata } from "@/lib/seo";
 import Link from "next/link";
 
@@ -10,17 +11,22 @@ export const metadata = createPageMetadata({
   path: "/",
 });
 import Image from "next/image";
-import { ArrowRight, BookOpen, GraduationCap, Users, Calendar, CheckCircle, Star, TrendingUp, Award } from "lucide-react";
+import { ArrowRight, BookOpen, GraduationCap, Users, Calendar, CheckCircle, Star, TrendingUp, Award, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma";
 import { AnnouncementPopupLoader } from "@/components/layout/AnnouncementPopupLoader";
 import { HeroFallback } from "@/components/layout/HeroFallback";
 import { ScrollReveal } from "@/components/providers/ScrollReveal";
 import { HeroSlider } from "@/components/layout/HeroSlider";
+import { getPageContent, mergeContent } from "@/lib/page-content";
+import { defaultHomeContent } from "@/lib/home-content";
+import { Editable } from "@/components/admin/Editable";
+
+export { defaultHomeContent };
 
 async function getData() {
   try {
-    const [banners, activePopup, latestPosts] = await Promise.all([
+    const [banners, activePopup, latestPosts, dbContent] = await Promise.all([
       prisma.banner.findMany({ where: { active: true }, orderBy: { order: "asc" } }),
       prisma.popup.findFirst({ where: { active: true } }),
       prisma.post.findMany({
@@ -28,19 +34,22 @@ async function getData() {
         orderBy: { createdAt: "desc" },
         take: 3,
       }),
+      getPageContent("home"),
     ]);
 
-    return { banners, activePopup, latestPosts };
+    const content = mergeContent(defaultHomeContent, dbContent);
+    return { banners, activePopup, latestPosts, content };
   } catch (error) {
     console.error("Database connection error in getData:", error);
-    return { banners: [], activePopup: null, latestPosts: [] };
+    return { banners: [], activePopup: null, latestPosts: [], content: defaultHomeContent };
   }
 }
 
 export default async function Home() {
-  const { banners, activePopup, latestPosts } = await getData();
+  const { banners, activePopup, latestPosts, content } = await getData();
 
   return (
+    <Suspense fallback={null}>
     <div className="flex flex-col">
       <AnnouncementPopupLoader popup={activePopup} />
 
@@ -52,25 +61,19 @@ export default async function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {[
             {
-              title: "Σύστημα Επιτυχίας",
-              description: "Η μεθοδολογία μας που οδηγεί τους μαθητές μας στην κορυφή.",
-              icon: GraduationCap,
-              gradient: "from-blue-600 to-blue-800",
-              href: "/organization/history",
+              titleId: "feature1_title" as const, descId: "feature1_desc" as const,
+              title: content.feature1_title, description: content.feature1_desc,
+              icon: GraduationCap, gradient: "from-blue-600 to-blue-800", href: "/organization/history",
             },
             {
-              title: "Ανακοινώσεις",
-              description: "Μείνετε ενημερωμένοι για νέα, εγγραφές και προγράμματα.",
-              icon: BookOpen,
-              gradient: "from-blue-600 to-blue-800",
-              href: "/announcements",
+              titleId: "feature2_title" as const, descId: "feature2_desc" as const,
+              title: content.feature2_title, description: content.feature2_desc,
+              icon: BookOpen, gradient: "from-blue-600 to-blue-800", href: "/announcements",
             },
             {
-              title: "Επικοινωνία",
-              description: "Κλείστε ραντεβού για ενημέρωση και εγγραφή.",
-              icon: Users,
-              gradient: "from-blue-600 to-blue-800",
-              href: "/contact",
+              titleId: "feature3_title" as const, descId: "feature3_desc" as const,
+              title: content.feature3_title, description: content.feature3_desc,
+              icon: Users, gradient: "from-blue-600 to-blue-800", href: "/contact",
             },
           ].map((item, i) => (
             <ScrollReveal key={i} delay={i * 0.1} className="h-full">
@@ -81,8 +84,8 @@ export default async function Home() {
                     <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${item.gradient} flex items-center justify-center text-white mb-5 shadow-lg group-hover:scale-110 transition-transform`}>
                       <item.icon className="w-6 h-6" />
                     </div>
-                    <h3 className="text-lg font-bold mb-2 text-slate-900">{item.title}</h3>
-                    <p className="text-slate-500 text-sm flex-grow leading-relaxed">{item.description}</p>
+                    <h3 className="text-lg font-bold mb-2 text-slate-900"><Editable id={item.titleId}>{item.title}</Editable></h3>
+                    <p className="text-slate-500 text-sm flex-grow leading-relaxed"><Editable id={item.descId}>{item.description}</Editable></p>
                     <div className="flex items-center gap-1.5 text-primary font-bold text-sm mt-5 group-hover:gap-3 transition-all">
                       Περισσότερα <ArrowRight className="w-4 h-4" />
                     </div>
@@ -99,18 +102,18 @@ export default async function Home() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
             {[
-              { value: "17+", label: "Χρόνια Εμπειρίας", icon: TrendingUp },
-              { value: "2.000+", label: "Απόφοιτοι Μαθητές", icon: GraduationCap },
-              { value: "98%", label: "Ποσοστό Επιτυχίας", icon: Award },
-              { value: "4-5", label: "Μαθητές ανά Τμήμα", icon: Star },
+              { valueId: "stats_years" as const, labelId: "stats_years_label" as const, value: content.stats_years, label: content.stats_years_label, icon: TrendingUp },
+              { valueId: "stats_students" as const, labelId: "stats_students_label" as const, value: content.stats_students, label: content.stats_students_label, icon: Clock },
+              { valueId: "stats_success" as const, labelId: "stats_success_label" as const, value: content.stats_success, label: content.stats_success_label, icon: Award },
+              { valueId: "stats_class_size" as const, labelId: "stats_class_size_label" as const, value: content.stats_class_size, label: content.stats_class_size_label, icon: Star },
             ].map((stat, i) => (
               <ScrollReveal key={i} delay={i * 0.08}>
                 <div className="flex flex-col items-center gap-2">
                   <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-1">
                     <stat.icon className="w-5 h-5" />
                   </div>
-                  <div className="text-4xl font-black text-slate-900">{stat.value}</div>
-                  <div className="text-sm font-medium text-slate-500">{stat.label}</div>
+                  <div className="text-4xl font-black text-slate-900"><Editable id={stat.valueId}>{stat.value}</Editable></div>
+                  <div className="text-sm font-medium text-slate-500"><Editable id={stat.labelId}>{stat.label}</Editable></div>
                 </div>
               </ScrollReveal>
             ))}
@@ -125,8 +128,8 @@ export default async function Home() {
             <div className="flex flex-col items-center text-center md:flex-row md:items-end md:text-left justify-between gap-4 mb-12">
               <div className="space-y-3">
 
-                <h2 className="text-3xl md:text-4xl font-black text-slate-900">Τελευταία Νέα</h2>
-                <p className="text-slate-500">Μείνετε ενημερωμένοι για όλες τις εξελίξεις.</p>
+                <h2 className="text-3xl md:text-4xl font-black text-slate-900"><Editable id="news_title">{content.news_title}</Editable></h2>
+                <p className="text-slate-500"><Editable id="news_subtitle">{content.news_subtitle}</Editable></p>
               </div>
               <Button asChild variant="outline" className="border-primary/30 text-primary font-bold hover:bg-primary/5 shrink-0">
                 <Link href="/announcements" className="flex items-center gap-2">
@@ -196,13 +199,7 @@ export default async function Home() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
                 </div>
-                {/* Badge overlay */}
-                <div className="absolute top-2 left-2 sm:-top-4 sm:-left-4 bg-white rounded-2xl p-3 sm:p-4 shadow-2xl border border-slate-100 flex items-center gap-2">
-                  <div>
-                    <div className="text-xs font-black text-slate-900">2.000+</div>
-                    <div className="text-[11px] text-slate-500">Απόφοιτοι</div>
-                  </div>
-                </div>
+
               </div>
             </ScrollReveal>
 
@@ -211,29 +208,27 @@ export default async function Home() {
               <div>
 
                 <h2 className="text-2xl md:text-4xl lg:text-5xl font-black leading-tight">
-                  Γιατί να επιλέξετε το{" "}
-                  <span className="text-gradient">Διδακτήριον</span>;
+                  <Editable id="why_title">{content.why_title}</Editable>{" "}
+                  <span className="text-gradient"><Editable id="why_title_highlight">{content.why_title_highlight}</Editable></span>;
                 </h2>
               </div>
 
               <p className="text-lg text-slate-400 leading-relaxed">
-                Στο Διδακτήριον, πιστεύουμε ότι κάθε μαθητής έχει τις δυνατότητες να πετύχει.
-                Με έμπειρο διδακτικό προσωπικό, σύγχρονες εγκαταστάσεις και εξατομικευμένη προσέγγιση,
-                δημιουργούμε το ιδανικό περιβάλλον για μάθηση.
+                <Editable id="why_description" multiline>{content.why_description}</Editable>
               </p>
 
               <ul className="space-y-4">
                 {[
-                  "Ολιγομελή τμήματα (4-5 μαθητές) για ουσιαστική επαφή",
-                  "Συνεχής αξιολόγηση και διαγωνίσματα",
-                  "Σύγχρονα εκπαιδευτικά εργαλεία (E-class, StudyBot)",
-                  "Εξειδικευμένοι καθηγητές με πολυετή εμπειρία",
-                ].map((text, i) => (
+                  { id: "why_bullet1", text: content.why_bullet1 },
+                  { id: "why_bullet2", text: content.why_bullet2 },
+                  { id: "why_bullet3", text: content.why_bullet3 },
+                  { id: "why_bullet4", text: content.why_bullet4 },
+                ].map((item, i) => (
                   <li key={i} className="flex items-start gap-3">
                     <div className="w-6 h-6 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center shrink-0 mt-0.5">
                       <CheckCircle className="w-3.5 h-3.5 text-blue-400" />
                     </div>
-                    <span className="text-slate-300 leading-relaxed">{text}</span>
+                    <span className="text-slate-300 leading-relaxed"><Editable id={item.id}>{item.text}</Editable></span>
                   </li>
                 ))}
               </ul>
@@ -255,9 +250,9 @@ export default async function Home() {
       <section className="container mx-auto px-4 py-20">
         <ScrollReveal className="text-center space-y-3 mb-14">
 
-          <h2 className="text-3xl md:text-4xl font-black text-slate-900">Προγράμματα Σπουδών</h2>
+          <h2 className="text-3xl md:text-4xl font-black text-slate-900"><Editable id="programs_title">{content.programs_title}</Editable></h2>
           <p className="text-slate-500 max-w-xl mx-auto">
-            Από το Γυμνάσιο έως τις Πανελλαδικές — ένα ολοκληρωμένο εκπαιδευτικό πρόγραμμα.
+            <Editable id="programs_subtitle">{content.programs_subtitle}</Editable>
           </p>
         </ScrollReveal>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
@@ -290,25 +285,25 @@ export default async function Home() {
           <ScrollReveal>
 
             <h2 className="text-3xl sm:text-4xl md:text-6xl font-black mt-6 leading-tight">
-              Έτοιμοι να ξεκινήσετε<br />το ταξίδι σας;
+              <Editable id="cta_title" multiline>{content.cta_title.replace(/\n/g, " ")}</Editable>
             </h2>
             <p className="text-base sm:text-xl text-blue-100/80 max-w-2xl mx-auto mt-4">
-              Οι εγγραφές για τα νέα τμήματα έχουν ξεκινήσει.
-              Επικοινωνήστε μαζί μας για να βρούμε το κατάλληλο πρόγραμμα για εσάς.
+              <Editable id="cta_subtitle" multiline>{content.cta_subtitle}</Editable>
             </p>
           </ScrollReveal>
           <ScrollReveal delay={0.1}>
             <div className="flex flex-wrap justify-center gap-4 pt-2">
               <Button size="lg" asChild className="bg-white text-primary hover:bg-white/90 font-bold px-12 h-14 text-lg shadow-2xl shadow-black/20 hover:shadow-black/30 transition-all">
-                <Link href="/contact">Εγγραφή Τώρα</Link>
+                <Link href="/contact"><Editable id="cta_button1">{content.cta_button1}</Editable></Link>
               </Button>
               <Button size="lg" asChild variant="outline" className="border-white/60 text-white hover:text-white bg-white/10 hover:bg-white/20 font-bold px-8 h-14 text-lg">
-                <Link href="/points-calculator">Υπολογισμός Μορίων</Link>
+                <Link href="/points-calculator"><Editable id="cta_button2">{content.cta_button2}</Editable></Link>
               </Button>
             </div>
           </ScrollReveal>
         </div>
       </section>
     </div>
+    </Suspense>
   );
 }

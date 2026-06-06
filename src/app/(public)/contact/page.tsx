@@ -1,5 +1,7 @@
 import { createPageMetadata } from "@/lib/seo";
+import { getPageContent, mergeContent } from "@/lib/page-content";
 import { ContactPageClient } from "./ContactPageClient";
+import { defaultContactContent } from "./contact-content";
 
 export const metadata = createPageMetadata({
   title: "Επικοινωνία",
@@ -8,6 +10,9 @@ export const metadata = createPageMetadata({
   path: "/contact",
 });
 
-export default function ContactPage() {
-  return <ContactPageClient />;
+export default async function ContactPage() {
+  const dbContent = await getPageContent("contact");
+  const content = mergeContent(defaultContactContent, dbContent);
+
+  return <ContactPageClient initialContent={content} />;
 }

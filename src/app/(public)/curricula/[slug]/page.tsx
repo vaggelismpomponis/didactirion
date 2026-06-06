@@ -1,5 +1,6 @@
 export const revalidate = 3600;
 
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { CheckCircle2, GraduationCap, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,7 @@ import { createPageMetadata } from "@/lib/seo";
 import { getPageContent, mergeContent } from "@/lib/page-content";
 import { CurriculaPreviewSync } from "./CurriculaPreviewSync";
 import { ScrollReveal } from "@/components/providers/ScrollReveal";
+import { Editable } from "@/components/admin/Editable";
 
 export const curriculaDefaults: Record<string, any> = {
   "junior-high": {
@@ -111,10 +113,12 @@ export default async function CurriculumPage({ params }: { params: Promise<{ slu
   const data = mergeContent(defaults, dbContent);
 
   return (
+    <Suspense fallback={null}>
     <div className="flex flex-col">
       <CurriculaPreviewSync pageKey={`curricula/${slug}`} slug={slug} initialData={data} defaults={defaults} />
       <CurriculumView data={data} slug={slug} />
     </div>
+    </Suspense>
   );
 }
 
@@ -128,10 +132,10 @@ function CurriculumView({ data, slug }: { data: any; slug: string }) {
         <div className="absolute -bottom-20 -left-20 w-80 h-80 rounded-full bg-white/5 blur-3xl pointer-events-none" />
         <div className="container mx-auto px-4 relative z-10 text-white text-center flex flex-col items-center justify-center">
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-black tracking-tight mb-5 leading-tight max-w-3xl mx-auto">
-            {data.title}
+            <Editable id="title">{data.title}</Editable>
           </h1>
           <p className="text-xl text-blue-100/80 max-w-2xl leading-relaxed mx-auto">
-            {data.description}
+            <Editable id="description" multiline>{data.description}</Editable>
           </p>
         </div>
       </section>
@@ -143,7 +147,7 @@ function CurriculumView({ data, slug }: { data: any; slug: string }) {
             <ScrollReveal>
               <div className="prose prose-slate max-w-none">
                 <h2 className="text-3xl font-black text-slate-900 mb-6">Πληροφορίες Προγράμματος</h2>
-                <p className="text-lg text-slate-600 leading-relaxed">{data.details}</p>
+                <p className="text-lg text-slate-600 leading-relaxed"><Editable id="details" multiline>{data.details}</Editable></p>
               </div>
             </ScrollReveal>
 
@@ -157,13 +161,13 @@ function CurriculumView({ data, slug }: { data: any; slug: string }) {
                         <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-lg hover:border-primary/20 transition-all duration-300">
                           <h4 className="font-bold text-primary mb-4 flex items-center gap-2">
                             <span className="w-2 h-2 bg-primary rounded-full" />
-                            {group.grade}
+                            <Editable id={`subjects_${i}_grade`}>{group.grade}</Editable>
                           </h4>
                           <ul className="space-y-2">
                             {(Array.isArray(group.items) ? group.items : []).map((item: string, j: number) => (
                               <li key={j} className="text-slate-600 text-sm flex items-center gap-2">
                                 <ArrowRight className="w-3 h-3 text-slate-400" />
-                                {item}
+                                <Editable id={`subjects_${i}_item_${j}`}>{item}</Editable>
                               </li>
                             ))}
                           </ul>
@@ -182,7 +186,7 @@ function CurriculumView({ data, slug }: { data: any; slug: string }) {
                   return (
                     <div key={i} className="flex items-center gap-3 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-300">
                       <CheckCircle2 className="w-6 h-6 text-green-500 shrink-0" />
-                      <span className="font-bold text-slate-900">{text}</span>
+                      <span className="font-bold text-slate-900"><Editable id={`features_${i}`}>{text}</Editable></span>
                     </div>
                   );
                 })}
@@ -241,9 +245,9 @@ function CurriculumView({ data, slug }: { data: any; slug: string }) {
             <div className="absolute -bottom-16 -right-16 w-64 h-64 rounded-full bg-white/10 pointer-events-none" />
             <div className="relative p-6 sm:p-10 md:p-14 text-white flex flex-col md:flex-row items-center justify-between gap-8">
               <div className="space-y-3 text-center md:text-left">
-                <h2 className="text-3xl md:text-4xl font-black">Ξεκινήστε σήμερα!</h2>
+                <h2 className="text-3xl md:text-4xl font-black"><Editable id="cta_title">Ξεκινήστε σήμερα!</Editable></h2>
                 <p className="text-blue-100/80 max-w-xl leading-relaxed">
-                  Επικοινωνήστε μαζί μας για να σχεδιάσουμε μαζί το εκπαιδευτικό σας μέλλον.
+                  <Editable id="cta_subtitle" multiline>Επικοινωνήστε μαζί μας για να σχεδιάσουμε μαζί το εκπαιδευτικό σας μέλλον.</Editable>
                 </p>
               </div>
               <Button

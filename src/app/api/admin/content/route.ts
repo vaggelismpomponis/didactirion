@@ -25,14 +25,31 @@ export async function PUT(request: Request) {
   }
   const body = await request.json();
   const { pageKey, content } = body;
-  if (!pageKey || !content) {
-    return NextResponse.json({ error: "pageKey and content required" }, { status: 400 });
+  if (!pageKey) {
+    return NextResponse.json({ error: "pageKey required" }, { status: 400 });
   }
+
+  // Strip empty strings — they mean "use default", so no need to store them
+  function cleanContent(obj: Record<string, any>): Record<string, any> {
+    const cleaned: Record<string, any> = {};
+    for (const [key, val] of Object.entries(obj)) {
+      if (typeof val === "string" && val.trim() === "") continue;
+      if (val != null && typeof val === "object" && !Array.isArray(val)) {
+        const sub = cleanContent(val);
+        if (Object.keys(sub).length > 0) cleaned[key] = sub;
+      } else {
+        cleaned[key] = val;
+      }
+    }
+    return cleaned;
+  }
+
+  const cleaned = content ? cleanContent(content) : {};
   try {
     const row = await prisma.pageContent.upsert({
       where: { pageKey },
-      update: { content, updatedBy: session.user.email ?? undefined },
-      create: { pageKey, content, updatedBy: session.user.email ?? undefined },
+      update: { content: cleaned, updatedBy: session.user.email ?? undefined },
+      create: { pageKey, content: cleaned, updatedBy: session.user.email ?? undefined },
     });
     return NextResponse.json({ ok: true, updatedAt: row.updatedAt });
   } catch (err) {

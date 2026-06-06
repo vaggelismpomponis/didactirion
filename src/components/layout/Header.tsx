@@ -125,7 +125,7 @@ export function Header() {
                       <>
                         <NavigationMenuTrigger
                           className={cn(
-                            "text-sm font-heading font-semibold text-slate-700 hover:text-primary transition-colors bg-transparent hover:bg-primary/5",
+                            "text-sm font-heading font-semibold text-slate-700 hover:text-slate-600 transition-colors bg-transparent hover:bg-slate-50 data-[state=open]:bg-slate-50 data-[state=open]:text-slate-600",
                           )}
                         >
                           {item.title}
@@ -140,14 +140,14 @@ export function Header() {
                                       href={child.href}
                                       className={cn(
                                         "group flex flex-col select-none rounded-xl p-3 no-underline outline-none transition-all",
-                                        "text-slate-700 hover:bg-primary/5 hover:text-primary"
+                                        "text-slate-700 hover:bg-slate-50 hover:text-slate-600"
                                       )}
                                     >
                                       <div className="text-sm font-heading font-semibold leading-none mb-1">
                                         {child.title}
                                       </div>
                                       {child.desc && (
-                                        <p className="text-xs text-slate-400 group-hover:text-primary/70 leading-relaxed transition-colors">
+                                        <p className="text-xs text-slate-400 group-hover:text-slate-600/70 leading-relaxed transition-colors">
                                           {child.desc}
                                         </p>
                                       )}
@@ -167,7 +167,7 @@ export function Header() {
                             className={cn(
                               navigationMenuTriggerStyle(),
                               "text-sm font-heading font-semibold bg-transparent",
-                              "text-slate-700 hover:text-primary hover:bg-primary/5"
+                              "text-slate-700 hover:text-slate-600 hover:bg-slate-50"
                             )}
                           >
                             {item.title}

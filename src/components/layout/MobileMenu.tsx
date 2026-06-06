@@ -56,7 +56,7 @@ export function MobileMenu({ isOpen, setIsOpen, navigation }: MobileMenuProps) {
       {/* Hamburger Trigger */}
       <button
         onClick={() => setIsOpen(true)}
-        className="relative flex items-center justify-center w-10 h-10 rounded-xl text-slate-700 hover:text-primary hover:bg-primary/5 transition-all duration-200"
+        className="relative flex items-center justify-center w-10 h-10 rounded-xl text-slate-700 hover:text-slate-600 hover:bg-slate-50 transition-all duration-200"
         aria-label="Άνοιγμα μενού"
       >
         <div className="flex flex-col gap-[5px]">
@@ -100,7 +100,7 @@ export function MobileMenu({ isOpen, setIsOpen, navigation }: MobileMenuProps) {
             />
             <button
               onClick={() => setIsOpen(false)}
-              className="flex items-center justify-center w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 transition-all duration-200"
+              className="flex items-center justify-center w-9 h-9 rounded-xl text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-all duration-200"
               aria-label="Κλείσιμο μενού"
             >
               <X className="w-4 h-4" />
@@ -132,8 +132,8 @@ export function MobileMenu({ isOpen, setIsOpen, navigation }: MobileMenuProps) {
                       className={cn(
                         "w-full flex items-center justify-between px-3 py-3 rounded-xl text-[15px] font-bold transition-all duration-200",
                         expandedSection === item.title
-                          ? "bg-primary/5 text-primary"
-                          : "text-slate-700 hover:bg-slate-50 hover:text-slate-900"
+                          ? "bg-slate-50 text-slate-600"
+                          : "text-slate-700 hover:bg-slate-50 hover:text-slate-600"
                       )}
                     >
                       <span>{item.title}</span>
@@ -154,19 +154,19 @@ export function MobileMenu({ isOpen, setIsOpen, navigation }: MobileMenuProps) {
                           : "max-h-0 opacity-0"
                       )}
                     >
-                      <div className="ml-3 pl-3 border-l-2 border-primary/15 mt-1 mb-2 space-y-0.5">
+                      <div className="ml-3 pl-3 border-l-2 border-slate-200 mt-1 mb-2 space-y-0.5">
                         {item.children.map((child) => (
                           <Link
                             key={child.title}
                             href={child.href}
                             onClick={() => setIsOpen(false)}
-                            className="group flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-medium text-slate-600 hover:text-primary hover:bg-primary/5 transition-all duration-200"
+                            className="group flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-medium text-slate-600 hover:text-slate-700 hover:bg-slate-50 transition-all duration-200"
                           >
-                            <span className="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover:bg-primary group-hover:scale-125 transition-all duration-200 shrink-0" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover:bg-slate-400 group-hover:scale-125 transition-all duration-200 shrink-0" />
                             <div className="min-w-0">
                               <div className="truncate">{child.title}</div>
                               {child.desc && (
-                                <div className="text-[11px] text-slate-400 group-hover:text-primary/60 truncate mt-0.5 transition-colors">
+                                <div className="text-[11px] text-slate-400 group-hover:text-slate-500 truncate mt-0.5 transition-colors">
                                   {child.desc}
                                 </div>
                               )}
@@ -181,10 +181,10 @@ export function MobileMenu({ isOpen, setIsOpen, navigation }: MobileMenuProps) {
                   <Link
                     href={item.href || "#"}
                     onClick={() => setIsOpen(false)}
-                    className="flex items-center justify-between px-3 py-3 rounded-xl text-[15px] font-bold text-slate-700 hover:bg-slate-50 hover:text-primary group transition-all duration-200"
+                    className="flex items-center justify-between px-3 py-3 rounded-xl text-[15px] font-bold text-slate-700 hover:bg-slate-50 hover:text-slate-600 group transition-all duration-200"
                   >
                     <span>{item.title}</span>
-                    <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-primary group-hover:translate-x-0.5 transition-all duration-200" />
+                    <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-slate-500 group-hover:translate-x-0.5 transition-all duration-200" />
                   </Link>
                 )}
               </li>
@@ -209,7 +209,7 @@ export function MobileMenu({ isOpen, setIsOpen, navigation }: MobileMenuProps) {
                 href="http://www.eclass.didactirion.gr/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-slate-50 text-[13px] font-semibold text-slate-600 hover:bg-primary/5 hover:text-primary transition-all duration-200"
+                className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-slate-50 text-[13px] font-semibold text-slate-600 hover:bg-slate-100 hover:text-slate-700 transition-all duration-200"
               >
                 E-class
                 <ExternalLink className="w-3 h-3 opacity-50" />
@@ -218,7 +218,7 @@ export function MobileMenu({ isOpen, setIsOpen, navigation }: MobileMenuProps) {
                 href="https://studybot.employ.edu.gr/login"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-slate-50 text-[13px] font-semibold text-slate-600 hover:bg-primary/5 hover:text-primary transition-all duration-200"
+                className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-slate-50 text-[13px] font-semibold text-slate-600 hover:bg-slate-100 hover:text-slate-700 transition-all duration-200"
               >
                 StudyBot
                 <ExternalLink className="w-3 h-3 opacity-50" />
@@ -239,20 +239,20 @@ export function MobileMenu({ isOpen, setIsOpen, navigation }: MobileMenuProps) {
         >
           <a
             href="tel:2102448542"
-            className="group flex items-center gap-3.5 p-3.5 rounded-2xl bg-gradient-to-br from-primary/[0.07] to-primary/[0.03] border border-primary/10 hover:border-primary/25 hover:from-primary/[0.12] hover:to-primary/[0.06] transition-all duration-300"
+            className="group flex items-center gap-3.5 p-3.5 rounded-2xl bg-slate-50 border border-slate-200/60 hover:border-slate-300 hover:bg-slate-100 transition-all duration-300"
           >
-            <div className="w-11 h-11 rounded-xl bg-white flex items-center justify-center text-primary shadow-sm shrink-0 group-hover:shadow-md group-hover:scale-105 transition-all duration-300">
+            <div className="w-11 h-11 rounded-xl bg-white flex items-center justify-center text-slate-600 shadow-sm shrink-0 group-hover:shadow-md group-hover:scale-105 transition-all duration-300">
               <Phone className="w-[18px] h-[18px]" />
             </div>
             <div className="flex flex-col min-w-0">
-              <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-primary/70 mb-0.5">
+              <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500 mb-0.5">
                 Καλέστε μας
               </span>
-              <span className="text-base font-black text-primary leading-none">
+              <span className="text-base font-black text-slate-600 leading-none">
                 210 2448542
               </span>
             </div>
-            <ChevronRight className="w-4 h-4 text-primary/40 ml-auto group-hover:text-primary/70 group-hover:translate-x-0.5 transition-all duration-200" />
+            <ChevronRight className="w-4 h-4 text-slate-400 ml-auto group-hover:text-slate-600 group-hover:translate-x-0.5 transition-all duration-200" />
           </a>
         </div>
       </div>

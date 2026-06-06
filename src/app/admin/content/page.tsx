@@ -2,249 +2,352 @@
 
 import * as React from "react";
 import { Button } from "@/components/ui/button";
-import { Save, Eye, EyeOff, RefreshCw, CheckCircle2, AlertCircle, Plus, Trash2, ChevronDown, ChevronUp } from "lucide-react";
+import {
+  Save,
+  RefreshCw,
+  CheckCircle2,
+  AlertCircle,
+  Home,
+  History,
+  GraduationCap,
+  FileText,
+  Undo2,
+  PenLine,
+  Phone,
+  Image,
+  Users,
+  Calculator,
+  Lock,
+  ChevronLeft,
+  ChevronRight,
+  type LucideIcon,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
-/* ─── Page Registry ─────────────────────────────────────────────────────── */
-const PAGE_REGISTRY: Array<{
+/* ─── Types ──────────────────────────────────────────────────────────────── */
+type Status = { type: "idle" | "saving" | "saved" | "error"; msg?: string };
+
+/* ─── Page registry (for page selector) ──────────────────────────────────── */
+const PAGES: Array<{
   key: string;
   label: string;
+  icon: LucideIcon;
   route: string;
-  schema: FieldSchema[];
+  supportsInlineEdit: boolean;
 }> = [
-  {
-    key: "home",
-    label: "Αρχική Σελίδα",
-    route: "/",
-    schema: [
-      { id: "hero_title", label: "Τίτλος Hero (Fallback)", type: "text" },
-      { id: "hero_subtitle", label: "Υπότιτλος Hero (Fallback)", type: "textarea" },
-      { id: "stats_years", label: "Στατιστικά — Χρόνια Εμπειρίας", type: "text" },
-      { id: "stats_students", label: "Στατιστικά — Απόφοιτοι", type: "text" },
-      { id: "stats_success", label: "Στατιστικά — Ποσοστό Επιτυχίας", type: "text" },
-      { id: "stats_class_size", label: "Στατιστικά — Μαθητές ανά Τμήμα", type: "text" },
-      { id: "why_title", label: '"Γιατί Διδακτήριον" — Τίτλος', type: "text" },
-      { id: "why_description", label: '"Γιατί Διδακτήριον" — Κείμενο', type: "textarea" },
-      { id: "cta_title", label: "CTA — Τίτλος", type: "text" },
-      { id: "cta_subtitle", label: "CTA — Υπότιτλος", type: "textarea" },
-    ],
-  },
-  {
-    key: "history",
-    label: "Ιστορία & Φιλοσοφία",
-    route: "/organization/history",
-    schema: [
-      { id: "hero_title", label: "Hero — Τίτλος", type: "text" },
-      { id: "hero_subtitle", label: "Hero — Υπότιτλος", type: "textarea" },
-      { id: "philosophy_heading", label: "Φιλοσοφία — Τίτλος", type: "text" },
-      { id: "philosophy_p1", label: "Φιλοσοφία — Παράγραφος 1", type: "textarea" },
-      { id: "philosophy_p2", label: "Φιλοσοφία — Παράγραφος 2", type: "textarea" },
-      { id: "pillars", label: "Πυλώνες (4 κάρτες)", type: "repeatable", itemFields: ["title", "desc"] },
-      { id: "timeline", label: "Χρονολόγιο", type: "repeatable", itemFields: ["year", "title", "desc"] },
-      { id: "cta_title", label: "CTA — Τίτλος", type: "text" },
-      { id: "cta_subtitle", label: "CTA — Κείμενο", type: "textarea" },
-    ],
-  },
-  {
-    key: "curricula/junior-high",
-    label: "Γυμνάσιο",
-    route: "/curricula/junior-high",
-    schema: curriculaSchema(),
-  },
-  {
-    key: "curricula/high-school",
-    label: "Λύκειο",
-    route: "/curricula/high-school",
-    schema: curriculaSchema(),
-  },
-  {
-    key: "curricula/epal",
-    label: "ΕΠΑΛ",
-    route: "/curricula/epal",
-    schema: curriculaSchema(),
-  },
-  {
-    key: "curricula/alumni",
-    label: "Απόφοιτοι",
-    route: "/curricula/alumni",
-    schema: curriculaSchema(),
-  },
-  {
-    key: "curricula/model-schools",
-    label: "Πρότυπα Σχολεία",
-    route: "/curricula/model-schools",
-    schema: curriculaSchema(),
-  },
-  {
-    key: "exams/panhellenic",
-    label: "Πανελλαδικές",
-    route: "/exams/panhellenic",
-    schema: examsSchema(),
-  },
-  {
-    key: "exams/question-bank",
-    label: "Τράπεζα Θεμάτων",
-    route: "/exams/question-bank",
-    schema: examsSchema(),
-  },
-  {
-    key: "exams/oefe",
-    label: "Θέματα ΟΕΦΕ",
-    route: "/exams/oefe",
-    schema: examsSchema(),
-  },
-  {
-    key: "exams/career-guide",
-    label: "Οδηγός Σταδιοδρομίας",
-    route: "/exams/career-guide",
-    schema: examsSchema(),
-  },
+  { key: "home", label: "Αρχική", icon: Home, route: "/", supportsInlineEdit: true },
+  { key: "history", label: "Ιστορία", icon: History, route: "/organization/history", supportsInlineEdit: true },
+  { key: "curricula/junior-high", label: "Γυμνάσιο", icon: GraduationCap, route: "/curricula/junior-high", supportsInlineEdit: true },
+  { key: "curricula/high-school", label: "Λύκειο", icon: GraduationCap, route: "/curricula/high-school", supportsInlineEdit: true },
+  { key: "curricula/epal", label: "ΕΠΑΛ", icon: GraduationCap, route: "/curricula/epal", supportsInlineEdit: true },
+  { key: "curricula/alumni", label: "Απόφοιτοι", icon: GraduationCap, route: "/curricula/alumni", supportsInlineEdit: true },
+  { key: "curricula/model-schools", label: "Πρότυπα", icon: GraduationCap, route: "/curricula/model-schools", supportsInlineEdit: true },
+  { key: "exams/panhellenic", label: "Πανελλαδικές", icon: FileText, route: "/exams/panhellenic", supportsInlineEdit: true },
+  { key: "exams/question-bank", label: "Τράπεζα Θεμάτων", icon: FileText, route: "/exams/question-bank", supportsInlineEdit: true },
+  { key: "exams/oefe", label: "ΟΕΦΕ", icon: FileText, route: "/exams/oefe", supportsInlineEdit: true },
+  { key: "exams/career-guide", label: "Σταδιοδρομία", icon: FileText, route: "/exams/career-guide", supportsInlineEdit: true },
+  { key: "contact", label: "Επικοινωνία", icon: Phone, route: "/contact", supportsInlineEdit: true },
+  { key: "gallery", label: "Φωτογραφίες", icon: Image, route: "/organization/gallery", supportsInlineEdit: true },
+  { key: "teachers-header", label: "Καθηγητές (Κείμενα)", icon: Users, route: "/organization/teachers", supportsInlineEdit: true },
+  { key: "success-header", label: "Επιτυχόντες (Κείμενα)", icon: GraduationCap, route: "/organization/success-stories", supportsInlineEdit: true },
+  { key: "announcements-header", label: "Ανακοινώσεις (Κείμενα)", icon: FileText, route: "/announcements", supportsInlineEdit: true },
+  { key: "points-calculator", label: "Υπολογισμός Μορίων", icon: Calculator, route: "/points-calculator", supportsInlineEdit: true },
+  { key: "privacy-policy", label: "Πολιτική Απορρήτου", icon: Lock, route: "/privacy-policy", supportsInlineEdit: true },
 ];
-
-type FieldSchema =
-  | { id: string; label: string; type: "text" | "textarea" }
-  | { id: string; label: string; type: "repeatable"; itemFields: string[] };
-
-function curriculaSchema(): FieldSchema[] {
-  return [
-    { id: "title", label: "Τίτλος", type: "text" },
-    { id: "description", label: "Περιγραφή", type: "textarea" },
-    { id: "details", label: "Λεπτομέρειες", type: "textarea" },
-    { id: "features", label: "Χαρακτηριστικά", type: "repeatable", itemFields: ["text"] },
-  ];
-}
-
-function examsSchema(): FieldSchema[] {
-  return [
-    { id: "title", label: "Τίτλος", type: "text" },
-    { id: "description", label: "Περιγραφή", type: "textarea" },
-    { id: "content", label: "Κύριο κείμενο", type: "textarea" },
-    { id: "sections", label: "Ενότητες", type: "repeatable", itemFields: ["title", "text"] },
-  ];
-}
-
-/* ─── Status banner ─────────────────────────────────────────────────────── */
-type Status = { type: "idle" | "saving" | "saved" | "error"; msg?: string };
 
 /* ─── Main Component ─────────────────────────────────────────────────────── */
 export default function AdminContentPage() {
-  const [selectedKey, setSelectedKey] = React.useState(PAGE_REGISTRY[0].key);
-  const [formValues, setFormValues] = React.useState<Record<string, any>>({});
-  const [loading, setLoading] = React.useState(false);
+  const [selectedPage, setSelectedPage] = React.useState("home");
+  const [changes, setChanges] = React.useState<Record<string, string>>({});
   const [status, setStatus] = React.useState<Status>({ type: "idle" });
-  const [previewVisible, setPreviewVisible] = React.useState(true);
+  const [iframeReady, setIframeReady] = React.useState(false);
   const iframeRef = React.useRef<HTMLIFrameElement>(null);
 
-  const page = PAGE_REGISTRY.find((p) => p.key === selectedKey)!;
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+  const [showLeftArrow, setShowLeftArrow] = React.useState(false);
+  const [showRightArrow, setShowRightArrow] = React.useState(false);
+  const isDragging = React.useRef(false);
+  const startX = React.useRef(0);
+  const scrollLeftStart = React.useRef(0);
+  const dragDistance = React.useRef(0);
 
-  /* Load content from API when page changes */
+  const checkScroll = React.useCallback(() => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      const { scrollLeft, scrollWidth, clientWidth } = container;
+      setShowLeftArrow(scrollLeft > 2);
+      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 2);
+    }
+  }, []);
+
   React.useEffect(() => {
-    setLoading(true);
-    setFormValues({});
-    fetch(`/api/admin/content?pageKey=${encodeURIComponent(selectedKey)}`)
-      .then((r) => r.json())
-      .then(({ content }) => {
-        if (content) setFormValues(content);
-      })
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, [selectedKey]);
+    const container = scrollContainerRef.current;
+    if (container) {
+      checkScroll();
+      container.addEventListener("scroll", checkScroll);
+      window.addEventListener("resize", checkScroll);
+      const timer = setTimeout(checkScroll, 500);
+      return () => {
+        container.removeEventListener("scroll", checkScroll);
+        window.removeEventListener("resize", checkScroll);
+        clearTimeout(timer);
+      };
+    }
+  }, [checkScroll]);
 
-  /* Push updated content to iframe preview via postMessage */
-  const sendPreview = React.useCallback(
-    (vals: Record<string, any>) => {
-      iframeRef.current?.contentWindow?.postMessage(
-        { type: "DIDACTIRION_PREVIEW", pageKey: selectedKey, content: vals },
-        "*"
-      );
-    },
-    [selectedKey]
-  );
-
-  const handleChange = (id: string, value: any) => {
-    setFormValues((prev) => {
-      const next = { ...prev, [id]: value };
-      sendPreview(next);
-      return next;
-    });
+  const scroll = (direction: "left" | "right") => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      const scrollAmount = 250;
+      const target = container.scrollLeft + (direction === "left" ? -scrollAmount : scrollAmount);
+      container.scrollTo({
+        left: target,
+        behavior: "smooth"
+      });
+    }
   };
 
+  const handleMouseDown = (e: React.MouseEvent) => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    isDragging.current = true;
+    startX.current = e.pageX;
+    scrollLeftStart.current = container.scrollLeft;
+    dragDistance.current = 0;
+    container.style.cursor = "grabbing";
+    container.style.userSelect = "none";
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging.current) return;
+    e.preventDefault();
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    const x = e.pageX;
+    const dist = x - startX.current;
+    dragDistance.current = Math.abs(dist);
+    container.scrollLeft = scrollLeftStart.current - dist;
+  };
+
+  const handleMouseUpOrLeave = () => {
+    if (!isDragging.current) return;
+    isDragging.current = false;
+    const container = scrollContainerRef.current;
+    if (container) {
+      container.style.cursor = "grab";
+      container.style.removeProperty("user-select");
+    }
+  };
+
+  const page = PAGES.find((p) => p.key === selectedPage)!;
+  const changeCount = Object.keys(changes).filter((k) => changes[k] !== undefined).length;
+
+  /* Listen for messages from the iframe */
+  React.useEffect(() => {
+    const handler = (e: MessageEvent) => {
+      if (e.data?.type === "INLINE_EDIT_READY") {
+        setIframeReady(true);
+      }
+      if (e.data?.type === "INLINE_EDIT_CHANGE") {
+        const { id, value, changed } = e.data;
+        setChanges((prev) => {
+          const next = { ...prev };
+          if (changed) {
+            next[id] = value;
+          } else {
+            delete next[id];
+          }
+          return next;
+        });
+      }
+    };
+    window.addEventListener("message", handler);
+    return () => window.removeEventListener("message", handler);
+  }, []);
+
+  /* Reset state when page changes */
+  React.useEffect(() => {
+    setChanges({});
+    setIframeReady(false);
+    setStatus({ type: "idle" });
+  }, [selectedPage]);
+
+  /* Save changes */
   const handleSave = async () => {
+    if (changeCount === 0) return;
     setStatus({ type: "saving" });
+
     try {
+      // First load existing content
+      const getRes = await fetch(`/api/admin/content?pageKey=${encodeURIComponent(selectedPage)}`);
+      const { content: existing } = await getRes.json();
+
+      // Merge changes onto existing content
+      const merged = { ...(existing || {}), ...changes };
+
       const res = await fetch("/api/admin/content", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pageKey: selectedKey, content: formValues }),
+        body: JSON.stringify({ pageKey: selectedPage, content: merged }),
       });
+
       if (!res.ok) throw new Error("API error");
+
+      // Tell iframe the save was successful
+      iframeRef.current?.contentWindow?.postMessage({ type: "INLINE_EDIT_SAVED" }, "*");
+      setChanges({});
       setStatus({ type: "saved" });
       setTimeout(() => setStatus({ type: "idle" }), 3000);
     } catch {
-      setStatus({ type: "error", msg: "Αποτυχία αποθήκευσης. Δοκιμάστε ξανά." });
+      setStatus({ type: "error", msg: "Αποτυχία αποθήκευσης." });
       setTimeout(() => setStatus({ type: "idle" }), 4000);
     }
   };
 
-  const reloadIframe = () => {
+  /* Cancel changes */
+  const handleCancel = () => {
+    iframeRef.current?.contentWindow?.postMessage({ type: "INLINE_EDIT_RESET" }, "*");
+    setChanges({});
+  };
+
+  /* Reload iframe */
+  const handleReload = () => {
+    setIframeReady(false);
+    setChanges({});
     if (iframeRef.current) {
       iframeRef.current.src = iframeRef.current.src;
     }
   };
 
   return (
-    <div className="flex flex-col h-full gap-0 -m-4 md:-m-6">
-      {/* ── Toolbar ── */}
+    <div className="flex flex-col h-full gap-0 -m-5 md:-m-7">
+      {/* ── Top Toolbar ── */}
       <div className="flex items-center justify-between px-4 md:px-6 py-3 bg-white border-b border-slate-100 shrink-0">
-        <div className="flex items-center gap-3">
-          <h1 className="text-base font-black text-slate-900 font-heading">Διαχείρηση Περιεχομένου</h1>
-          <span className="hidden sm:inline text-slate-300">|</span>
-          {/* Page selector */}
-          <div className="relative hidden sm:block">
-            <select
-              id="page-selector"
-              value={selectedKey}
-              onChange={(e) => setSelectedKey(e.target.value)}
-              className="appearance-none bg-slate-50 border border-slate-200 text-slate-700 text-sm font-medium rounded-xl pl-3 pr-8 py-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/40"
+        <div className="flex items-center gap-3 flex-1 min-w-0 mr-4">
+          <div className="flex items-center gap-2 shrink-0">
+            <PenLine className="w-5 h-5 text-primary" />
+            <h1 className="text-base font-black text-slate-900 font-heading hidden lg:block">
+              Επεξεργασία Περιεχομένου
+            </h1>
+          </div>
+
+          {/* Page selector pills */}
+          <div className="hidden md:block relative flex-1 min-w-0 ml-2 border-l border-slate-200 pl-3">
+            {/* Left Scroll Overlay / Fade */}
+            {showLeftArrow && (
+              <div className="absolute left-3 top-0 bottom-0 w-12 bg-gradient-to-r from-white via-white/80 to-transparent z-10 flex items-center justify-start pointer-events-none">
+                <button
+                  onClick={() => scroll("left")}
+                  className="w-6 h-6 rounded-full bg-white border border-slate-200 shadow-md flex items-center justify-center text-slate-600 hover:text-slate-900 pointer-events-auto hover:bg-slate-50 transition-colors"
+                  title="Μετακίνηση αριστερά"
+                >
+                  <ChevronLeft className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
+
+            {/* Right Scroll Overlay / Fade */}
+            {showRightArrow && (
+              <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-white via-white/80 to-transparent z-10 flex items-center justify-end pointer-events-none">
+                <button
+                  onClick={() => scroll("right")}
+                  className="w-6 h-6 rounded-full bg-white border border-slate-200 shadow-md flex items-center justify-center text-slate-600 hover:text-slate-900 pointer-events-auto hover:bg-slate-50 transition-colors"
+                  title="Μετακίνηση δεξιά"
+                >
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
+
+            {/* Scrollable pills container */}
+            <div
+              ref={scrollContainerRef}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUpOrLeave}
+              onMouseLeave={handleMouseUpOrLeave}
+              className="flex items-center gap-1.5 overflow-x-auto scrollbar-none select-none cursor-grab"
             >
-              {PAGE_REGISTRY.map((p) => (
-                <option key={p.key} value={p.key}>
+              {PAGES.map((p) => (
+                <button
+                  key={p.key}
+                  onClick={(e) => {
+                    if (dragDistance.current > 10) {
+                      e.preventDefault();
+                      return;
+                    }
+                    setSelectedPage(p.key);
+                  }}
+                  className={cn(
+                    "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap shrink-0 select-none",
+                    selectedPage === p.key
+                      ? "bg-primary text-white shadow-sm"
+                      : "text-slate-500 hover:bg-slate-100"
+                  )}
+                >
+                  <p.icon className="w-3.5 h-3.5" />
                   {p.label}
-                </option>
+                </button>
               ))}
-            </select>
-            <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
+            </div>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Status badge */}
+          {/* Change count */}
+          {changeCount > 0 && (
+            <span className="flex items-center gap-1.5 text-amber-600 text-xs font-bold bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
+              {changeCount} {changeCount === 1 ? "αλλαγή" : "αλλαγές"}
+            </span>
+          )}
+
+          {/* Status */}
           {status.type === "saved" && (
-            <span className="flex items-center gap-1.5 text-emerald-600 text-sm font-semibold animate-in fade-in">
+            <span className="flex items-center gap-1.5 text-emerald-600 text-sm font-semibold">
               <CheckCircle2 className="w-4 h-4" /> Αποθηκεύτηκε
             </span>
           )}
           {status.type === "error" && (
-            <span className="flex items-center gap-1.5 text-red-500 text-sm font-semibold animate-in fade-in">
+            <span className="flex items-center gap-1.5 text-red-500 text-sm font-semibold">
               <AlertCircle className="w-4 h-4" /> {status.msg}
             </span>
           )}
 
+          {/* Cancel button */}
+          {changeCount > 0 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleCancel}
+              className="text-slate-500 hover:text-slate-900 gap-1.5"
+            >
+              <Undo2 className="w-4 h-4" />
+              <span className="hidden sm:inline">Ακύρωση</span>
+            </Button>
+          )}
+
+          {/* Reload */}
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => setPreviewVisible((v) => !v)}
-            className="text-slate-500 hover:text-slate-900"
+            onClick={handleReload}
+            className="text-slate-400 hover:text-slate-700"
+            title="Ανανέωση"
           >
-            {previewVisible ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-            <span className="hidden sm:inline ml-1.5">{previewVisible ? "Απόκρυψη" : "Προεπισκόπηση"}</span>
+            <RefreshCw className="w-4 h-4" />
           </Button>
 
+          {/* Save button */}
           <Button
             size="sm"
             onClick={handleSave}
-            disabled={status.type === "saving"}
-            className="bg-primary hover:bg-primary/90 text-white font-bold gap-2"
+            disabled={changeCount === 0 || status.type === "saving"}
+            className={cn(
+              "font-bold gap-2 shadow-lg transition-all",
+              changeCount > 0
+                ? "bg-primary hover:bg-primary/90 text-white shadow-primary/20"
+                : "bg-slate-200 text-slate-400 shadow-none cursor-not-allowed"
+            )}
           >
             {status.type === "saving" ? (
               <RefreshCw className="w-4 h-4 animate-spin" />
@@ -256,228 +359,34 @@ export default function AdminContentPage() {
         </div>
       </div>
 
-      {/* ── Mobile page selector ── */}
-      <div className="sm:hidden px-4 py-2 bg-slate-50 border-b border-slate-100">
-        <select
-          value={selectedKey}
-          onChange={(e) => setSelectedKey(e.target.value)}
-          className="w-full bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/40"
-        >
-          {PAGE_REGISTRY.map((p) => (
-            <option key={p.key} value={p.key}>
-              {p.label}
-            </option>
-          ))}
-        </select>
+      {/* ── Edit Mode Banner ── */}
+      <div className="flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100 text-sm">
+        <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+        <span className="text-blue-700 font-medium">
+          <strong>Λειτουργία Επεξεργασίας</strong> — Κάντε κλικ πάνω σε οποιοδήποτε κείμενο για να το αλλάξετε
+        </span>
       </div>
 
-      {/* ── Split Screen ── */}
-      <div className="flex flex-1 min-h-0 overflow-hidden">
-        {/* Left pane — Form */}
-        <div
-          className={cn(
-            "flex flex-col bg-slate-50 border-r border-slate-100 overflow-y-auto transition-all duration-300",
-            previewVisible ? "w-full lg:w-[42%]" : "w-full"
-          )}
-        >
-          {loading ? (
-            <div className="flex-1 flex items-center justify-center text-slate-400 gap-3">
-              <RefreshCw className="w-5 h-5 animate-spin" />
-              Φόρτωση...
-            </div>
-          ) : (
-            <div className="p-4 md:p-6 space-y-4">
-              <p className="text-xs text-slate-400 font-medium uppercase tracking-widest pb-1">
-                {page.label} — Επεξεργασία
-              </p>
-              {page.schema.map((field) => (
-                <FieldEditor
-                  key={field.id}
-                  field={field}
-                  value={formValues[field.id]}
-                  onChange={(val) => handleChange(field.id, val)}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Right pane — Preview iframe */}
-        {previewVisible && (
-          <div className="hidden lg:flex flex-col flex-1 bg-slate-200 overflow-hidden">
-            <div className="flex items-center justify-between px-3 py-2 bg-white border-b border-slate-100">
-              <span className="text-xs text-slate-500 font-medium truncate">
-                Προεπισκόπηση: <span className="text-slate-800 font-bold">{page.route}</span>
-              </span>
-              <button
-                onClick={reloadIframe}
-                className="text-slate-400 hover:text-slate-700 transition-colors ml-2 shrink-0"
-                title="Ανανέωση"
-              >
-                <RefreshCw className="w-3.5 h-3.5" />
-              </button>
-            </div>
-            <div className="flex-1 overflow-hidden relative">
-              <iframe
-                ref={iframeRef}
-                src={`${page.route}?preview=1`}
-                className="w-full h-full border-none bg-white"
-                title={`Preview of ${page.label}`}
-              />
+      {/* ── Iframe Preview ── */}
+      <div className="flex-1 relative bg-slate-100 overflow-hidden">
+        {/* Loading overlay */}
+        {!iframeReady && (
+          <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/80 backdrop-blur-sm">
+            <div className="flex flex-col items-center gap-3">
+              <RefreshCw className="w-6 h-6 text-primary animate-spin" />
+              <span className="text-sm font-medium text-slate-500">Φόρτωση σελίδας...</span>
             </div>
           </div>
         )}
-      </div>
-    </div>
-  );
-}
 
-/* ─── Field Editor ───────────────────────────────────────────────────────── */
-function FieldEditor({
-  field,
-  value,
-  onChange,
-}: {
-  field: FieldSchema;
-  value: any;
-  onChange: (val: any) => void;
-}) {
-  const labelClass = "block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5";
-  const inputClass =
-    "w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 placeholder:text-slate-300 transition-all resize-none";
-
-  if (field.type === "text") {
-    return (
-      <div>
-        <label className={labelClass}>{field.label}</label>
-        <input
-          type="text"
-          value={value ?? ""}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder="(χρήση προεπιλογής)"
-          className={inputClass}
+        <iframe
+          ref={iframeRef}
+          src={`${page.route}?edit=1`}
+          className="w-full h-full border-none bg-white"
+          title={`Inline edit: ${page.label}`}
+          style={{ minHeight: "calc(100vh - 140px)" }}
         />
       </div>
-    );
-  }
-
-  if (field.type === "textarea") {
-    return (
-      <div>
-        <label className={labelClass}>{field.label}</label>
-        <textarea
-          rows={3}
-          value={value ?? ""}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder="(χρήση προεπιλογής)"
-          className={cn(inputClass, "min-h-[80px]")}
-        />
-      </div>
-    );
-  }
-
-  if (field.type === "repeatable") {
-    const items: Record<string, string>[] = Array.isArray(value) ? value : [];
-
-    const update = (idx: number, key: string, val: string) => {
-      const next = items.map((item, i) => (i === idx ? { ...item, [key]: val } : item));
-      onChange(next);
-    };
-
-    const addItem = () => {
-      const empty: Record<string, string> = {};
-      field.itemFields.forEach((f) => (empty[f] = ""));
-      onChange([...items, empty]);
-    };
-
-    const removeItem = (idx: number) => {
-      onChange(items.filter((_, i) => i !== idx));
-    };
-
-    return (
-      <div>
-        <label className={labelClass}>{field.label}</label>
-        <div className="space-y-3">
-          {items.map((item, idx) => (
-            <RepeatableItem
-              key={idx}
-              idx={idx}
-              item={item}
-              itemFields={field.itemFields}
-              onUpdate={(key, val) => update(idx, key, val)}
-              onRemove={() => removeItem(idx)}
-              inputClass={inputClass}
-            />
-          ))}
-          <button
-            onClick={addItem}
-            className="flex items-center gap-1.5 text-xs font-bold text-primary hover:text-primary/80 transition-colors py-1"
-          >
-            <Plus className="w-3.5 h-3.5" /> Προσθήκη
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  return null;
-}
-
-/* ─── Repeatable Item ────────────────────────────────────────────────────── */
-function RepeatableItem({
-  idx,
-  item,
-  itemFields,
-  onUpdate,
-  onRemove,
-  inputClass,
-}: {
-  idx: number;
-  item: Record<string, string>;
-  itemFields: string[];
-  onUpdate: (key: string, val: string) => void;
-  onRemove: () => void;
-  inputClass: string;
-}) {
-  const [open, setOpen] = React.useState(true);
-
-  return (
-    <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
-      <div className="flex items-center justify-between px-3 py-2 bg-slate-50 border-b border-slate-100">
-        <span className="text-xs font-bold text-slate-500">#{idx + 1}</span>
-        <div className="flex items-center gap-1">
-          <button
-            onClick={() => setOpen((o) => !o)}
-            className="text-slate-400 hover:text-slate-700 transition-colors p-1"
-          >
-            {open ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-          </button>
-          <button
-            onClick={onRemove}
-            className="text-slate-300 hover:text-red-500 transition-colors p-1"
-          >
-            <Trash2 className="w-3.5 h-3.5" />
-          </button>
-        </div>
-      </div>
-      {open && (
-        <div className="p-3 space-y-2">
-          {itemFields.map((f) => (
-            <div key={f}>
-              <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-                {f}
-              </label>
-              <input
-                type="text"
-                value={item[f] ?? ""}
-                onChange={(e) => onUpdate(f, e.target.value)}
-                placeholder={`(${f})`}
-                className={inputClass}
-              />
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 }

@@ -178,18 +178,35 @@
   }
 
   /* Custom scrollbar */
-  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 99px; }
+  ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
+  ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 }
 
 /* ── Utility Classes ── */
 @layer utilities {
+  /* Hide scrollbar utility */
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
   /* Gradient text */
   .text-gradient {
     background: linear-gradient(135deg, #004a99 0%, #1a73d9 60%, #4da6ff 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient * {
+    -webkit-text-fill-color: transparent;
+    background: inherit;
+    -webkit-background-clip: text;
     background-clip: text;
   }
 
@@ -446,5 +463,79 @@
 .admin-input {
   @apply h-10 rounded-xl border-slate-200 bg-white text-slate-900 placeholder:text-slate-400
          focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-150;
+}
+
+/* ── Inline Edit Mode (admin CMS) ── */
+
+/* Editable fields — hover state */
+.inline-edit-mode .editable-field {
+  position: relative;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border-radius: 4px;
+}
+
+.inline-edit-mode .editable-field:hover {
+  outline: 2px dashed rgba(0, 74, 153, 0.5);
+  outline-offset: 4px;
+  background: rgba(0, 74, 153, 0.04);
+}
+
+/* Show pencil icon on hover */
+.inline-edit-mode .editable-field:hover::after {
+  content: '✏️';
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  font-size: 12px;
+  background: white;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Active editing state */
+.inline-edit-mode .editable-field.editable-active {
+  outline: 2px solid rgba(0, 74, 153, 0.8) !important;
+  outline-offset: 4px;
+  background: rgba(0, 74, 153, 0.06);
+  cursor: text;
+}
+
+.inline-edit-mode .editable-field.editable-active::after {
+  display: none;
+}
+
+/* Modified indicator */
+.inline-edit-mode .editable-field.editable-modified {
+  outline: 2px solid rgba(245, 158, 11, 0.6);
+  outline-offset: 4px;
+  background: rgba(245, 158, 11, 0.05);
+}
+
+.inline-edit-mode .editable-field.editable-modified::after {
+  content: '✓';
+  background: #f59e0b;
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+/* Disable pointer events on non-editable interactive elements */
+.inline-edit-mode a:not([data-editable-id]),
+.inline-edit-mode button:not([data-editable-id]) {
+  pointer-events: none !important;
+  cursor: default !important;
+}
+
+/* Keep editable fields clickable */
+.inline-edit-mode [data-editable-id] {
+  pointer-events: auto !important;
 }
 

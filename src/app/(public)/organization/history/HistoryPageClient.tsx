@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { PreviewListener } from "@/components/admin/PreviewListener";
 import { mergeContent } from "@/lib/content-utils";
 import { defaultHistoryContent } from "./history-content";
+import { Editable } from "@/components/admin/Editable";
 
 const timelineIcons = [Lightbulb, Target, Zap, ArrowRight];
 
@@ -34,10 +35,10 @@ export function HistoryPageClient({ initialContent }: { initialContent: HistoryC
         <div className="absolute -bottom-20 -left-20 w-80 h-80 rounded-full bg-white/5 blur-3xl pointer-events-none" />
         <div className="container mx-auto px-4 relative z-10 text-white text-center flex flex-col items-center justify-center">
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-black tracking-tight mb-5 max-w-3xl leading-tight mx-auto">
-            {content.hero_title}
+            <Editable id="hero_title">{content.hero_title}</Editable>
           </h1>
           <p className="text-xl text-blue-100/80 max-w-2xl leading-relaxed mx-auto">
-            {content.hero_subtitle}
+            <Editable id="hero_subtitle" multiline>{content.hero_subtitle}</Editable>
           </p>
         </div>
       </section>
@@ -62,22 +63,22 @@ export function HistoryPageClient({ initialContent }: { initialContent: HistoryC
           <div className="space-y-8 order-1 lg:order-2">
             <div>
               <h2 className="text-3xl md:text-4xl font-black text-slate-900 mt-4 leading-tight">
-                {content.philosophy_heading}
+                <Editable id="philosophy_heading">{content.philosophy_heading}</Editable>
               </h2>
             </div>
 
             <p className="text-lg text-slate-600 leading-relaxed">
-              {content.philosophy_p1}
+              <Editable id="philosophy_p1" multiline>{content.philosophy_p1}</Editable>
             </p>
             <p className="text-slate-500 leading-relaxed">
-              {content.philosophy_p2}
+              <Editable id="philosophy_p2" multiline>{content.philosophy_p2}</Editable>
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {pillars.map((item, i) => (
                 <div key={i} className="p-5 rounded-2xl bg-slate-50 border border-slate-100 hover:border-primary/30 hover:bg-primary/5 transition-all group">
-                  <h4 className="font-bold text-slate-900 mb-1.5 group-hover:text-primary transition-colors">{item.title}</h4>
-                  <p className="text-sm text-slate-500">{item.desc}</p>
+                  <h4 className="font-bold text-slate-900 mb-1.5 group-hover:text-primary transition-colors"><Editable id={`pillars_${i}_title`}>{item.title}</Editable></h4>
+                  <p className="text-sm text-slate-500"><Editable id={`pillars_${i}_desc`}>{item.desc}</Editable></p>
                 </div>
               ))}
             </div>
@@ -90,8 +91,8 @@ export function HistoryPageClient({ initialContent }: { initialContent: HistoryC
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/20 via-transparent to-transparent pointer-events-none" />
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-3xl md:text-5xl font-black text-white mb-4">Η Διαδρομή μας</h2>
-            <p className="text-slate-400">Σταθμοί στην πορεία μας προς την εκπαιδευτική αριστεία.</p>
+            <h2 className="text-3xl md:text-5xl font-black text-white mb-4"><Editable id="timeline_heading">Η Διαδρομή μας</Editable></h2>
+            <p className="text-slate-400"><Editable id="timeline_subheading">Σταθμοί στην πορεία μας προς την εκπαιδευτική αριστεία.</Editable></p>
           </div>
 
           <div className="relative max-w-3xl mx-auto">
@@ -111,9 +112,9 @@ export function HistoryPageClient({ initialContent }: { initialContent: HistoryC
                     </div>
                     <div className={`ml-16 md:ml-0 md:w-[calc(50%-2.5rem)] ${i % 2 === 0 ? "md:mr-auto md:pr-8" : "md:ml-auto md:pl-8"}`}>
                       <div className="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-6 backdrop-blur hover:border-primary/30 transition-colors">
-                        <div className="text-blue-400 font-black text-2xl mb-1">{item.year}</div>
-                        <h3 className="text-xl font-black text-white mb-2">{item.title}</h3>
-                        <p className="text-slate-400 text-sm leading-relaxed">{item.desc}</p>
+                        <div className="text-blue-400 font-black text-2xl mb-1"><Editable id={`timeline_${i}_year`}>{item.year}</Editable></div>
+                        <h3 className="text-xl font-black text-white mb-2"><Editable id={`timeline_${i}_title`}>{item.title}</Editable></h3>
+                        <p className="text-slate-400 text-sm leading-relaxed"><Editable id={`timeline_${i}_desc`}>{item.desc}</Editable></p>
                       </div>
                     </div>
                   </div>
@@ -131,8 +132,8 @@ export function HistoryPageClient({ initialContent }: { initialContent: HistoryC
           <div className="absolute -bottom-16 -right-16 w-64 h-64 rounded-full bg-white/10 pointer-events-none" />
           <div className="relative p-6 sm:p-10 md:p-14 text-white flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="space-y-3 text-center md:text-left">
-              <h2 className="text-3xl md:text-4xl font-black">{content.cta_title}</h2>
-              <p className="text-blue-100/80 max-w-xl leading-relaxed">{content.cta_subtitle}</p>
+              <h2 className="text-3xl md:text-4xl font-black"><Editable id="cta_title">{content.cta_title}</Editable></h2>
+              <p className="text-blue-100/80 max-w-xl leading-relaxed"><Editable id="cta_subtitle" multiline>{content.cta_subtitle}</Editable></p>
             </div>
             <Button
               asChild

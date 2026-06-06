@@ -57,7 +57,7 @@ function NavigationMenuItem({
 }
 
 const navigationMenuTriggerStyle = cva(
-  "group/navigation-menu-trigger inline-flex h-10 w-max items-center justify-center rounded-lg px-4 py-2 text-sm font-heading font-semibold transition-all outline-none hover:bg-blue-50 hover:text-primary focus:bg-blue-50 focus:text-primary data-[state=open]:bg-blue-50 data-[state=open]:text-primary disabled:pointer-events-none disabled:opacity-50 cursor-pointer"
+  "group/navigation-menu-trigger inline-flex h-10 w-max items-center justify-center rounded-lg px-4 py-2 text-sm font-heading font-semibold transition-all outline-none hover:bg-slate-50 hover:text-slate-600 focus:bg-slate-50 focus:text-slate-600 data-[state=open]:bg-slate-50 data-[state=open]:text-slate-600 disabled:pointer-events-none disabled:opacity-50 cursor-pointer"
 )
 
 function NavigationMenuTrigger({
@@ -131,7 +131,7 @@ function NavigationMenuLink({
     <NavigationMenuPrimitive.Link
       data-slot="navigation-menu-link"
       className={cn(
-        "flex items-center gap-2 rounded-lg p-2 text-sm font-medium transition-all outline-none hover:bg-blue-50 hover:text-primary focus:bg-blue-50 focus:text-primary data-[state=active]:bg-blue-50 data-[state=active]:text-primary [&_svg:not([class*='size-'])]:size-4 cursor-pointer",
+        "flex items-center gap-2 rounded-lg p-2 text-sm font-medium transition-all outline-none hover:bg-slate-50 hover:text-slate-600 focus:bg-slate-50 focus:text-slate-600 data-[state=active]:bg-slate-50 data-[state=active]:text-slate-600 [&_svg:not([class*='size-'])]:size-4 cursor-pointer",
         className
       )}
       {...rest}
