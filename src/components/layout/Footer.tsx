@@ -46,6 +46,31 @@ function scrollToTop() {
 }
 
 export function Footer() {
+  const [isVisible, setIsVisible] = React.useState(false);
+  const [scrollProgress, setScrollProgress] = React.useState(0);
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      const scrolled = window.scrollY;
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      
+      if (scrollHeight > 0) {
+        setScrollProgress((scrolled / scrollHeight) * 100);
+      }
+      
+      if (scrolled > 300) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <footer className="relative overflow-hidden" aria-label="Υποσέλιδο">
       {/* ── Gradient top border ── */}
@@ -188,9 +213,8 @@ export function Footer() {
                     <div key={item.day} className="flex items-center justify-between gap-2">
                       <span className="text-xs text-slate-500 shrink-0">{item.day}</span>
                       <span
-                        className={`text-xs font-bold ${
-                          item.active ? "text-white" : "text-slate-600"
-                        }`}
+                        className={`text-xs font-bold ${item.active ? "text-white" : "text-slate-600"
+                          }`}
                       >
                         {item.hours}
                       </span>
@@ -271,10 +295,31 @@ export function Footer() {
       {/* ── Back to top ── */}
       <button
         onClick={scrollToTop}
-        className="absolute bottom-20 right-6 sm:right-8 z-20 w-10 h-10 rounded-xl bg-white/[0.08] border border-white/[0.1] flex items-center justify-center text-slate-400 hover:bg-primary hover:border-primary hover:text-white transition-all duration-200 backdrop-blur-sm"
+        className={`fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-50 w-12 h-12 rounded-full bg-slate-950/80 hover:bg-slate-900 border border-white/10 flex items-center justify-center text-slate-400 hover:text-primary transition-all duration-300 backdrop-blur-md shadow-2xl hover:scale-110 active:scale-95 ${
+          isVisible ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-4 pointer-events-none"
+        }`}
         aria-label="Επιστροφή στην κορυφή"
       >
-        <ChevronUp className="w-4 h-4" />
+        <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 48 48">
+          <circle
+            cx="24"
+            cy="24"
+            r="21"
+            className="stroke-white/5 fill-none"
+            strokeWidth="2.5"
+          />
+          <circle
+            cx="24"
+            cy="24"
+            r="21"
+            className="stroke-primary fill-none transition-all duration-100"
+            strokeWidth="2.5"
+            strokeDasharray={2 * Math.PI * 21}
+            strokeDashoffset={2 * Math.PI * 21 - (scrollProgress / 100) * 2 * Math.PI * 21}
+            strokeLinecap="round"
+          />
+        </svg>
+        <ChevronUp className="w-5 h-5 relative z-10" />
       </button>
     </footer>
   );

@@ -209,9 +209,9 @@ export function PointsCalculatorClient({ initialContent }: { initialContent: typ
             </div>
 
             <Button asChild variant="link" className="w-full text-xs text-slate-500 hover:text-primary h-auto py-0">
-              <a 
-                href="https://www.oefe.gr/el/normal/credits-calculation_el.aspx" 
-                target="_blank" 
+              <a
+                href="https://www.oefe.gr/el/normal/credits-calculation_el.aspx"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 justify-center"
               >
