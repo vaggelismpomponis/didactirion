@@ -412,7 +412,7 @@ export function PostForm({ initialData }: PostFormProps) {
             </div>
 
             {/* ── Settings Sidebar ── */}
-            <div className="xl:w-72 space-y-5 sticky top-6 self-start">
+            <div className="w-full xl:w-72 space-y-5 sticky top-6 xl:self-start">
 
               {/* Publish controls */}
               <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 space-y-5">

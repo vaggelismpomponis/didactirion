@@ -61,11 +61,11 @@ export default async function SuccessStoriesPage() {
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
           <Button
             asChild
             variant="outline"
-            className="border-slate-200 text-slate-600 hover:bg-slate-50 font-heading font-bold h-9 rounded-xl transition-all"
+            className="w-full sm:w-auto border-slate-200 text-slate-600 hover:bg-slate-50 font-heading font-bold h-9 rounded-xl transition-all justify-center"
           >
             <Link href="/admin/success-stories/bulk">
               <Upload className="w-4 h-4 mr-1.5" /> Μαζική Εισαγωγή
@@ -73,7 +73,7 @@ export default async function SuccessStoriesPage() {
           </Button>
           <Button
             asChild
-            className="bg-emerald-600 hover:bg-emerald-500 font-heading font-bold shadow-lg shadow-emerald-200 h-9 rounded-xl transition-all"
+            className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 font-heading font-bold shadow-lg shadow-emerald-200 h-9 rounded-xl transition-all justify-center"
           >
             <Link href="/admin/success-stories/new">
               <Plus className="w-4 h-4 mr-1.5" /> Προσθήκη Επιτυχόντα
@@ -101,8 +101,8 @@ export default async function SuccessStoriesPage() {
       {/* Table card */}
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         {/* Toolbar */}
-        <div className="px-5 py-3 border-b border-slate-50 flex items-center gap-3 bg-slate-50/40">
-          <div className="relative flex-1 max-w-sm">
+        <div className="px-5 py-3 border-b border-slate-50 flex flex-col sm:flex-row sm:items-center gap-3 bg-slate-50/40">
+          <div className="relative w-full sm:flex-1 sm:max-w-sm">
             <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
@@ -112,9 +112,11 @@ export default async function SuccessStoriesPage() {
             />
           </div>
           {latestYear && (
-            <span className="ml-auto inline-flex items-center gap-1.5 text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-xl">
-              <GraduationCap className="w-3 h-3" /> Τελευταίο: {latestYear}
-            </span>
+            <div className="flex sm:ml-auto shrink-0">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-xl">
+                <GraduationCap className="w-3 h-3" /> Τελευταίο: {latestYear}
+              </span>
+            </div>
           )}
         </div>
 

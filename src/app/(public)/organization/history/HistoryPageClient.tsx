@@ -76,9 +76,15 @@ export function HistoryPageClient({ initialContent }: { initialContent: HistoryC
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {pillars.map((item, i) => (
+<<<<<<< HEAD
+                <div key={i} className="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md hover:border-primary/30 hover:bg-primary/[0.01] transition-all duration-300 group">
+                  <h4 className="font-bold text-slate-900 mb-2 group-hover:text-primary transition-colors text-base">{item.title}</h4>
+                  <p className="text-sm text-slate-600 leading-relaxed">{item.desc}</p>
+=======
                 <div key={i} className="p-5 rounded-2xl bg-slate-50 border border-slate-100 hover:border-primary/30 hover:bg-primary/5 transition-all group">
                   <h4 className="font-bold text-slate-900 mb-1.5 group-hover:text-primary transition-colors"><Editable id={`pillars_${i}_title`}>{item.title}</Editable></h4>
                   <p className="text-sm text-slate-500"><Editable id={`pillars_${i}_desc`}>{item.desc}</Editable></p>
+>>>>>>> df30dc6773a16ee1796f786401c56f567bdbeae1
                 </div>
               ))}
             </div>
