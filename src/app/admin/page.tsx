@@ -94,7 +94,7 @@ export default async function AdminDashboard() {
       href: "/admin/success-stories",
     },
     {
-      name: "Αδιάβαστα Μηνύματα",
+      name: "Μηνύματα",
       value: messages,
       icon: MessageSquare,
       colorText: "text-amber-600",
@@ -158,9 +158,9 @@ export default async function AdminDashboard() {
       {/* ── Stat Cards ── */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
         {stats.map((stat) => (
-          <Link key={stat.name} href={stat.href} className="group">
+          <Link key={stat.name} href={stat.href} className="group flex flex-col h-full">
             <div
-              className={`relative bg-white rounded-2xl border ${stat.colorBorder} p-5 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 overflow-hidden`}
+              className={`relative bg-white rounded-2xl border ${stat.colorBorder} p-5 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 overflow-hidden flex flex-col h-full flex-grow`}
             >
               {/* Subtle top accent bar */}
               <div className={`absolute top-0 left-0 right-0 h-0.5 ${stat.colorAccent} rounded-t-2xl`} />
@@ -180,8 +180,10 @@ export default async function AdminDashboard() {
                 </div>
               </div>
 
-              <p className="text-4xl font-black text-slate-900 leading-none">{stat.value}</p>
-              <p className="text-[13px] font-semibold text-slate-500 mt-1.5">{stat.name}</p>
+              <div className="flex-grow flex flex-col justify-end">
+                <p className="text-4xl font-black text-slate-900 leading-none">{stat.value}</p>
+                <p className="text-[13px] font-semibold text-slate-500 mt-1.5">{stat.name}</p>
+              </div>
             </div>
           </Link>
         ))}
@@ -313,8 +315,8 @@ export default async function AdminDashboard() {
             { label: "Επιτυχόντες", href: "/admin/success-stories", icon: GraduationCap, count: successStories, color: "group-hover:text-emerald-600", hoverBg: "group-hover:bg-emerald-50", hoverBorder: "group-hover:border-emerald-200" },
             { label: "Popups", href: "/admin/gallery", icon: Bell, count: popups, color: "group-hover:text-sky-600", hoverBg: "group-hover:bg-sky-50", hoverBorder: "group-hover:border-sky-200" },
           ].map((item) => (
-            <Link key={item.label} href={item.href} className="group">
-              <div className={`bg-white border border-slate-100 rounded-2xl p-4 text-center hover:shadow-md ${item.hoverBorder} hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between`}>
+            <Link key={item.label} href={item.href} className="group flex flex-col h-full">
+              <div className={`bg-white border border-slate-100 rounded-2xl p-4 text-center hover:shadow-md ${item.hoverBorder} hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between flex-grow`}>
                 <div>
                   <div className={`w-10 h-10 rounded-xl bg-slate-50 ${item.hoverBg} flex items-center justify-center mx-auto mb-3 transition-colors relative`}>
                     <item.icon className={`w-5 h-5 text-slate-400 ${item.color} transition-colors`} />

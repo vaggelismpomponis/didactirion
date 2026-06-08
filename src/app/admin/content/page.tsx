@@ -64,8 +64,11 @@ export default function AdminContentPage() {
   const iframeRef = React.useRef<HTMLIFrameElement>(null);
 
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+  const mobileScrollContainerRef = React.useRef<HTMLDivElement>(null);
   const [showLeftArrow, setShowLeftArrow] = React.useState(false);
   const [showRightArrow, setShowRightArrow] = React.useState(false);
+  const [showLeftMobileArrow, setShowLeftMobileArrow] = React.useState(false);
+  const [showRightMobileArrow, setShowRightMobileArrow] = React.useState(false);
   const isDragging = React.useRef(false);
   const startX = React.useRef(0);
   const scrollLeftStart = React.useRef(0);
@@ -78,25 +81,43 @@ export default function AdminContentPage() {
       setShowLeftArrow(scrollLeft > 2);
       setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 2);
     }
+    const mobileContainer = mobileScrollContainerRef.current;
+    if (mobileContainer) {
+      const { scrollLeft, scrollWidth, clientWidth } = mobileContainer;
+      setShowLeftMobileArrow(scrollLeft > 2);
+      setShowRightMobileArrow(scrollLeft < scrollWidth - clientWidth - 2);
+    }
   }, []);
 
   React.useEffect(() => {
     const container = scrollContainerRef.current;
+    const mobileContainer = mobileScrollContainerRef.current;
+    
+    checkScroll();
+    
     if (container) {
-      checkScroll();
       container.addEventListener("scroll", checkScroll);
-      window.addEventListener("resize", checkScroll);
-      const timer = setTimeout(checkScroll, 500);
-      return () => {
-        container.removeEventListener("scroll", checkScroll);
-        window.removeEventListener("resize", checkScroll);
-        clearTimeout(timer);
-      };
     }
+    if (mobileContainer) {
+      mobileContainer.addEventListener("scroll", checkScroll);
+    }
+    window.addEventListener("resize", checkScroll);
+    
+    const timer = setTimeout(checkScroll, 500);
+    return () => {
+      if (container) {
+        container.removeEventListener("scroll", checkScroll);
+      }
+      if (mobileContainer) {
+        mobileContainer.removeEventListener("scroll", checkScroll);
+      }
+      window.removeEventListener("resize", checkScroll);
+      clearTimeout(timer);
+    };
   }, [checkScroll]);
 
-  const scroll = (direction: "left" | "right") => {
-    const container = scrollContainerRef.current;
+  const scroll = (direction: "left" | "right", isMobile = false) => {
+    const container = isMobile ? mobileScrollContainerRef.current : scrollContainerRef.current;
     if (container) {
       const scrollAmount = 250;
       const target = container.scrollLeft + (direction === "left" ? -scrollAmount : scrollAmount);
@@ -266,7 +287,7 @@ export default function AdminContentPage() {
               onMouseMove={handleMouseMove}
               onMouseUp={handleMouseUpOrLeave}
               onMouseLeave={handleMouseUpOrLeave}
-              className="flex items-center gap-1.5 overflow-x-auto scrollbar-none select-none cursor-grab"
+              className="flex items-center gap-1.5 overflow-x-auto scrollbar-none select-none cursor-grab px-10"
             >
               {PAGES.map((p) => (
                 <button
@@ -356,6 +377,56 @@ export default function AdminContentPage() {
             )}
             Αποθήκευση
           </Button>
+        </div>
+      </div>
+
+      {/* ── Mobile Page Selector ── */}
+      <div className="md:hidden relative border-b border-slate-100 bg-white shrink-0">
+        {/* Left Scroll Overlay / Fade */}
+        {showLeftMobileArrow && (
+          <div className="absolute left-2 top-0 bottom-0 w-10 bg-gradient-to-r from-white via-white/80 to-transparent z-10 flex items-center justify-start pointer-events-none">
+            <button
+              onClick={() => scroll("left", true)}
+              className="w-6 h-6 rounded-full bg-white border border-slate-200 shadow-md flex items-center justify-center text-slate-600 hover:text-slate-900 pointer-events-auto hover:bg-slate-50 transition-colors"
+              title="Μετακίνηση αριστερά"
+            >
+              <ChevronLeft className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
+
+        {/* Right Scroll Overlay / Fade */}
+        {showRightMobileArrow && (
+          <div className="absolute right-2 top-0 bottom-0 w-10 bg-gradient-to-l from-white via-white/80 to-transparent z-10 flex items-center justify-end pointer-events-none">
+            <button
+              onClick={() => scroll("right", true)}
+              className="w-6 h-6 rounded-full bg-white border border-slate-200 shadow-md flex items-center justify-center text-slate-600 hover:text-slate-900 pointer-events-auto hover:bg-slate-50 transition-colors"
+              title="Μετακίνηση δεξιά"
+            >
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
+
+        <div
+          ref={mobileScrollContainerRef}
+          className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-2.5 px-10"
+        >
+          {PAGES.map((p) => (
+            <button
+              key={p.key}
+              onClick={() => setSelectedPage(p.key)}
+              className={cn(
+                "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap shrink-0 select-none",
+                selectedPage === p.key
+                  ? "bg-primary text-white shadow-sm"
+                  : "text-slate-500 hover:bg-slate-100"
+              )}
+            >
+              <p.icon className="w-3.5 h-3.5" />
+              {p.label}
+            </button>
+          ))}
         </div>
       </div>
 

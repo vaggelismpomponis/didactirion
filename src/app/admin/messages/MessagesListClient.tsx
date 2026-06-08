@@ -186,13 +186,12 @@ export default function MessagesListClient({
                     <TableRow
                       key={message.id}
                       onClick={() => setSelectedMessage(message)}
-                      className={`cursor-pointer transition-colors duration-150 border-b border-slate-50 group ${
-                        selectedMessage?.id === message.id
-                          ? "bg-amber-50/50 border-l-2 border-l-amber-400"
-                          : !message.isRead
+                      className={`cursor-pointer transition-colors duration-150 border-b border-slate-50 group ${selectedMessage?.id === message.id
+                        ? "bg-amber-50/50 border-l-2 border-l-amber-400"
+                        : !message.isRead
                           ? "bg-blue-50/30 hover:bg-blue-50/60"
                           : "hover:bg-slate-50/60"
-                      }`}
+                        }`}
                     >
                       <TableCell className="pl-5">
                         <div className="flex items-center gap-3">
@@ -251,7 +250,7 @@ export default function MessagesListClient({
                               <DropdownMenuItem className="gap-2 text-[13px] rounded-lg" onClick={() => setSelectedMessage(message)}>
                                 <Eye className="w-3.5 h-3.5" /> Προβολή Μηνύματος
                               </DropdownMenuItem>
-                              <DropdownMenuItem 
+                              <DropdownMenuItem
                                 className="gap-2 text-[13px] rounded-lg cursor-pointer"
                                 onClick={() => handleReply(message.email, message.subject)}
                               >
@@ -326,7 +325,7 @@ export default function MessagesListClient({
                         <DropdownMenuItem className="gap-2 text-[13px] rounded-lg" onClick={() => setSelectedMessage(message)}>
                           <Eye className="w-3.5 h-3.5" /> Προβολή
                         </DropdownMenuItem>
-                        <DropdownMenuItem 
+                        <DropdownMenuItem
                           className="gap-2 text-[13px] rounded-lg cursor-pointer"
                           onClick={() => handleReply(message.email, message.subject)}
                         >
@@ -509,7 +508,7 @@ export default function MessagesListClient({
                 <Button variant="outline" onClick={() => setSelectedMessage(null)} className="rounded-xl">
                   Κλείσιμο
                 </Button>
-                <Button 
+                <Button
                   className="bg-blue-600 hover:bg-blue-500 rounded-xl cursor-pointer"
                   onClick={() => handleReply(selectedMessage.email, selectedMessage.subject)}
                 >

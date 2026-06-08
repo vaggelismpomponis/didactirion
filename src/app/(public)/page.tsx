@@ -91,66 +91,6 @@ export default async function Home() {
                       </div>
                     </div>
                   </div>
-<<<<<<< HEAD
-                  <div className="text-4xl font-black text-slate-900">{stat.value}</div>
-                  <div className="text-sm font-medium text-slate-500">{stat.label}</div>
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Latest Announcements ── */}
-      {latestPosts.length > 0 && (
-        <section className="container mx-auto px-4 py-20">
-          <ScrollReveal>
-            <div className="flex flex-col md:flex-row items-center md:items-end justify-between gap-4 mb-12 text-center md:text-left">
-              <div className="space-y-3">
-
-                <h2 className="text-3xl md:text-4xl font-black text-slate-900">Τελευταία Νέα</h2>
-                <p className="text-slate-500">Μείνετε ενημερωμένοι για όλες τις εξελίξεις.</p>
-              </div>
-              <Button asChild variant="outline" className="border-primary/30 text-primary font-bold hover:bg-primary/5 shrink-0">
-                <Link href="/announcements" className="flex items-center gap-2">
-                  Όλες οι ανακοινώσεις <ArrowRight className="w-4 h-4" />
-                </Link>
-              </Button>
-            </div>
-          </ScrollReveal>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {latestPosts.map((post, i) => (
-              <ScrollReveal key={post.id} delay={i * 0.1} className="h-full">
-                <Link href={`/announcements/${post.slug}`} className="group block h-full">
-                  <article className="card-premium overflow-hidden h-full flex flex-col">
-                    <div className="aspect-video relative overflow-hidden bg-slate-100">
-                      <Image
-                        src={post.image || "/announcement-placeholder.png"}
-                        alt={post.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </div>
-                    <div className="p-6 space-y-3 flex-grow flex flex-col">
-                      <div className="flex items-center gap-2 text-xs text-slate-400 font-medium">
-                        <Calendar className="w-3.5 h-3.5" />
-                        {new Date(post.createdAt).toLocaleDateString("el-GR", { day: "numeric", month: "long", year: "numeric" })}
-                      </div>
-                      <h3 className="font-bold text-slate-900 group-hover:text-primary transition-colors line-clamp-2 text-base leading-snug">
-                        {post.title}
-                      </h3>
-                      <p className="text-slate-500 text-sm line-clamp-2 flex-grow">
-                        {post.content?.substring(0, 120)}...
-                      </p>
-                      <div className="flex items-center gap-1.5 text-primary font-bold text-sm pt-1 group-hover:gap-2.5 transition-all">
-                        Διαβάστε περισσότερα <ArrowRight className="w-3.5 h-3.5" />
-                      </div>
-                    </div>
-                  </article>
-=======
->>>>>>> df30dc6773a16ee1796f786401c56f567bdbeae1
                 </Link>
               </ScrollReveal>
             ))}
@@ -362,73 +302,8 @@ export default async function Home() {
               </div>
             </ScrollReveal>
           </div>
-<<<<<<< HEAD
-        </div>
-      </section>
-
-      {/* ── Programs Preview ── */}
-      <section className="container mx-auto px-4 py-20">
-        <ScrollReveal className="text-center space-y-3 mb-14">
-
-          <h2 className="text-3xl md:text-4xl font-black text-slate-900">Προγράμματα Σπουδών</h2>
-          <p className="text-slate-500 max-w-xl mx-auto">
-            Από το Γυμνάσιο έως τις Πανελλαδικές — ένα ολοκληρωμένο εκπαιδευτικό πρόγραμμα.
-          </p>
-        </ScrollReveal>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
-          {[
-            { title: "Γυμνάσιο", sub: "Α΄, Β΄, Γ΄", href: "/curricula/junior-high" },
-            { title: "Λύκειο", sub: "Α΄, Β΄, Γ΄ Λυκείου", href: "/curricula/high-school" },
-            { title: "ΕΠΑΛ", sub: "Επαγγελματικό Λύκειο", href: "/curricula/epal" },
-            { title: "Πρότυπα", sub: "Πρότυπα Σχολεία", href: "/curricula/model-schools" },
-          ].map((prog, i) => (
-            <ScrollReveal key={i} delay={i * 0.08} className="h-full">
-              <Link href={prog.href} className="group block h-full">
-                <div className="rounded-2xl bg-white p-5 sm:p-6 h-full flex flex-col justify-between min-h-[140px] sm:min-h-[160px] shadow-sm hover:shadow-xl hover:shadow-primary/5 hover:border-primary/30 hover:-translate-y-1.5 transition-all duration-300 border border-slate-200/80">
-                  <div>
-                    <h3 className="font-black text-lg sm:text-xl mb-1 text-slate-900 group-hover:text-primary transition-colors">{prog.title}</h3>
-                    <p className="text-slate-500 text-xs sm:text-sm">{prog.sub}</p>
-                  </div>
-                  <ArrowRight className="w-5 h-5 mt-4 text-primary opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
-                </div>
-              </Link>
-            </ScrollReveal>
-          ))}
-        </div>
-      </section>
-
-      {/* ── CTA Section ── */}
-      <section className="relative py-24 overflow-hidden">
-        <div className="absolute inset-0 hero-gradient" />
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=60 height=60 viewBox=0 0 60 60 xmlns=http://www.w3.org/2000/svg%3E%3Cg fill=none fill-rule=evenodd%3E%3Cg fill=%23ffffff opacity=.03%3E%3Cpath d=M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] pointer-events-none" />
-        <div className="container mx-auto px-4 text-center text-white relative z-10 space-y-8">
-          <ScrollReveal>
-
-            <h2 className="text-3xl sm:text-4xl md:text-6xl font-black mt-6 leading-tight">
-              Έτοιμοι να ξεκινήσετε<br />το ταξίδι σας;
-            </h2>
-            <p className="text-base sm:text-xl text-blue-100/80 max-w-2xl mx-auto mt-4">
-              Οι εγγραφές για τα νέα τμήματα έχουν ξεκινήσει.
-              Επικοινωνήστε μαζί μας για να βρούμε το κατάλληλο πρόγραμμα για εσάς.
-            </p>
-          </ScrollReveal>
-          <ScrollReveal delay={0.1}>
-            <div className="flex flex-wrap justify-center gap-4 pt-2">
-              <Button size="lg" asChild className="bg-white text-primary hover:bg-white/90 font-bold px-12 h-14 text-lg shadow-2xl shadow-black/20 hover:shadow-black/30 transition-all">
-                <Link href="/contact">Εγγραφή Τώρα</Link>
-              </Button>
-              <Button size="lg" asChild variant="outline" className="border-white/60 text-white hover:text-white bg-white/10 hover:bg-white/20 font-bold px-8 h-14 text-lg">
-                <Link href="/points-calculator">Υπολογισμός Μορίων</Link>
-              </Button>
-            </div>
-          </ScrollReveal>
-        </div>
-      </section>
-    </div>
-=======
         </section>
       </div>
     </Suspense>
->>>>>>> df30dc6773a16ee1796f786401c56f567bdbeae1
   );
 }
