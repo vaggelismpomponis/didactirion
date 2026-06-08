@@ -181,7 +181,7 @@ export function PointsCalculatorClient({ initialContent }: { initialContent: typ
           </div>
 
           {/* ── Sidebar ── */}
-          <div className="space-y-5 lg:sticky lg:top-24 lg:self-start order-1 lg:order-2">
+          <div className="space-y-5 lg:top-24 lg:self-start order-1 lg:order-2">
             {/* Result card */}
             <div className="relative overflow-hidden rounded-3xl text-slate-900 bg-[#F9F9F9] border border-slate-100 shadow-sm">
               <div className="p-7">

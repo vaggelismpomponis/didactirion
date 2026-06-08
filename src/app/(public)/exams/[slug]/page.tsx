@@ -26,7 +26,7 @@ export const examsDefaults: Record<string, any> = {
     title: "Τράπεζα Θεμάτων",
     description: "Πρόσβαση και ανάλυση των θεμάτων από το ΙΕΠ.",
     image: "https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?q=80&w=2070",
-    content: `Η Τράπεζα Θεμάτων είναι πλέον βασικό μέρος της εξεταστικής διαδικασίας. Στο φροντιστήριό μας, έχουμε κατηγοριοποιήσει και αναλύσει όλα τα θέματα ανά μάθημα και κεφάλαιο.`,
+    content: `Θα βρείτε συγκεντρωμένο υλικό και αναλύσεις θεμάτων από την επίσημη Τράπεζα Θεμάτων του ΙΕΠ, για όλα τα μαθήματα.`,
     features: ["Λυμένες ασκήσεις", "SOS θέματα", "Προσομοιώσεις"],
     links: [
       { label: "Επίσημη Ιστοσελίδα (ΙΕΠ)", url: "https://trapeza.iep.edu.gr/" },
@@ -48,11 +48,11 @@ export const examsDefaults: Record<string, any> = {
     title: "Οδηγός Σταδιοδρομίας",
     description: "Ένας πλήρης ψηφιακός οδηγός για το μέλλον των μαθητών μας.",
     image: "https://images.unsplash.com/photo-1507537297725-24a1c029d3ca?q=80&w=2070",
-    content: `Ο Οδηγός Σταδιοδρομίας του Διδακτήριον είναι μια ολοκληρωμένη ψηφιακή πλατφόρμα (με περιεχόμενο άνω των 2GB) που καλύπτει κάθε πτυχή της εκπαιδευτικής και επαγγελματικής πορείας.`,
+    content: `Ο Οδηγός Σταδιοδρομίας του Διδακτήριον είναι μια ολοκληρωμένη ψηφιακή πλατφόρμα που καλύπτει κάθε πτυχή της εκπαιδευτικής και επαγγελματικής πορείας.`,
     sections: [
       { title: "Σπουδές στην Ελλάδα & Εξωτερικό", text: "Αναλυτικές πληροφορίες για όλα τα τμήματα και τις προοπτικές τους." },
       { title: "Επαγγελματικά Δικαιώματα", text: "Τι μπορείτε να κάνετε μετά το πτυχίο σας." },
-      { title: "Μεταπτυχιακά", text: "Οδηγός για τη συνέχιση των σπουδών σας." },
+      { title: "Μεταπτυχιακά", text: "Οδηγός για τη συνέχιση των σπουδών..." },
     ],
   },
 };
@@ -103,82 +103,13 @@ export default async function ExamPage({ params }: { params: Promise<{ slug: str
       {/* ── Content ── */}
       <section className="container mx-auto px-4 py-12 sm:py-16 pb-20">
         <div className="max-w-4xl mx-auto space-y-12">
-<<<<<<< HEAD
-          <div className="bg-white p-5 sm:p-8 md:p-12 rounded-3xl border border-slate-200/80 shadow-sm space-y-8">
-            <div className="prose prose-slate max-w-none">
-              <h2 className="text-2xl font-bold text-slate-900">Πληροφορίες & Οδηγός</h2>
-              <p className="text-lg text-slate-600 leading-relaxed">{data.content}</p>
-            </div>
-
-            {data.sections && data.sections.length > 0 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-8 border-t">
-                {data.sections.map((section: any, i: number) => (
-                  <div key={i} className="space-y-2">
-                    <h4 className="font-bold text-slate-900 flex items-center gap-2">
-                      <Info className="w-4 h-4 text-[#004a99]" /> {section.title}
-                    </h4>
-                    <p className="text-slate-500 text-sm">{section.text}</p>
-                  </div>
-                ))}
-=======
           <ScrollReveal>
             <div className="bg-white p-6 sm:p-8 md:p-12 rounded-3xl border border-slate-100 shadow-sm space-y-8">
               <div className="prose prose-slate max-w-none">
                 <h2 className="text-2xl font-black text-slate-900">Πληροφορίες & Οδηγός</h2>
                 <p className="text-lg text-slate-600 leading-relaxed"><Editable id="content" multiline>{data.content}</Editable></p>
->>>>>>> df30dc6773a16ee1796f786401c56f567bdbeae1
               </div>
 
-<<<<<<< HEAD
-            {data.links && data.links.length > 0 && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-8 border-t">
-                {data.links.map((link: any, i: number) => (
-                  <Button key={i} variant="outline" asChild className="justify-between h-14 rounded-2xl border-slate-200 bg-slate-50/50 hover:bg-slate-100/80 text-slate-800 hover:text-[#004a99] hover:border-[#004a99]/30 font-bold shadow-sm transition-all duration-300 group">
-                    <a href={link.url} target="_blank" rel="noopener noreferrer" className="w-full flex items-center justify-between">
-                      {link.label} <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-[#004a99]/60 transition-colors" />
-                    </a>
-                  </Button>
-                ))}
-              </div>
-            )}
-
-            {data.downloads && data.downloads.length > 0 && (
-              <div className="space-y-3 pt-8 border-t">
-                <h4 className="font-bold text-slate-900 mb-4">Αρχεία για Λήψη</h4>
-                {data.downloads.map((doc: any, i: number) => (
-                  <div key={i} className="flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-200/80 hover:border-primary/30 hover:bg-primary/[0.01] shadow-sm hover:shadow-md transition-all duration-300 group">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-red-500 border border-slate-200 group-hover:scale-105 transition-transform">
-                        <span className="text-xs font-bold">{doc.type}</span>
-                      </div>
-                      <span className="font-semibold text-slate-700">{doc.name}</span>
-                    </div>
-                    <Button size="sm" variant="ghost" className="text-blue-600 hover:text-blue-700 rounded-xl">
-                      <Download className="w-4 h-4 mr-2" /> Λήψη
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div className="relative overflow-hidden bg-gradient-to-br from-blue-900 to-indigo-950 rounded-3xl p-6 sm:p-8 md:p-12 text-white text-center space-y-6 shadow-xl shadow-blue-900/10">
-            <div className="absolute top-0 right-0 w-80 h-80 rounded-full bg-white/5 blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-20 -left-20 w-80 h-80 rounded-full bg-white/5 blur-3xl pointer-events-none" />
-            <div className="relative z-10 space-y-6">
-              <h2 className="text-3xl font-black tracking-tight text-white">Χρειάζεστε περισσότερη ενημέρωση;</h2>
-              <p className="text-blue-100 max-w-xl mx-auto leading-relaxed">
-                Η ομάδα μας είναι στη διάθεσή σας για να σας καθοδηγήσει σε κάθε βήμα της προετοιμασης σας.
-              </p>
-              <div className="flex flex-col sm:flex-row justify-center gap-4 pt-2">
-                <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90 font-bold px-10 h-14 rounded-xl shadow-md">
-                  <Link href="/contact">Επικοινωνία</Link>
-                </Button>
-                <Button asChild size="lg" className="bg-transparent text-white border-2 border-white/80 hover:bg-white/10 font-bold px-10 h-14 rounded-xl">
-                  <Link href="/points-calculator">Υπολογισμός Μορίων</Link>
-                </Button>
-              </div>
-=======
               {data.sections && data.sections.length > 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-8 border-t border-slate-100">
                   {data.sections.map((section: any, i: number) => (
@@ -222,7 +153,6 @@ export default async function ExamPage({ params }: { params: Promise<{ slug: str
                   ))}
                 </div>
               )}
->>>>>>> df30dc6773a16ee1796f786401c56f567bdbeae1
             </div>
           </ScrollReveal>
 

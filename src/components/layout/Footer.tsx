@@ -91,11 +91,11 @@ export function Footer() {
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-800/5 rounded-full blur-[100px] pointer-events-none" />
 
-        <div className="container mx-auto px-4 pt-14 pb-10 md:pt-16 md:pb-14 relative z-10">
+        <div className="container mx-auto px-6 sm:px-12 lg:px-16 max-w-7xl pt-14 pb-10 md:pt-16 md:pb-14 relative z-10">
           {/* ── Top tier: Brand + Links + Platforms ── */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8">
             {/* Brand column */}
-            <div className="lg:col-span-4 space-y-6">
+            <div className="lg:col-span-3 space-y-6">
               <Link href="/" className="inline-block transition-transform hover:scale-105">
                 <Image
                   src="/logo-main.png"
@@ -133,7 +133,7 @@ export function Footer() {
             </div>
 
             {/* Quick Links */}
-            <div className="lg:col-span-3 space-y-5">
+            <div className="lg:col-span-2 space-y-5">
               <h3 className="text-xs font-bold text-white uppercase tracking-[0.15em]">
                 Γρήγοροι Σύνδεσμοι
               </h3>
@@ -153,7 +153,7 @@ export function Footer() {
             </div>
 
             {/* Contact column */}
-            <div className="lg:col-span-3 space-y-5">
+            <div className="lg:col-span-4 space-y-5">
               <h3 className="text-xs font-bold text-white uppercase tracking-[0.15em]">
                 Επικοινωνία
               </h3>
@@ -202,7 +202,7 @@ export function Footer() {
             </div>
 
             {/* Hours + Platforms column */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-3 space-y-6">
               {/* Hours */}
               <div className="space-y-4">
                 <h3 className="text-xs font-bold text-white uppercase tracking-[0.15em]">
@@ -211,9 +211,9 @@ export function Footer() {
                 <div className="space-y-2.5">
                   {schedule.map((item) => (
                     <div key={item.day} className="flex items-center justify-between gap-2">
-                      <span className="text-xs text-slate-500 shrink-0">{item.day}</span>
+                      <span className="text-xs text-slate-500 shrink-0 whitespace-nowrap">{item.day}</span>
                       <span
-                        className={`text-xs font-bold ${item.active ? "text-white" : "text-slate-600"
+                        className={`text-xs font-bold whitespace-nowrap ${item.active ? "text-white" : "text-slate-600"
                           }`}
                       >
                         {item.hours}
@@ -271,7 +271,7 @@ export function Footer() {
 
         {/* ── Bottom bar ── */}
         <div className="border-t border-white/[0.06] relative z-10">
-          <div className="container mx-auto px-4 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="container mx-auto px-6 sm:px-12 lg:px-16 max-w-7xl py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
             <p className="text-xs text-slate-600">
               © {new Date().getFullYear()} Διδακτήριον. Με επιφύλαξη παντός δικαιώματος.
             </p>

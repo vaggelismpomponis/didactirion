@@ -114,10 +114,10 @@ export default async function CurriculumPage({ params }: { params: Promise<{ slu
 
   return (
     <Suspense fallback={null}>
-    <div className="flex flex-col">
-      <CurriculaPreviewSync pageKey={`curricula/${slug}`} slug={slug} initialData={data} defaults={defaults} />
-      <CurriculumView data={data} slug={slug} />
-    </div>
+      <div className="flex flex-col">
+        <CurriculaPreviewSync pageKey={`curricula/${slug}`} slug={slug} initialData={data} defaults={defaults} />
+        <CurriculumView data={data} slug={slug} />
+      </div>
     </Suspense>
   );
 }
@@ -152,27 +152,6 @@ function CurriculumView({ data, slug }: { data: any; slug: string }) {
             </ScrollReveal>
 
             {data.subjects && (
-<<<<<<< HEAD
-              <div className="mt-12 space-y-8">
-                <h3 className="text-2xl font-bold text-slate-900">Πρόγραμμα Μαθημάτων</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {data.subjects.map((group: any, i: number) => (
-                    <div key={i} className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md hover:border-[#004a99]/30 transition-all duration-300 group">
-                      <h4 className="font-bold text-[#004a99] mb-4 flex items-center gap-2">
-                        <span className="w-2 h-2 bg-[#004a99] rounded-full group-hover:scale-125 transition-transform" />
-                        {group.grade}
-                      </h4>
-                      <ul className="space-y-2">
-                        {(Array.isArray(group.items) ? group.items : []).map((item: string, j: number) => (
-                          <li key={j} className="text-slate-600 text-sm flex items-center gap-2">
-                            <ArrowRight className="w-3 h-3 text-slate-400 group-hover:text-[#004a99]/60 transition-colors" />
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-=======
               <ScrollReveal>
                 <div className="mt-12 space-y-8">
                   <h3 className="text-2xl font-black text-slate-900">Πρόγραμμα Μαθημάτων</h3>
@@ -196,24 +175,10 @@ function CurriculumView({ data, slug }: { data: any; slug: string }) {
                       </ScrollReveal>
                     ))}
                   </div>
->>>>>>> df30dc6773a16ee1796f786401c56f567bdbeae1
                 </div>
               </ScrollReveal>
             )}
 
-<<<<<<< HEAD
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-8">
-              {(Array.isArray(data.features) ? data.features : []).map((feature: any, i: number) => {
-                const text = typeof feature === "object" ? feature.text : feature;
-                return (
-                  <div key={i} className="flex items-center gap-3 p-4 rounded-2xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition-all duration-300">
-                    <CheckCircle2 className="w-6 h-6 text-green-500 shrink-0" />
-                    <span className="font-bold text-slate-900">{text}</span>
-                  </div>
-                );
-              })}
-            </div>
-=======
             <ScrollReveal>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-8">
                 {(Array.isArray(data.features) ? data.features : []).map((feature: any, i: number) => {
@@ -227,7 +192,6 @@ function CurriculumView({ data, slug }: { data: any; slug: string }) {
                 })}
               </div>
             </ScrollReveal>
->>>>>>> df30dc6773a16ee1796f786401c56f567bdbeae1
           </div>
 
           {/* ── Sidebar ── */}
@@ -249,26 +213,6 @@ function CurriculumView({ data, slug }: { data: any; slug: string }) {
               </div>
             </ScrollReveal>
 
-<<<<<<< HEAD
-            <div className="bg-white p-8 rounded-3xl border border-slate-200/80 shadow-sm">
-              <h4 className="font-bold text-slate-900 mb-4">Άλλα Προγράμματα</h4>
-              <ul className="space-y-3">
-                {Object.keys(curriculaDefaults)
-                  .filter((s) => s !== slug)
-                  .map((s) => (
-                    <li key={s}>
-                      <Link
-                        href={`/curricula/${s}`}
-                        className="flex items-center justify-between text-slate-600 hover:text-[#004a99] font-medium transition-colors p-2 rounded-lg hover:bg-white"
-                      >
-                        {curriculaDefaults[s].title}
-                        <ArrowRight className="w-4 h-4" />
-                      </Link>
-                    </li>
-                  ))}
-              </ul>
-            </div>
-=======
             <ScrollReveal delay={0.1}>
               <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
                 <h4 className="font-black text-slate-900 mb-4">Άλλα Προγράμματα</h4>
@@ -289,7 +233,6 @@ function CurriculumView({ data, slug }: { data: any; slug: string }) {
                 </ul>
               </div>
             </ScrollReveal>
->>>>>>> df30dc6773a16ee1796f786401c56f567bdbeae1
           </div>
         </div>
       </section>
