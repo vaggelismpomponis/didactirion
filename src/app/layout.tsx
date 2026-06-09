@@ -4,6 +4,7 @@ import "./globals.css";
 import { Suspense } from "react";
 import { LoadingScreen } from "@/components/providers/LoadingScreen";
 import { getSiteUrl } from "@/lib/site";
+import { CookieNotice } from "@/components/layout/CookieNotice";
 
 const openSans = Open_Sans({
   subsets: ["latin", "greek"],
@@ -57,7 +58,9 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col font-sans" suppressHydrationWarning>
         <LoadingScreen />
         <Suspense fallback={null}>{children}</Suspense>
+        <CookieNotice />
       </body>
     </html>
   );
 }
+
