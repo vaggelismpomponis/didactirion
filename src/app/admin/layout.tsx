@@ -6,6 +6,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
+  Clock,
   FileText,
   Users,
   GraduationCap,
@@ -39,6 +40,7 @@ const sidebarLinks = [
     group: "Κύριο",
     items: [
       { name: "Πίνακας Ελέγχου", href: "/admin", icon: LayoutDashboard },
+      { name: "Ιστορικό Δραστηριότητας", href: "/admin/activity", icon: Clock },
     ],
   },
   {
@@ -204,6 +206,37 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const [isMobileOpen, setIsMobileOpen] = React.useState(false);
+  const [hasNewActivity, setHasNewActivity] = React.useState(false);
+
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const saved = localStorage.getItem("admin_last_seen_activity");
+    const lastSeen = saved ? parseInt(saved, 10) : 0;
+    
+    const fetchLatest = async () => {
+      try {
+        const res = await fetch("/api/admin/activity/latest");
+        if (res.ok) {
+          const data = await res.json();
+          const latest = data.latestTimestamp;
+          
+          if (pathname === "/admin/activity") {
+            localStorage.setItem("admin_last_seen_activity", latest.toString());
+            setHasNewActivity(false);
+          } else {
+            setHasNewActivity(latest > lastSeen);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch latest activity timestamp:", err);
+      }
+    };
+
+    fetchLatest();
+    const interval = setInterval(fetchLatest, 60000);
+    return () => clearInterval(interval);
+  }, [pathname]);
 
   React.useEffect(() => {
     if (status === "unauthenticated") {
@@ -296,7 +329,19 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
+            {/* Notification Bell */}
+            <Link
+              href="/admin/activity"
+              className="relative p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-xl transition-all"
+              title="Ιστορικό Δραστηριότητας"
+            >
+              <Bell className="w-5 h-5" />
+              {hasNewActivity && (
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white ring-2 ring-red-100 animate-pulse" />
+              )}
+            </Link>
+
             {/* User avatar (topbar, desktop) */}
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-700 flex items-center justify-center text-white font-black text-[11px] shadow-sm uppercase ring-2 ring-blue-100">

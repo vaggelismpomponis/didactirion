@@ -21,15 +21,131 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
+function formatRelativeTime(date: Date): string {
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  if (diffMs < 0) return "Μόλις τώρα";
+  
+  const seconds = Math.floor(diffMs / 1000);
+  if (seconds < 60) return "Μόλις τώρα";
+  
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) {
+    return minutes === 1 ? "Πριν 1 λεπτό" : `Πριν ${minutes} λεπτά`;
+  }
+  
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) {
+    if (hours === 1) return "Πριν 1 ώρα";
+    return `Πριν ${hours} ώρες`;
+  }
+  
+  const days = Math.floor(hours / 24);
+  if (days < 7) {
+    if (days === 1) {
+      const yesterday = new Date(now);
+      yesterday.setDate(now.getDate() - 1);
+      if (date.getDate() === yesterday.getDate()) {
+        const timeStr = date.toLocaleTimeString("el-GR", { hour: "2-digit", minute: "2-digit" });
+        return `Εχθές, ${timeStr}`;
+      }
+      return "Πριν 1 ημέρα";
+    }
+    return `${days} μέρες πριν`;
+  }
+  
+  return date.toLocaleDateString("el-GR", { day: "numeric", month: "short", year: "numeric" });
+}
+
 async function getDashboardData() {
-  const [posts, teachers, successStories, messages, popups] = await Promise.all([
+  const [
+    postsCount,
+    teachersCount,
+    successStoriesCount,
+    messagesCount,
+    popupsCount,
+    posts,
+    teachers,
+    messages,
+    popups,
+    successStories
+  ] = await Promise.all([
     prisma.post.count(),
     prisma.teacher.count(),
     prisma.successStory.count(),
     prisma.contactMessage.count({ where: { isRead: false } }),
     prisma.popup.count(),
+    prisma.post.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 5,
+      select: { id: true, title: true, createdAt: true },
+    }),
+    prisma.teacher.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 5,
+      select: { id: true, name: true, createdAt: true },
+    }),
+    prisma.contactMessage.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 5,
+      select: { id: true, name: true, createdAt: true },
+    }),
+    prisma.popup.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 5,
+      select: { id: true, title: true, createdAt: true },
+    }),
+    prisma.successStory.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 5,
+      select: { id: true, name: true, university: true, createdAt: true },
+    }),
   ]);
-  return { posts, teachers, successStories, messages, popups };
+
+  const activities = [
+    ...posts.map((p) => ({
+      id: p.id,
+      title: `Νέα ανακοίνωση: ${p.title}`,
+      createdAt: p.createdAt,
+      type: "post",
+    })),
+    ...teachers.map((t) => ({
+      id: t.id,
+      title: `Προσθήκη καθηγητή: ${t.name}`,
+      createdAt: t.createdAt,
+      type: "teacher",
+    })),
+    ...messages.map((m) => ({
+      id: m.id,
+      title: `Νέο μήνυμα από: ${m.name}`,
+      createdAt: m.createdAt,
+      type: "message",
+    })),
+    ...popups.map((p) => ({
+      id: p.id,
+      title: `Νέο Popup αρχικής σελίδας: ${p.title}`,
+      createdAt: p.createdAt,
+      type: "popup",
+    })),
+    ...successStories.map((s) => ({
+      id: s.id,
+      title: `Νέος επιτυχών: ${s.name} — ${s.university}`,
+      createdAt: s.createdAt,
+      type: "success",
+    })),
+  ];
+
+  activities.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  const recentActivity = activities.slice(0, 5);
+
+  return {
+    posts: postsCount,
+    teachers: teachersCount,
+    successStories: successStoriesCount,
+    messages: messagesCount,
+    popups: popupsCount,
+    recentActivity,
+  };
 }
 
 const quickActions = [
@@ -38,14 +154,6 @@ const quickActions = [
   { label: "Στοιχεία Επικοινωνίας & Ωράριο", href: "/admin/content?page=contact", icon: Phone, color: "bg-amber-600", shadow: "shadow-amber-200" },
   { label: "Νέο Popup", href: "/admin/gallery/popups/new", icon: Bell, color: "bg-sky-600", shadow: "shadow-sky-200" },
   { label: "Επιτυχόντας", href: "/admin/success-stories/new", icon: GraduationCap, color: "bg-emerald-600", shadow: "shadow-emerald-200" },
-];
-
-const recentActivity = [
-  { title: "Νέα ανακοίνωση: Θερινά Τμήματα 2026", time: "Πριν 2 ώρες", type: "post" },
-  { title: "Προσθήκη καθηγητή: Ιωάννης Παπαδόπουλος", time: "Πριν 5 ώρες", type: "teacher" },
-  { title: "Νέο μήνυμα από: Μαρία Κ.", time: "Εχθές, 18:30", type: "message" },
-  { title: "Νέο Popup αρχικής σελίδας", time: "Εχθές, 14:00", type: "popup" },
-  { title: "Νέος επιτυχών: Νίκος Παπάς — ΑΠΘ", time: "3 μέρες πριν", type: "success" },
 ];
 
 const typeConfig: Record<string, { color: string; label: string }> = {
@@ -57,7 +165,7 @@ const typeConfig: Record<string, { color: string; label: string }> = {
 };
 
 export default async function AdminDashboard() {
-  const { posts, teachers, successStories, messages, popups } = await getDashboardData();
+  const { posts, teachers, successStories, messages, popups, recentActivity } = await getDashboardData();
 
   const now = new Date();
   const hour = now.getHours();
@@ -206,7 +314,7 @@ export default async function AdminDashboard() {
               </h2>
             </div>
             <Link
-              href="/admin/posts"
+              href="/admin/activity"
               className="text-xs font-semibold text-slate-400 hover:text-primary transition-colors"
             >
               Προβολή όλων →
@@ -214,30 +322,49 @@ export default async function AdminDashboard() {
           </div>
 
           <div className="px-6 py-2 divide-y divide-slate-50">
-            {recentActivity.map((activity, i) => {
-              const cfg = typeConfig[activity.type];
-              return (
-                <div key={i} className="flex items-start gap-4 py-4 group">
-                  <div className="flex flex-col items-center shrink-0 mt-0.5">
-                    <div className={`w-2 h-2 rounded-full ${cfg.color} ring-4 ring-white`} />
-                    {i < recentActivity.length - 1 && (
-                      <div className="w-px flex-1 bg-slate-100 mt-1.5 mb-[-16px]" />
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0 pb-0">
-                    <p className="text-[13px] font-semibold text-slate-800 leading-snug">
-                      {activity.title}
-                    </p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className={`admin-badge-info text-[10px] font-bold`}>
-                        {cfg.label}
-                      </span>
-                      <span className="text-[11px] text-slate-400">{activity.time}</span>
+            {recentActivity.length === 0 ? (
+              <div className="py-8 text-center text-slate-400 text-sm font-semibold">
+                Δεν υπάρχει πρόσφατη δραστηριότητα
+              </div>
+            ) : (
+              recentActivity.map((activity, i) => {
+                const cfg = typeConfig[activity.type];
+                let href = "/admin";
+                if (activity.type === "post") href = `/admin/posts/edit/${activity.id}`;
+                else if (activity.type === "teacher") href = `/admin/teachers/edit/${activity.id}`;
+                else if (activity.type === "message") href = `/admin/messages`;
+                else if (activity.type === "popup") href = `/admin/gallery/popups/edit/${activity.id}`;
+                else if (activity.type === "success") href = `/admin/success-stories/edit/${activity.id}`;
+
+                return (
+                  <Link
+                    key={i}
+                    href={href}
+                    className="flex items-start gap-4 py-4 group hover:bg-slate-50/50 px-2 rounded-xl transition-all duration-200"
+                  >
+                    <div className="flex flex-col items-center shrink-0 mt-0.5">
+                      <div className={`w-2 h-2 rounded-full ${cfg.color} ring-4 ring-white`} />
+                      {i < recentActivity.length - 1 && (
+                        <div className="w-px flex-1 bg-slate-100 mt-1.5 mb-[-16px]" />
+                      )}
                     </div>
-                  </div>
-                </div>
-              );
-            })}
+                    <div className="flex-1 min-w-0 pb-0">
+                      <p className="text-[13px] font-semibold text-slate-800 leading-snug group-hover:text-primary transition-colors">
+                        {activity.title}
+                      </p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className={`admin-badge-info text-[10px] font-bold`}>
+                          {cfg.label}
+                        </span>
+                        <span className="text-[11px] text-slate-400">
+                          {formatRelativeTime(activity.createdAt)}
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })
+            )}
           </div>
         </div>
 
