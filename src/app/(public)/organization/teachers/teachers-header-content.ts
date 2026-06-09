@@ -1,9 +1,9 @@
 export const defaultTeachersHeaderContent = {
   hero_title: "Οι Καθηγητές μας",
   hero_subtitle: "Η ομάδα μας αποτελείται από έμπειρους εκπαιδευτικούς με πάθος για τη διδασκαλία και αφοσίωση στην επιτυχία κάθε μαθητή.",
-  
+
   cta_title: "Θέλετε να γίνετε μέλος της ομάδας μας;",
   cta_subtitle: "Αναζητούμε πάντα ικανούς και παθιασμένους εκπαιδευτικούς. Στείλτε μας το βιογραφικό σας στο",
-  cta_email: "info@didactirion.gr",
+  cta_email: "didactirion@gmail.com",
   cta_button: "Αποστολή CV",
 };

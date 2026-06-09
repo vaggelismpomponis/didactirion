@@ -53,11 +53,11 @@ export function Footer() {
     const handleScroll = () => {
       const scrolled = window.scrollY;
       const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-      
+
       if (scrollHeight > 0) {
         setScrollProgress((scrolled / scrollHeight) * 100);
       }
-      
+
       if (scrolled > 300) {
         setIsVisible(true);
       } else {
@@ -174,8 +174,8 @@ export function Footer() {
                   {
                     icon: Mail,
                     label: "Email",
-                    content: "info@didactirion.gr",
-                    href: "mailto:info@didactirion.gr",
+                    content: "didactirion@gmail.com",
+                    href: "mailto:didactirion@gmail.com",
                   },
                 ].map(({ icon: Icon, label, content, href }) => (
                   <a
@@ -295,9 +295,8 @@ export function Footer() {
       {/* ── Back to top ── */}
       <button
         onClick={scrollToTop}
-        className={`fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-50 w-12 h-12 rounded-full bg-slate-950/80 hover:bg-slate-900 border border-white/10 flex items-center justify-center text-slate-400 hover:text-primary transition-all duration-300 backdrop-blur-md shadow-2xl hover:scale-110 active:scale-95 ${
-          isVisible ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-4 pointer-events-none"
-        }`}
+        className={`fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-50 w-12 h-12 rounded-full bg-slate-950/80 hover:bg-slate-900 border border-white/10 flex items-center justify-center text-slate-400 hover:text-primary transition-all duration-300 backdrop-blur-md shadow-2xl hover:scale-110 active:scale-95 ${isVisible ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-4 pointer-events-none"
+          }`}
         aria-label="Επιστροφή στην κορυφή"
       >
         <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 48 48">
