@@ -1,11 +1,11 @@
 "use client";
-
 import * as React from "react";
 import { User, GraduationCap, Mail } from "lucide-react";
 import { PreviewListener } from "@/components/admin/PreviewListener";
 import { mergeContent } from "@/lib/content-utils";
 import { defaultTeachersHeaderContent } from "./teachers-header-content";
 import { Editable } from "@/components/admin/Editable";
+import { parseMarkdownToHtml } from "@/lib/markdown";
 
 type TeachersHeaderContent = typeof defaultTeachersHeaderContent;
 type Teacher = {
@@ -90,10 +90,17 @@ export function TeachersPageClient({
                 </div>
 
                 {/* Bio */}
-                <div className="p-5">
-                  <p className="text-slate-500 text-sm leading-relaxed line-clamp-4">
-                    {teacher.bio || "Εξειδικευμένος εκπαιδευτικός με πολυετή εμπειρία."}
-                  </p>
+                <div className="p-5 flex-grow">
+                  {teacher.bio ? (
+                    <div
+                      dangerouslySetInnerHTML={{ __html: parseMarkdownToHtml(teacher.bio) }}
+                      className="text-slate-500 text-sm leading-relaxed line-clamp-4 [&_p]:mb-0 [&_ul]:my-1 [&_ol]:my-1 [&_li]:text-sm [&_li]:text-slate-500"
+                    />
+                  ) : (
+                    <p className="text-slate-500 text-sm leading-relaxed">
+                      Εξειδικευμένος εκπαιδευτικός με πολυετή εμπειρία.
+                    </p>
+                  )}
                 </div>
               </div>
             ))}

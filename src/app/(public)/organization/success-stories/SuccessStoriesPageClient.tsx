@@ -16,8 +16,6 @@ type SuccessStory = {
   id: string;
   name: string;
   university: string;
-  faculty: string | null;
-  year: number;
   photo: string | null;
 };
 
@@ -33,8 +31,6 @@ export function SuccessStoriesPageClient({
   const handlePreviewUpdate = React.useCallback((override: Record<string, any>) => {
     setContent(mergeContent(defaultSuccessHeaderContent, override) as SuccessHeaderContent);
   }, []);
-
-  const years = Array.from(new Set(stories.map(s => s.year))).sort((a, b) => b - a);
 
   return (
     <div className="flex flex-col">
@@ -55,9 +51,9 @@ export function SuccessStoriesPageClient({
         </div>
       </section>
 
-      {/* ── Success Stories by Year ── */}
+      {/* ── Success Stories ── */}
       <section className="container mx-auto px-4 py-16 pb-20">
-        {years.length === 0 ? (
+        {stories.length === 0 ? (
           <div className="py-32 text-center space-y-5">
             <div className="w-20 h-20 rounded-full bg-slate-100 flex items-center justify-center mx-auto text-slate-300">
               <School className="w-10 h-10" />
@@ -66,39 +62,25 @@ export function SuccessStoriesPageClient({
             <p className="text-slate-400 text-sm">Η λίστα των επιτυχόντων θα ενημερωθεί σύντομα.</p>
           </div>
         ) : (
-          <div className="space-y-16">
-            {years.map((year, yearIdx) => (
-              <ScrollReveal key={year} delay={yearIdx * 0.05}>
-                <div className="space-y-8">
-                  <div className="flex items-center gap-4">
-                    <h2 className="text-2xl sm:text-3xl font-black text-slate-900">{year}</h2>
-                    <div className="h-px bg-slate-200 flex-grow" />
-                    <Badge variant="outline" className="text-primary border-primary/20 bg-primary/5 hidden sm:inline-flex font-bold">
-                      Έτος Επιτυχίας
-                    </Badge>
-                  </div>
+          <div className="space-y-8">
+            <div className="flex items-center gap-4">
+              <h2 className="text-2xl sm:text-3xl font-black text-slate-900">Οι Επιτυχόντες μας</h2>
+              <div className="h-px bg-slate-200 flex-grow" />
+            </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                    {stories
-                      .filter((s) => s.year === year)
-                      .map((story, i) => (
-                        <ScrollReveal key={story.id} delay={i * 0.05}>
-                          <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex items-start gap-4">
-                            <div className="w-12 h-12 bg-primary/5 rounded-xl flex items-center justify-center text-primary shrink-0">
-                              <GraduationCap className="w-6 h-6" />
-                            </div>
-                            <div className="space-y-1">
-                              <h4 className="font-bold text-slate-900">{story.name}</h4>
-                              <p className="text-sm font-semibold text-primary">{story.university}</p>
-                              <p className="text-xs text-slate-500">{story.faculty}</p>
-                            </div>
-                          </div>
-                        </ScrollReveal>
-                      ))}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+              {stories.map((story) => (
+                <div key={story.id} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex items-start gap-4">
+                  <div className="w-12 h-12 bg-primary/5 rounded-xl flex items-center justify-center text-primary shrink-0">
+                    <GraduationCap className="w-6 h-6" />
+                  </div>
+                  <div className="space-y-1">
+                    <h4 className="font-bold text-slate-900">{story.name}</h4>
+                    <p className="text-sm font-semibold text-primary">{story.university}</p>
                   </div>
                 </div>
-              </ScrollReveal>
-            ))}
+              ))}
+            </div>
           </div>
         )}
       </section>

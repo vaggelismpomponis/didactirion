@@ -79,13 +79,12 @@ export function AnnouncementPopup({ popup }: { popup: Popup | null }) {
       >
         {/* Image */}
         {popup.image && (
-          <div className="aspect-video relative w-full overflow-hidden">
+          <div className="relative w-full overflow-hidden bg-slate-50 flex items-center justify-center">
             <img
               src={popup.image}
               alt={popup.title}
-              className="w-full h-full object-cover"
+              className="w-full h-auto max-h-[65vh] object-contain block"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
           </div>
         )}
 

@@ -17,12 +17,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
     }
 
-    // Format the payload and convert year to integer
+    // Format the payload
     const formattedStories = stories.map((s: any) => ({
       name: s.name.trim(),
       university: s.university.trim(),
-      faculty: s.faculty?.trim() || null,
-      year: parseInt(s.year),
       photo: null, // default to no photo
     }));
 

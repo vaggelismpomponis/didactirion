@@ -10,12 +10,6 @@ import {
   Save, 
   X, 
   Loader2, 
-  Bold, 
-  Italic, 
-  Heading3, 
-  List, 
-  ListOrdered, 
-  Link as LinkIcon, 
   Eye, 
   PenTool 
 } from "lucide-react";
@@ -30,9 +24,9 @@ import {
   FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { ImageUpload } from "./ImageUpload";
+import { RichTextEditor } from "./RichTextEditor";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -68,41 +62,7 @@ export function PopupForm({ initialData }: PopupFormProps) {
 
   const contentValue = form.watch("content");
 
-  const insertMarkdown = (syntax: string) => {
-    const textarea = document.getElementById("content-textarea") as HTMLTextAreaElement;
-    if (!textarea) return;
 
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const text = textarea.value;
-    const before = text.substring(0, start);
-    const after = text.substring(end, text.length);
-    const selected = text.substring(start, end);
-
-    let replacement = "";
-    if (syntax === "bold") {
-      replacement = `**${selected || "έντονο κείμενο"}**`;
-    } else if (syntax === "italic") {
-      replacement = `*${selected || "πλάγιο κείμενο"}*`;
-    } else if (syntax === "heading") {
-      replacement = `\n### ${selected || "Υπότιτλος"}\n`;
-    } else if (syntax === "list") {
-      replacement = `\n- ${selected || "στοιχείο"}\n`;
-    } else if (syntax === "numlist") {
-      replacement = `\n1. ${selected || "στοιχείο"}\n`;
-    } else if (syntax === "link") {
-      replacement = `[${selected || "σύνδεσμος"}](https://example.com)`;
-    }
-
-    const newValue = before + replacement + after;
-    form.setValue("content", newValue, { shouldValidate: true });
-
-    setTimeout(() => {
-      textarea.focus();
-      const newCursorPos = start + replacement.length;
-      textarea.setSelectionRange(newCursorPos, newCursorPos);
-    }, 50);
-  };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
@@ -181,85 +141,11 @@ export function PopupForm({ initialData }: PopupFormProps) {
                 </div>
 
                 {activeTab === "edit" ? (
-                  <div className="space-y-3">
-                    {/* Formatting Toolbar */}
-                    <div className="flex flex-wrap items-center gap-1 p-1 bg-slate-50 rounded-xl border border-slate-100">
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="w-8 h-8 rounded-lg text-slate-600 hover:bg-white hover:text-blue-600 cursor-pointer"
-                        onClick={() => insertMarkdown("bold")}
-                        title="Έντονο"
-                      >
-                        <Bold className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="w-8 h-8 rounded-lg text-slate-600 hover:bg-white hover:text-blue-600 cursor-pointer"
-                        onClick={() => insertMarkdown("italic")}
-                        title="Πλάγιο"
-                      >
-                        <Italic className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="w-8 h-8 rounded-lg text-slate-600 hover:bg-white hover:text-blue-600 cursor-pointer"
-                        onClick={() => insertMarkdown("heading")}
-                        title="Υπότιτλος"
-                      >
-                        <Heading3 className="w-4 h-4" />
-                      </Button>
-                      <div className="w-[1px] h-5 bg-slate-200 mx-1" />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="w-8 h-8 rounded-lg text-slate-600 hover:bg-white hover:text-blue-600 cursor-pointer"
-                        onClick={() => insertMarkdown("list")}
-                        title="Λίστα με κουκκίδες"
-                      >
-                        <List className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="w-8 h-8 rounded-lg text-slate-600 hover:bg-white hover:text-blue-600 cursor-pointer"
-                        onClick={() => insertMarkdown("numlist")}
-                        title="Αριθμημένη λίστα"
-                      >
-                        <ListOrdered className="w-4 h-4" />
-                      </Button>
-                      <div className="w-[1px] h-5 bg-slate-200 mx-1" />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="w-8 h-8 rounded-lg text-slate-600 hover:bg-white hover:text-blue-600 cursor-pointer"
-                        onClick={() => insertMarkdown("link")}
-                        title="Σύνδεσμος"
-                      >
-                        <LinkIcon className="w-4 h-4" />
-                      </Button>
-                      <span className="text-[11px] text-slate-400 font-medium ml-auto pr-2 hidden sm:inline-block">
-                        Markdown υποστηρίζεται
-                      </span>
-                    </div>
-
-                    <FormControl>
-                      <Textarea 
-                        id="content-textarea"
-                        placeholder="Γράψτε το κείμενο που θα εμφανίζεται στο popup..." 
-                        className="min-h-[140px] rounded-xl border-slate-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 text-[13px] leading-relaxed p-4" 
-                        {...field} 
-                      />
-                    </FormControl>
-                  </div>
+                  <RichTextEditor
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                    placeholder="Γράψτε το κείμενο που θα εμφανίζεται στο popup..."
+                  />
                 ) : (
                   <div className="border border-slate-100 rounded-xl p-6 bg-slate-50 min-h-[187px] prose prose-slate max-w-none">
                     {contentValue ? (

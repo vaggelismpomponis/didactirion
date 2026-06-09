@@ -11,14 +11,12 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { name, university, faculty, year, photo } = body;
+    const { name, university, photo } = body;
 
     const story = await prisma.successStory.create({
       data: {
         name,
         university,
-        faculty,
-        year: parseInt(year),
         photo,
       },
     });
@@ -33,7 +31,7 @@ export async function POST(request: Request) {
 export async function GET() {
   try {
     const stories = await prisma.successStory.findMany({
-      orderBy: { year: "desc" },
+      orderBy: { createdAt: "desc" },
     });
     return NextResponse.json(stories);
   } catch (error) {

@@ -17,8 +17,6 @@ import Link from "next/link";
 interface ParsedStory {
   name: string;
   university: string;
-  faculty: string;
-  year: string;
   isValid: boolean;
   error?: string;
 }
@@ -49,21 +47,8 @@ export default function BulkSuccessStoriesPage() {
 
       let name = "";
       let university = "";
-      let faculty = "";
-      let year = new Date().getFullYear().toString();
 
-      if (parts.length >= 4) {
-        // Name, University, Faculty, Year
-        name = parts[0] || "";
-        university = parts[1] || "";
-        faculty = parts[2] || "";
-        year = parts[3] || year;
-      } else if (parts.length === 3) {
-        // Name, University, Year (Automatic detection)
-        name = parts[0] || "";
-        university = parts[1] || "";
-        year = parts[2] || year;
-      } else if (parts.length === 2) {
+      if (parts.length >= 2) {
         // Name, University
         name = parts[0] || "";
         university = parts[1] || "";
@@ -81,19 +66,11 @@ export default function BulkSuccessStoriesPage() {
       } else if (!university) {
         isValid = false;
         error = "Λείπει η σχολή/πανεπιστήμιο.";
-      } else {
-        const parsedYear = parseInt(year);
-        if (isNaN(parsedYear) || parsedYear < 1998 || parsedYear > 2100) {
-          isValid = false;
-          error = "Μη έγκυρο έτος (1998 - 2100).";
-        }
       }
 
       return {
         name,
         university,
-        faculty,
-        year,
         isValid,
         error,
       };
@@ -168,19 +145,12 @@ export default function BulkSuccessStoriesPage() {
             <p className="text-[13px] text-emerald-900/80 leading-relaxed">
               Επιλέξτε και αντιγράψτε τις στήλες από το αρχείο σας και επικολλήστε τις στο παρακάτω πλαίσιο.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-[12px] pt-1">
+            <div className="grid grid-cols-1 gap-4 text-[12px] pt-1">
               <div className="bg-white/80 rounded-xl p-3 border border-emerald-100/50">
-                <span className="font-bold text-emerald-800 block mb-1">📋 Δομή 4 Στηλών (Πλήρης)</span>
+                <span className="font-bold text-emerald-800 block mb-1">📋 Δομή 2 Στηλών (Ονοματεπώνυμο & Σχολή)</span>
                 <span className="text-slate-500 font-mono block text-[11px] leading-relaxed">
-                  [Ονοματεπώνυμο] [Σχολή] [Τμήμα] [Έτος]<br />
-                  <span className="text-slate-400 font-sans">π.χ. Νίκος Παππάς [tab] ΕΜΠ [tab] Ηλεκτρολόγων [tab] 2026</span>
-                </span>
-              </div>
-              <div className="bg-white/80 rounded-xl p-3 border border-emerald-100/50">
-                <span className="font-bold text-emerald-800 block mb-1">📋 Δομή 3 Στηλών (Γρήγορη)</span>
-                <span className="text-slate-500 font-mono block text-[11px] leading-relaxed">
-                  [Ονοματεπώνυμο] [Σχολή] [Έτος]<br />
-                  <span className="text-slate-400 font-sans">π.χ. Μαρία Αντωνίου [tab] ΕΚΠΑ [tab] 2026</span>
+                  [Ονοματεπώνυμο] [Σχολή]<br />
+                  <span className="text-slate-400 font-sans">π.χ. Νίκος Παππάς [tab] ΕΜΠ</span>
                 </span>
               </div>
             </div>
@@ -257,8 +227,6 @@ export default function BulkSuccessStoriesPage() {
                   <th className="p-4 font-heading font-bold text-slate-500 text-[11px] uppercase tracking-wider pl-6 w-12">Κανόνας</th>
                   <th className="p-4 font-heading font-bold text-slate-500 text-[11px] uppercase tracking-wider">Ονοματεπώνυμο</th>
                   <th className="p-4 font-heading font-bold text-slate-500 text-[11px] uppercase tracking-wider">Πανεπιστήμιο / Σχολή</th>
-                  <th className="p-4 font-heading font-bold text-slate-500 text-[11px] uppercase tracking-wider">Τμήμα</th>
-                  <th className="p-4 font-heading font-bold text-slate-500 text-[11px] uppercase tracking-wider w-24">Έτος</th>
                   <th className="p-4 font-heading font-bold text-slate-500 text-[11px] uppercase tracking-wider pr-6">Κατάσταση</th>
                 </tr>
               </thead>
@@ -268,12 +236,7 @@ export default function BulkSuccessStoriesPage() {
                     <td className="p-4 pl-6 text-[12px] font-mono text-slate-400">#{idx + 1}</td>
                     <td className="p-4 text-[13px] font-bold text-slate-800">{story.name || <span className="text-amber-500 font-normal italic">Λείπει</span>}</td>
                     <td className="p-4 text-[13px] text-slate-600 font-medium">{story.university || <span className="text-amber-500 font-normal italic">Λείπει</span>}</td>
-                    <td className="p-4 text-[13px] text-slate-500">{story.faculty || <span className="text-slate-300 italic">-</span>}</td>
-                    <td className="p-4">
-                      <span className="inline-flex items-center justify-center px-2.5 py-0.5 rounded-xl bg-slate-50 text-slate-700 text-[11px] font-black border border-slate-200">
-                        {story.year}
-                      </span>
-                    </td>
+
                     <td className="p-4 pr-6">
                       {story.isValid ? (
                         <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-100">

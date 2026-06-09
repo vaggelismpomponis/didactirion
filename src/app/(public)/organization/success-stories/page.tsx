@@ -1,4 +1,4 @@
-export const revalidate = 3600;
+export const revalidate = 0;
 
 import { createPageMetadata } from "@/lib/seo";
 import { prisma } from "@/lib/prisma";
@@ -9,13 +9,13 @@ import { defaultSuccessHeaderContent } from "./success-header-content";
 export const metadata = createPageMetadata({
   title: "Επιτυχόντες",
   description:
-    "Ιστορίες επιτυχίας μαθητών του Διδακτήριον: εισαγωγές σε πανεπιστήμια και σχολές ανά έτος.",
+    "Ιστορίες επιτυχίας μαθητών του Διδακτήριον: εισαγωγές σε πανεπιστήμια και σχολές.",
   path: "/organization/success-stories",
 });
 
 async function getSuccessStories() {
   return await prisma.successStory.findMany({
-    orderBy: { year: "desc" },
+    orderBy: { createdAt: "desc" },
   });
 }
 

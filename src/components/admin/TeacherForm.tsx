@@ -1,11 +1,20 @@
 "use client";
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Save, X, Loader2, User, GraduationCap, ChevronUp, ChevronDown } from "lucide-react";
+import { 
+  Save, 
+  X, 
+  Loader2, 
+  User, 
+  GraduationCap, 
+  ChevronUp, 
+  ChevronDown,
+  Eye, 
+  PenTool 
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,8 +25,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { ImageUpload } from "./ImageUpload";
+import { parseMarkdownToHtml } from "@/lib/markdown";
+import { RichTextEditor } from "./RichTextEditor";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Το όνομα πρέπει να είναι τουλάχιστον 2 χαρακτήρες." }),
@@ -50,6 +60,10 @@ export function TeacherForm({ initialData }: TeacherFormProps) {
   const specialtyValue = form.watch("specialty");
   const photoValue = form.watch("photo");
   const bioValue = form.watch("bio");
+
+  const [activeTab, setActiveTab] = useState<"edit" | "preview">("edit");
+
+
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
@@ -130,26 +144,76 @@ export function TeacherForm({ initialData }: TeacherFormProps) {
                   />
                 </div>
 
-                <FormField
-                  control={form.control}
-                  name="bio"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-[13px] font-bold text-slate-700">Βιογραφικό</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Λίγα λόγια για τον καθηγητή..."
-                          className="min-h-[160px] rounded-xl border-slate-200 focus:border-violet-400 focus:ring-2 focus:ring-violet-100 text-[13px] leading-relaxed resize-none"
-                          {...field}
+                <div className="space-y-4 pt-4 border-t border-slate-50">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <FormLabel className="text-[13px] font-bold text-slate-700">Βιογραφικό</FormLabel>
+                    
+                    {/* Edit/Preview Tabs */}
+                    <div className="flex items-center bg-slate-50 p-1 rounded-xl border border-slate-100">
+                      <button
+                        type="button"
+                        onClick={() => setActiveTab("edit")}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-bold transition-all ${
+                          activeTab === "edit"
+                            ? "bg-white text-violet-600 shadow-sm"
+                            : "text-slate-500 hover:text-slate-800"
+                        }`}
+                      >
+                        <PenTool className="w-3.5 h-3.5" />
+                        Σύνταξη
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setActiveTab("preview")}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-bold transition-all ${
+                          activeTab === "preview"
+                            ? "bg-white text-violet-600 shadow-sm"
+                            : "text-slate-500 hover:text-slate-800"
+                        }`}
+                      >
+                        <Eye className="w-3.5 h-3.5" />
+                        Προεπισκόπηση
+                      </button>
+                    </div>
+                  </div>
+
+                  {activeTab === "edit" ? (
+                    <FormField
+                      control={form.control}
+                      name="bio"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <RichTextEditor
+                              value={field.value || ""}
+                              onChange={field.onChange}
+                              placeholder="Λίγα λόγια για τον καθηγητή..."
+                            />
+                          </FormControl>
+                          <div className="flex items-center justify-between">
+                            <FormMessage />
+                            <span className="text-[11px] text-slate-400 ml-auto">
+                              {field.value?.length || 0} χαρακτήρες
+                            </span>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                  ) : (
+                    <div className="border border-slate-100 rounded-xl p-6 bg-slate-50 min-h-[227px] prose prose-slate max-w-none">
+                      {bioValue ? (
+                        <div
+                          dangerouslySetInnerHTML={{ __html: parseMarkdownToHtml(bioValue) }}
+                          className="space-y-2 text-[13px] text-slate-600"
                         />
-                      </FormControl>
-                      <div className="flex items-center justify-end">
-                        <span className="text-[11px] text-slate-400">{field.value?.length || 0} χαρακτήρες</span>
-                      </div>
-                      <FormMessage />
-                    </FormItem>
+                      ) : (
+                        <p className="text-slate-400 text-[13px] italic text-center pt-16">
+                          Δεν υπάρχει περιεχόμενο για προεπισκόπηση ακόμη.
+                        </p>
+                      )}
+                    </div>
                   )}
-                />
+                </div>
               </div>
 
               {/* Photo */}
@@ -209,7 +273,7 @@ export function TeacherForm({ initialData }: TeacherFormProps) {
 
                   {bioValue && (
                     <p className="text-[11px] text-slate-500 text-center line-clamp-3 leading-relaxed">
-                      {bioValue}
+                      {bioValue.replace(/[*#_\-`\[\]()]/g, "")}
                     </p>
                   )}
                 </div>

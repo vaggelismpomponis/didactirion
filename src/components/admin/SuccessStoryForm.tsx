@@ -20,8 +20,6 @@ import { Input } from "@/components/ui/input";
 const formSchema = z.object({
   name: z.string().min(2, { message: "Το όνομα είναι υποχρεωτικό." }),
   university: z.string().min(2, { message: "Το πανεπιστήμιο είναι υποχρεωτικό." }),
-  faculty: z.string().optional().or(z.literal("")),
-  year: z.coerce.number().int().min(1998).max(2100),
   photo: z.string().optional().or(z.literal("")),
 });
 
@@ -38,16 +36,12 @@ export function SuccessStoryForm({ initialData }: SuccessStoryFormProps) {
     defaultValues: initialData || {
       name: "",
       university: "",
-      faculty: "",
-      year: new Date().getFullYear(),
       photo: "",
     },
   });
 
   const nameValue = form.watch("name");
   const universityValue = form.watch("university");
-  const facultyValue = form.watch("faculty");
-  const yearValue = form.watch("year");
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
@@ -108,53 +102,16 @@ export function SuccessStoryForm({ initialData }: SuccessStoryFormProps) {
                   )}
                 />
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <FormField
-                    control={form.control}
-                    name="university"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-[13px] font-bold text-slate-700">Πανεπιστήμιο / Σχολή</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="π.χ. ΕΜΠ"
-                            className="h-11 rounded-xl border-slate-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 text-[14px]"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="faculty"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-[13px] font-bold text-slate-700">Τμήμα</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="π.χ. Ηλεκτρολόγων Μηχανικών"
-                            className="h-11 rounded-xl border-slate-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 text-[14px]"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
                 <FormField
                   control={form.control}
-                  name="year"
+                  name="university"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-[13px] font-bold text-slate-700">Έτος Επιτυχίας</FormLabel>
+                      <FormLabel className="text-[13px] font-bold text-slate-700">Πανεπιστήμιο / Σχολή</FormLabel>
                       <FormControl>
                         <Input
-                          type="number"
-                          className="h-11 rounded-xl border-slate-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 text-[14px] max-w-[160px]"
+                          placeholder="π.χ. ΕΜΠ"
+                          className="h-11 rounded-xl border-slate-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 text-[14px]"
                           {...field}
                         />
                       </FormControl>
@@ -162,6 +119,8 @@ export function SuccessStoryForm({ initialData }: SuccessStoryFormProps) {
                     </FormItem>
                   )}
                 />
+
+
               </div>
             </div>
 
@@ -190,14 +149,8 @@ export function SuccessStoryForm({ initialData }: SuccessStoryFormProps) {
                         {universityValue}
                       </div>
                     )}
-                    {facultyValue && (
-                      <p className="text-[11px] text-slate-500">{facultyValue}</p>
-                    )}
-                    {yearValue && (
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-xl bg-emerald-50 text-emerald-700 text-[11px] font-black border border-emerald-200">
-                        <GraduationCap className="w-3 h-3" /> {yearValue}
-                      </span>
-                    )}
+
+
                   </div>
                 </div>
 

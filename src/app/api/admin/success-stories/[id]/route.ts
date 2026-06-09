@@ -15,15 +15,13 @@ export async function PATCH(
     }
 
     const body = await request.json();
-    const { name, university, faculty, year, photo } = body;
+    const { name, university, photo } = body;
 
     const story = await prisma.successStory.update({
       where: { id },
       data: {
         name,
         university,
-        faculty,
-        year: parseInt(year),
         photo,
       },
     });

@@ -8,6 +8,7 @@ import { Calendar, ArrowLeft, Share2, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { parseMarkdownToHtml } from "@/lib/markdown";
 
 export async function generateMetadata({
   params,
@@ -91,12 +92,10 @@ export default async function AnnouncementDetailPage({
             </div>
           )}
 
-          <div className="prose prose-slate prose-lg max-w-none">
-            {/* Split content by newlines to render paragraphs */}
-            {post.content.split('\n').map((paragraph, i) => (
-              paragraph.trim() && <p key={i} className="text-slate-600 leading-relaxed mb-6">{paragraph}</p>
-            ))}
-          </div>
+          <div 
+            className="prose prose-slate prose-lg max-w-none text-slate-600"
+            dangerouslySetInnerHTML={{ __html: parseMarkdownToHtml(post.content) }}
+          />
 
           {/* ── Share & Navigation ── */}
           <div className="pt-12 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-6">

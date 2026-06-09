@@ -40,7 +40,7 @@ const navigation = [
       { title: "Λύκειο (Α, Β, Γ)", href: "/curricula/high-school", desc: "Πλήρης προετοιμασία για Πανελλαδικές" },
       { title: "ΕΠΑΛ", href: "/curricula/epal", desc: "Εκπαίδευση για Επαγγελματικό Λύκειο" },
       { title: "Απόφοιτοι", href: "/curricula/alumni", desc: "Επανάληψη για αποφοίτους" },
-      { title: "Πρότυπα Σχολεία", href: "/curricula/model-schools", desc: "Προετοιμασία για πρότυπα & πειραματικά" },
+      { title: "Πρότυπα & Ωνάσεια Σχολεία", href: "/curricula/model-schools", desc: "Προετοιμασία για πρότυπα & πειραματικά" },
     ],
   },
   {
@@ -139,7 +139,7 @@ export function Header() {
                                     <Link
                                       href={child.href}
                                       className={cn(
-                                        "group flex flex-col select-none rounded-xl p-3 no-underline outline-none transition-all",
+                                        "group flex flex-col items-center text-center select-none rounded-xl p-3 no-underline outline-none transition-all",
                                         "text-slate-700 hover:bg-slate-50 hover:text-slate-600"
                                       )}
                                     >
