@@ -94,7 +94,7 @@ export function TeachersPageClient({
                   {teacher.bio ? (
                     <div
                       dangerouslySetInnerHTML={{ __html: parseMarkdownToHtml(teacher.bio) }}
-                      className="text-slate-500 text-sm leading-relaxed line-clamp-4 [&_p]:mb-0 [&_ul]:my-1 [&_ol]:my-1 [&_li]:text-sm [&_li]:text-slate-500"
+                      className="text-slate-500 text-sm leading-relaxed [&_p]:mb-0 [&_ul]:my-1 [&_ol]:my-1 [&_li]:text-sm [&_li]:text-slate-500"
                     />
                   ) : (
                     <p className="text-slate-500 text-sm leading-relaxed">
