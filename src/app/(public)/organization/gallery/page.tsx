@@ -13,6 +13,8 @@ export const metadata = createPageMetadata({
 export default async function GalleryPage() {
   const dbContent = await getPageContent("gallery");
   const content = mergeContent(defaultGalleryContent, dbContent);
+  
+  content.images = [];
 
   return <GalleryPageClient initialContent={content} />;
 }

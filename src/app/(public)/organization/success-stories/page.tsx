@@ -13,16 +13,24 @@ export const metadata = createPageMetadata({
   path: "/organization/success-stories",
 });
 
-async function getSuccessStories() {
-  return await prisma.successStory.findMany({
-    orderBy: { createdAt: "desc" },
-  });
-}
 
 export default async function SuccessStoriesPage() {
-  const stories = await getSuccessStories();
-  const dbContent = await getPageContent("success-header");
+  const [dbContent, initialStories, total] = await Promise.all([
+    getPageContent("success-header"),
+    prisma.successStory.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 30,
+    }),
+    prisma.successStory.count(),
+  ]);
+
   const content = mergeContent(defaultSuccessHeaderContent, dbContent);
 
-  return <SuccessStoriesPageClient stories={stories} initialContent={content} />;
+  return (
+    <SuccessStoriesPageClient
+      initialStories={initialStories}
+      totalCount={total}
+      initialContent={content}
+    />
+  );
 }

@@ -4,7 +4,7 @@ export const defaultContactContent = {
 
   address_title: "Διεύθυνση",
   address_content: "Θρακομακεδόνων 97",
-  address_subContent: "Αχαρναί, 136 71",
+  address_subContent: "Αχαρναί, 136 72",
 
   phone_title: "Τηλέφωνο",
   phone_content: "210 2448542",

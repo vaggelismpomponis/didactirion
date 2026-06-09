@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { GraduationCap, School, ArrowRight } from "lucide-react";
+import { GraduationCap, School, ArrowRight, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -20,17 +20,57 @@ type SuccessStory = {
 };
 
 export function SuccessStoriesPageClient({
-  stories,
+  initialStories,
+  totalCount,
   initialContent,
 }: {
-  stories: SuccessStory[];
+  initialStories: SuccessStory[];
+  totalCount: number;
   initialContent: SuccessHeaderContent;
 }) {
   const [content, setContent] = React.useState<SuccessHeaderContent>(initialContent);
+  const [stories, setStories] = React.useState<SuccessStory[]>(initialStories);
+  const [offset, setOffset] = React.useState(30);
+  const [total, setTotal] = React.useState(totalCount);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const isLoadingRef = React.useRef(false);
+  const [hasMore, setHasMore] = React.useState(initialStories.length < totalCount);
 
   const handlePreviewUpdate = React.useCallback((override: Record<string, any>) => {
     setContent(mergeContent(defaultSuccessHeaderContent, override) as SuccessHeaderContent);
   }, []);
+
+  const fetchStories = React.useCallback(async (currentOffset: number) => {
+    if (isLoadingRef.current) return;
+    isLoadingRef.current = true;
+    setIsLoading(true);
+    try {
+      const res = await fetch(`/api/success-stories?limit=30&offset=${currentOffset}`);
+      if (!res.ok) throw new Error("Failed to fetch success stories");
+      const data = await res.json();
+
+      setStories((prev) => {
+        const existingIds = new Set(prev.map((item: any) => item.id));
+        const newStories = data.stories.filter((item: any) => !existingIds.has(item.id));
+        return [...prev, ...newStories];
+      });
+      setTotal(data.total);
+      setHasMore(currentOffset + data.stories.length < data.total);
+    } catch (err) {
+      console.error("Fetch stories error:", err);
+    } finally {
+      isLoadingRef.current = false;
+      setIsLoading(false);
+    }
+  }, []);
+
+  const loadMore = React.useCallback(() => {
+    setOffset((prevOffset) => {
+      const nextOffset = prevOffset + 30;
+      fetchStories(nextOffset);
+      return nextOffset;
+    });
+  }, [fetchStories]);
 
   return (
     <div className="flex flex-col">
@@ -81,6 +121,25 @@ export function SuccessStoriesPageClient({
                 </div>
               ))}
             </div>
+
+            {hasMore && (
+              <div className="flex justify-center mt-12">
+                <Button
+                  onClick={loadMore}
+                  disabled={isLoading}
+                  className="bg-[#004a99] hover:bg-[#003d80] text-white font-bold px-8 py-3 rounded-2xl shadow-xl shadow-blue-500/20"
+                >
+                  {isLoading ? (
+                    <span className="flex items-center gap-2">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Φόρτωση...
+                    </span>
+                  ) : (
+                    "Φόρτωση Περισσότερων"
+                  )}
+                </Button>
+              </div>
+            )}
           </div>
         )}
       </section>

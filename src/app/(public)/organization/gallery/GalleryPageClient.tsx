@@ -1,6 +1,6 @@
 "use client";
 
-import { Image as ImageIcon, ArrowRight, X, ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
+import { Image as ImageIcon, ArrowRight, X, ChevronLeft, ChevronRight, ZoomIn, Loader2 } from "lucide-react";
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -17,12 +17,14 @@ type GalleryContent = typeof defaultGalleryContent;
 function Lightbox({
   images,
   currentIndex,
+  totalCount,
   onClose,
   onPrev,
   onNext,
 }: {
-  images: GalleryContent["images"];
+  images: any[];
   currentIndex: number;
+  totalCount: number;
   onClose: () => void;
   onPrev: () => void;
   onNext: () => void;
@@ -53,11 +55,11 @@ function Lightbox({
       <div className="relative z-10 w-full max-w-5xl mx-auto px-4 flex flex-col items-center">
         <div className="w-full flex items-center justify-between mb-4">
           <span className="text-white/60 text-sm font-medium">
-            {currentIndex + 1} / {images.length}
+            {currentIndex + 1} / {totalCount || images.length}
           </span>
           <div className="flex items-center gap-2">
             <span className="text-white font-bold text-sm hidden sm:block">
-              {image.title}
+              {image ? image.title : "Φόρτωση..."}
             </span>
             <button
               onClick={onClose}
@@ -70,13 +72,19 @@ function Lightbox({
         </div>
 
         <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden shadow-2xl">
-          <Image
-            src={image.url}
-            alt={image.title}
-            fill
-            className="object-contain bg-black"
-            sizes="(max-width: 1024px) 100vw, 1024px"
-          />
+          {image ? (
+            <Image
+              src={image.url}
+              alt={image.title}
+              fill
+              className="object-contain bg-black"
+              sizes="(max-width: 1024px) 100vw, 1024px"
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center bg-black text-white">
+              <Loader2 className="w-8 h-8 animate-spin text-white/50" />
+            </div>
+          )}
         </div>
 
         <div className="flex items-center gap-4 mt-6">
@@ -100,26 +108,134 @@ function Lightbox({
   );
 }
 
+const LazyImage = ({ src, alt }: { src: string; alt: string }) => {
+  const [loadedSrc, setLoadedSrc] = React.useState<string | null>(null);
+  const ref = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setLoadedSrc(src);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px" }
+    );
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+    return () => observer.disconnect();
+  }, [src]);
+
+  return (
+    <div ref={ref} className="w-full h-full relative bg-slate-50">
+      {loadedSrc ? (
+        <img
+          src={loadedSrc}
+          alt={alt}
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+        />
+      ) : (
+        <div className="absolute inset-0 flex items-center justify-center text-slate-300">
+          <Loader2 className="w-5 h-5 animate-spin text-slate-400" />
+        </div>
+      )}
+    </div>
+  );
+};
+
 export function GalleryPageClient({ initialContent }: { initialContent: GalleryContent }) {
   const [content, setContent] = React.useState<GalleryContent>(initialContent);
+  const [images, setImages] = React.useState<any[]>([]);
+  const [offset, setOffset] = React.useState(0);
+  const [total, setTotal] = React.useState(0);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const isLoadingRef = React.useRef(false);
+  const [hasMore, setHasMore] = React.useState(true);
   const [lightboxIndex, setLightboxIndex] = React.useState<number | null>(null);
 
   const handlePreviewUpdate = React.useCallback((override: Record<string, any>) => {
     setContent(mergeContent(defaultGalleryContent, override) as GalleryContent);
   }, []);
 
-  const galleryImages = Array.isArray(content.images) ? content.images : defaultGalleryContent.images;
+  const fetchImages = React.useCallback(async (currentOffset: number) => {
+    if (isLoadingRef.current) return;
+    isLoadingRef.current = true;
+    setIsLoading(true);
+    try {
+      const res = await fetch(`/api/gallery-images?limit=12&offset=${currentOffset}`);
+      if (!res.ok) throw new Error("Failed to fetch images");
+      const data = await res.json();
+      
+      setImages((prev) => {
+        const existingIds = new Set(prev.map((img: any) => img.id));
+        const newImages = data.images.filter((img: any) => !existingIds.has(img.id));
+        return [...prev, ...newImages];
+      });
+      setTotal(data.total);
+      setHasMore(currentOffset + data.images.length < data.total);
+    } catch (err) {
+      console.error("Fetch images error:", err);
+    } finally {
+      isLoadingRef.current = false;
+      setIsLoading(false);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    fetchImages(0);
+  }, []);
+
+  const loadMore = React.useCallback(() => {
+    setOffset((prevOffset) => {
+      const nextOffset = prevOffset + 12;
+      fetchImages(nextOffset);
+      return nextOffset;
+    });
+  }, [fetchImages]);
+
+  // Pre-fetch next batch in the background if the user is close to the end of currently loaded images in the lightbox
+  React.useEffect(() => {
+    if (
+      lightboxIndex !== null &&
+      lightboxIndex >= images.length - 2 &&
+      hasMore &&
+      !isLoadingRef.current
+    ) {
+      loadMore();
+    }
+  }, [lightboxIndex, images.length, hasMore, loadMore]);
 
   const openLightbox = (index: number) => setLightboxIndex(index);
   const closeLightbox = () => setLightboxIndex(null);
-  const prevImage = () =>
-    setLightboxIndex((prev) =>
-      prev !== null ? (prev - 1 + galleryImages.length) % galleryImages.length : null
-    );
-  const nextImage = () =>
-    setLightboxIndex((prev) =>
-      prev !== null ? (prev + 1) % galleryImages.length : null
-    );
+
+  const prevImage = () => {
+    if (lightboxIndex === null) return;
+    if (lightboxIndex === 0) {
+      setLightboxIndex(images.length - 1);
+    } else {
+      setLightboxIndex(lightboxIndex - 1);
+    }
+  };
+
+  const nextImage = () => {
+    if (lightboxIndex === null) return;
+
+    // If we are currently loading the next batch and already showing a loader, block next
+    if (lightboxIndex >= images.length) return;
+
+    if (lightboxIndex === images.length - 1) {
+      if (hasMore) {
+        setLightboxIndex(lightboxIndex + 1);
+        loadMore();
+      } else {
+        setLightboxIndex(0);
+      }
+    } else {
+      setLightboxIndex(lightboxIndex + 1);
+    }
+  };
 
   return (
     <div className="flex flex-col">
@@ -139,14 +255,14 @@ export function GalleryPageClient({ initialContent }: { initialContent: GalleryC
           </p>
           <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 text-sm text-blue-100/70">
             <ImageIcon className="w-4 h-4" />
-            {galleryImages.length} φωτογραφίες
+            {total || images.length} φωτογραφίες
           </div>
         </div>
       </section>
 
       {/* ── Gallery Masonry Grid ── */}
       <section className="container mx-auto px-4 py-12 sm:py-16">
-        {galleryImages.length === 0 ? (
+        {images.length === 0 && !isLoading ? (
           <div className="py-20 text-center space-y-4">
             <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto text-slate-400">
               <ImageIcon className="w-8 h-8" />
@@ -155,47 +271,62 @@ export function GalleryPageClient({ initialContent }: { initialContent: GalleryC
             <p className="text-slate-500">Πολύ σύντομα θα προστεθεί νέο φωτογραφικό υλικό.</p>
           </div>
         ) : (
-          <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 sm:gap-6 space-y-4 sm:space-y-6">
-            {galleryImages.map((image, i) => (
-              <ScrollReveal key={i} delay={i * 0.06}>
-                <div
-                  className={cn(
-                    "group relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm border border-slate-100 cursor-pointer hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 break-inside-avoid",
-                    image.aspect === "tall" && "aspect-[3/4]",
-                    image.aspect === "wide" && "aspect-[4/3]",
-                    image.aspect === "square" && "aspect-square"
-                  )}
-                  onClick={() => openLightbox(i)}
-                >
-                  <Image
-                    src={image.url}
-                    alt={image.title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    loading="lazy"
-                  />
-                  {/* Hover overlay — slide up */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end p-6">
-                    <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                      <p className="text-white font-bold text-lg mb-1">
-                        <Editable id={`images_${i}_title`}>{image.title}</Editable>
-                      </p>
-                      <div className="flex items-center gap-1.5 text-white/70 text-sm">
-                        <ZoomIn className="w-3.5 h-3.5" />
-                        Κάντε κλικ για μεγέθυνση
+          <>
+            <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 sm:gap-6 space-y-4 sm:space-y-6">
+              {images.map((image, i) => (
+                <ScrollReveal key={image.id || i} delay={(i % 6) * 0.06}>
+                  <div
+                    className={cn(
+                      "group relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm border border-slate-100 cursor-pointer hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 break-inside-avoid",
+                      image.aspect === "tall" && "aspect-[3/4]",
+                      image.aspect === "wide" && "aspect-[4/3]",
+                      image.aspect === "square" && "aspect-square"
+                    )}
+                    onClick={() => openLightbox(i)}
+                  >
+                    <LazyImage src={image.url} alt={image.title} />
+                    
+                    {/* Hover overlay — slide up */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end p-6 z-10">
+                      <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                        <p className="text-white font-bold text-lg mb-1">
+                          <Editable id={`images_${i}_title`}>{image.title}</Editable>
+                        </p>
+                        <div className="flex items-center gap-1.5 text-white/70 text-sm">
+                          <ZoomIn className="w-3.5 h-3.5" />
+                          Κάντε κλικ για μεγέθυνση
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Number badge */}
-                  <div className="absolute top-4 right-4 w-8 h-8 rounded-lg bg-black/30 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    {i + 1}
+                    {/* Number badge */}
+                    <div className="absolute top-4 right-4 w-8 h-8 rounded-lg bg-black/30 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+                      {i + 1}
+                    </div>
                   </div>
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
+                </ScrollReveal>
+              ))}
+            </div>
+
+            {hasMore && (
+              <div className="flex justify-center mt-12">
+                <Button
+                  onClick={loadMore}
+                  disabled={isLoading}
+                  className="bg-[#004a99] hover:bg-[#003d80] text-white font-bold px-8 py-3 rounded-2xl shadow-xl shadow-blue-500/20"
+                >
+                  {isLoading ? (
+                    <span className="flex items-center gap-2">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Φόρτωση...
+                    </span>
+                  ) : (
+                    "Φόρτωση Περισσότερων"
+                  )}
+                </Button>
+              </div>
+            )}
+          </>
         )}
       </section>
 
@@ -233,8 +364,9 @@ export function GalleryPageClient({ initialContent }: { initialContent: GalleryC
       {/* ── Lightbox ── */}
       {lightboxIndex !== null && (
         <Lightbox
-          images={galleryImages}
+          images={images}
           currentIndex={lightboxIndex}
+          totalCount={total}
           onClose={closeLightbox}
           onPrev={prevImage}
           onNext={nextImage}

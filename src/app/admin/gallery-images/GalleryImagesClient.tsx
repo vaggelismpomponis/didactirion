@@ -23,9 +23,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 type GalleryImage = {
+  id?: string;
+  tempId?: string;
   url: string;
   title: string;
   aspect: "wide" | "tall" | "square" | string;
+  isUploading?: boolean;
 };
 
 type GalleryContent = {
@@ -36,6 +39,83 @@ type GalleryContent = {
   cta_button: string;
   images: GalleryImage[];
 };
+
+const compressImage = (base64Str: string, maxWidth = 1200, maxHeight = 1200, quality = 0.7): Promise<string> => {
+  return new Promise((resolve) => {
+    const img = new window.Image();
+    img.src = base64Str;
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      let width = img.width;
+      let height = img.height;
+
+      if (width > height) {
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+      } else {
+        if (height > maxHeight) {
+          width = Math.round((width * maxHeight) / height);
+          height = maxHeight;
+        }
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        resolve(base64Str);
+        return;
+      }
+
+      ctx.drawImage(img, 0, 0, width, height);
+      resolve(canvas.toDataURL("image/jpeg", quality));
+    };
+    img.onerror = () => {
+      resolve(base64Str);
+    };
+  });
+};
+
+const LazyPreviewImage = ({ src, alt }: { src: string; alt: string }) => {
+  const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
+  const ref = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setLoadedSrc(src);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "100px" }
+    );
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+    return () => observer.disconnect();
+  }, [src]);
+
+  return (
+    <div ref={ref} className="w-full h-full bg-slate-50 relative">
+      {loadedSrc ? (
+        <img
+          src={loadedSrc}
+          alt={alt}
+          className="w-full h-full object-cover select-none pointer-events-none group-hover:scale-105 transition-transform duration-500"
+        />
+      ) : (
+        <div className="w-full h-full flex items-center justify-center text-slate-300">
+          <ImageIcon className="w-5 h-5 animate-pulse" />
+        </div>
+      )}
+    </div>
+  );
+};
+
 
 export function GalleryImagesClient({ initialContent }: { initialContent: GalleryContent }) {
   const router = useRouter();
@@ -117,28 +197,114 @@ export function GalleryImagesClient({ initialContent }: { initialContent: Galler
     }
   };
 
-  const handleFiles = (fileList: FileList) => {
+  const handleFiles = async (fileList: FileList) => {
     const validFiles = Array.from(fileList).filter((file) => file.type.startsWith("image/"));
     if (validFiles.length === 0) return;
 
-    validFiles.forEach((file) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64Url = reader.result as string;
+    setIsLoading(true);
+    setStatus({ type: "saving", msg: "Επεξεργασία και συμπίεση εικόνων..." });
+    setHasChanges(true);
+
+    const pendingImages: GalleryImage[] = [];
+
+    // 1. Read and compress all files locally first to display previews instantly
+    for (const file of validFiles) {
+      try {
+        const base64Url = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+
+        const compressed = await compressImage(base64Url);
         const defaultTitle = file.name.substring(0, file.name.lastIndexOf(".")) || file.name;
-        
-        setImages((prev) => [
-          ...prev,
-          {
-            url: base64Url,
-            title: defaultTitle,
-            aspect: "wide",
-          },
-        ]);
-        setHasChanges(true);
-      };
-      reader.readAsDataURL(file);
-    });
+
+        pendingImages.push({
+          tempId: Math.random().toString(36).substring(2, 9),
+          url: compressed,
+          title: defaultTitle,
+          aspect: "wide",
+          isUploading: true,
+        });
+      } catch (err) {
+        console.error("Failed to read file:", file.name, err);
+      }
+    }
+
+    const startIndex = images.length;
+    // Set previews in UI state
+    setImages((prev) => [...prev, ...pendingImages]);
+    setStatus({ type: "saving", msg: `Μεταφόρτωση εικόνων (0/${pendingImages.length})...` });
+
+    // 2. Upload in batches (e.g. 5 at a time) to avoid server bottlenecks
+    const BATCH_SIZE = 5;
+    let completedCount = 0;
+
+    const uploadSingleImage = async (img: GalleryImage, orderIndex: number) => {
+      try {
+        const res = await fetch("/api/admin/gallery-images", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            url: img.url,
+            title: img.title,
+            aspect: img.aspect,
+            order: orderIndex,
+          }),
+        });
+
+        if (!res.ok) throw new Error("Upload failed");
+
+        const savedImg = await res.json();
+
+        // Update target item in state with DB ID and non-loading state by matching tempId
+        setImages((prev) => {
+          const updated = [...prev];
+          const targetIdx = prev.findIndex((item) => item.tempId === img.tempId);
+          if (targetIdx !== -1) {
+            updated[targetIdx] = {
+              ...updated[targetIdx],
+              id: savedImg.id,
+              url: savedImg.url,
+              isUploading: false,
+            };
+          }
+          return updated;
+        });
+      } catch (err) {
+        console.error("Failed to upload image:", img.title, err);
+        // Remove from UI if upload failed
+        setImages((prev) => {
+          const updated = [...prev];
+          const targetIdx = prev.findIndex((item) => item.tempId === img.tempId);
+          if (targetIdx !== -1) {
+            updated.splice(targetIdx, 1);
+          }
+          return updated;
+        });
+      } finally {
+        completedCount++;
+        setStatus({
+          type: "saving",
+          msg: `Μεταφόρτωση εικόνων (${completedCount}/${pendingImages.length})...`,
+        });
+      }
+    };
+
+    // Run batch queue uploads
+    for (let i = 0; i < pendingImages.length; i += BATCH_SIZE) {
+      const batch = pendingImages.slice(i, i + BATCH_SIZE);
+      await Promise.all(
+        batch.map((img, batchIdx) => {
+          const orderIndex = startIndex + i + batchIdx;
+          return uploadSingleImage(img, orderIndex);
+        })
+      );
+    }
+
+    setIsLoading(false);
+    setStatus({ type: "idle" });
   };
 
   // Manual reorder arrows (mobile / keyboard support)
@@ -152,9 +318,28 @@ export function GalleryImagesClient({ initialContent }: { initialContent: Galler
   };
 
   // Delete image handler
-  const deleteImage = (index: number) => {
+  const deleteImage = async (index: number) => {
+    const img = images[index];
+    if (img.id) {
+      try {
+        setIsLoading(true);
+        setStatus({ type: "saving", msg: "Διαγραφή εικόνας..." });
+        const res = await fetch(`/api/admin/gallery-images?id=${img.id}`, {
+          method: "DELETE",
+        });
+        if (!res.ok) throw new Error("Delete failed");
+      } catch (err) {
+        console.error(err);
+        setStatus({ type: "error", msg: "Σφάλμα κατά τη διαγραφή." });
+        setTimeout(() => setStatus({ type: "idle" }), 3000);
+        setIsLoading(false);
+        return;
+      }
+    }
     setImages((prev) => prev.filter((_, i) => i !== index));
     setHasChanges(true);
+    setIsLoading(false);
+    setStatus({ type: "idle" });
   };
 
   // Edit fields handler
@@ -169,26 +354,45 @@ export function GalleryImagesClient({ initialContent }: { initialContent: Galler
 
   // Save changes handler
   const handleSave = async () => {
-    setStatus({ type: "saving" });
+    setStatus({ type: "saving", msg: "Αποθήκευση αλλαγών..." });
     setIsLoading(true);
 
     try {
-      // Fetch current database content first to merge text fields, ensuring we only update images
+      // 1. Fetch current database content first to merge text fields, ensuring we only update images
       const getRes = await fetch(`/api/admin/content?pageKey=gallery`);
       const { content: existing } = await getRes.json();
       
       const merged = {
         ...(existing || content),
-        images: images,
       };
+      // Delete legacy images array from PageContent table to avoid redundant heavy storage
+      delete (merged as any).images;
 
-      const res = await fetch("/api/admin/content", {
+      // Save content page text fields
+      const contentRes = await fetch("/api/admin/content", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ pageKey: "gallery", content: merged }),
       });
 
-      if (!res.ok) throw new Error("Failed to save gallery content");
+      if (!contentRes.ok) throw new Error("Failed to save gallery text content");
+
+      // 2. Save metadata (title, aspect, order) for all successfully uploaded database images
+      const validImages = images.filter((img) => img.id && !img.isUploading);
+      const metadataRes = await fetch("/api/admin/gallery-images", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          images: validImages.map((img, i) => ({
+            id: img.id,
+            title: img.title,
+            aspect: img.aspect,
+            order: i,
+          })),
+        }),
+      });
+
+      if (!metadataRes.ok) throw new Error("Failed to save gallery metadata");
 
       setHasChanges(false);
       setStatus({ type: "saved" });
@@ -205,7 +409,8 @@ export function GalleryImagesClient({ initialContent }: { initialContent: Galler
 
   // Cancel changes handler
   const handleCancel = () => {
-    setImages(initialContent.images || []);
+    // Reload state from database
+    router.refresh();
     setHasChanges(false);
   };
 
@@ -214,14 +419,20 @@ export function GalleryImagesClient({ initialContent }: { initialContent: Galler
       {/* ── Toast Notification ── */}
       <div
         className={`fixed top-6 left-1/2 -translate-x-1/2 z-[9999] pointer-events-none flex items-center gap-3 transition-all duration-500 ease-out ${
-          status.type === "saved" || status.type === "error"
+          status.type !== "idle"
             ? "opacity-100 translate-y-0 animate-in fade-in slide-in-from-top-4"
             : "opacity-0 -translate-y-4 pointer-events-none"
         }`}
       >
+        {status.type === "saving" && (
+          <div className="flex items-center gap-3 bg-blue-600 text-white px-6 py-3.5 rounded-2xl shadow-2xl shadow-blue-500/30 border border-blue-500">
+            <Loader2 className="w-5 h-5 shrink-0 animate-spin" />
+            <span className="text-sm font-bold">{status.msg || "Αποθήκευση..."}</span>
+          </div>
+        )}
         {status.type === "saved" && (
           <div className="flex items-center gap-3 bg-emerald-500 text-white px-6 py-3.5 rounded-2xl shadow-2xl shadow-emerald-500/30 border border-emerald-400">
-            <CheckCircle2 className="w-5 h-5 shrink-0" />
+            <CheckCircle2 className="w-5 h-5 shrink-0 animate-spin-none" />
             <span className="text-sm font-bold">Οι αλλαγές αποθηκεύτηκαν επιτυχώς!</span>
           </div>
         )}
@@ -370,68 +581,73 @@ export function GalleryImagesClient({ initialContent }: { initialContent: Galler
               >
                 {/* Image container & drag handle overlay */}
                 <div className="relative aspect-[4/3] bg-slate-50 border-b border-slate-100 overflow-hidden shrink-0">
-                  <img
-                    src={image.url}
-                    alt={image.title}
-                    className="w-full h-full object-cover select-none pointer-events-none group-hover:scale-105 transition-transform duration-500"
-                  />
+                  <LazyPreviewImage src={image.url} alt={image.title} />
                   
+                  {image.isUploading ? (
+                    <div className="absolute inset-0 bg-slate-900/60 flex flex-col items-center justify-center gap-2 text-white backdrop-blur-[1px] select-none pointer-events-none z-20">
+                      <Loader2 className="w-6 h-6 animate-spin text-white" />
+                      <span className="text-[10px] font-bold tracking-wider uppercase">Μεταφόρτωση...</span>
+                    </div>
+                  ) : null}
+
                   {/* Position Badge */}
-                  <div className="absolute top-3 left-3 bg-black/45 backdrop-blur-sm text-white text-[11px] font-black w-6 h-6 rounded-lg flex items-center justify-center select-none border border-white/10 shadow-sm">
+                  <div className="absolute top-3 left-3 bg-black/45 backdrop-blur-sm text-white text-[11px] font-black w-6 h-6 rounded-lg flex items-center justify-center select-none border border-white/10 shadow-sm z-10">
                     {index + 1}
                   </div>
 
                   {/* Reordering Controls (arrows) & Delete */}
-                  <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-3">
-                    <div className="flex justify-end">
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="icon"
-                        onClick={() => deleteImage(index)}
-                        className="w-7 h-7 rounded-lg text-white hover:scale-105 active:scale-95 transition-all shadow-md bg-red-600 hover:bg-red-700"
-                        title="Διαγραφή"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </Button>
-                    </div>
+                  {!image.isUploading && (
+                    <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-3 z-10">
+                      <div className="flex justify-end">
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="icon"
+                          onClick={() => deleteImage(index)}
+                          className="w-7 h-7 rounded-lg text-white hover:scale-105 active:scale-95 transition-all shadow-md bg-red-600 hover:bg-red-700"
+                          title="Διαγραφή"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </Button>
+                      </div>
 
-                    <div className="flex items-center justify-between gap-1 bg-white/10 backdrop-blur-md border border-white/20 p-1.5 rounded-xl">
-                      {/* Left arrow */}
-                      <button
-                        type="button"
-                        onClick={() => moveImage(index, "left")}
-                        disabled={index === 0}
-                        className={`w-8 h-8 rounded-lg flex items-center justify-center text-white transition-all ${
-                          index === 0
-                            ? "opacity-30 cursor-not-allowed"
-                            : "hover:bg-white/20 active:scale-95"
-                        }`}
-                        title="Μετακίνηση Αριστερά"
-                      >
-                        <ChevronLeft className="w-4 h-4" />
-                      </button>
-                      
-                      <span className="text-[10px] text-white/90 font-black uppercase tracking-wider select-none">
-                        Σειρα
-                      </span>
+                      <div className="flex items-center justify-between gap-1 bg-white/10 backdrop-blur-md border border-white/20 p-1.5 rounded-xl">
+                        {/* Left arrow */}
+                        <button
+                          type="button"
+                          onClick={() => moveImage(index, "left")}
+                          disabled={index === 0}
+                          className={`w-8 h-8 rounded-lg flex items-center justify-center text-white transition-all ${
+                            index === 0
+                              ? "opacity-30 cursor-not-allowed"
+                              : "hover:bg-white/20 active:scale-95"
+                          }`}
+                          title="Μετακίνηση Αριστερά"
+                        >
+                          <ChevronLeft className="w-4 h-4" />
+                        </button>
+                        
+                        <span className="text-[10px] text-white/90 font-black uppercase tracking-wider select-none">
+                          Σειρα
+                        </span>
 
-                      {/* Right arrow */}
-                      <button
-                        type="button"
-                        onClick={() => moveImage(index, "right")}
-                        disabled={index === images.length - 1}
-                        className={`w-8 h-8 rounded-lg flex items-center justify-center text-white transition-all ${
-                          index === images.length - 1
-                            ? "opacity-30 cursor-not-allowed"
-                            : "hover:bg-white/20 active:scale-95"
-                        }`}
-                        title="Μετακίνηση Δεξιά"
-                      >
-                        <ChevronRight className="w-4 h-4" />
-                      </button>
+                        {/* Right arrow */}
+                        <button
+                          type="button"
+                          onClick={() => moveImage(index, "right")}
+                          disabled={index === images.length - 1}
+                          className={`w-8 h-8 rounded-lg flex items-center justify-center text-white transition-all ${
+                            index === images.length - 1
+                              ? "opacity-30 cursor-not-allowed"
+                              : "hover:bg-white/20 active:scale-95"
+                          }`}
+                          title="Μετακίνηση Δεξιά"
+                        >
+                          <ChevronRight className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
 
                 {/* Form fields: Title & Aspect Ratio */}

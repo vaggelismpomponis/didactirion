@@ -9,6 +9,46 @@ interface ImageUploadProps {
   onChange: (value: string) => void;
 }
 
+const compressImage = (base64Str: string, maxWidth = 1200, maxHeight = 1200, quality = 0.7): Promise<string> => {
+  return new Promise((resolve) => {
+    const img = new window.Image();
+    img.src = base64Str;
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      let width = img.width;
+      let height = img.height;
+
+      if (width > height) {
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+      } else {
+        if (height > maxHeight) {
+          width = Math.round((width * maxHeight) / height);
+          height = maxHeight;
+        }
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        resolve(base64Str);
+        return;
+      }
+
+      ctx.drawImage(img, 0, 0, width, height);
+      resolve(canvas.toDataURL("image/jpeg", quality));
+    };
+    img.onerror = () => {
+      resolve(base64Str);
+    };
+  });
+};
+
+
 export function ImageUpload({ value, onChange }: ImageUploadProps) {
   const [dragActive, setDragActive] = useState(false);
 
@@ -16,8 +56,10 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       const reader = new FileReader();
-      reader.onloadend = () => {
-        onChange(reader.result as string);
+      reader.onloadend = async () => {
+        const base64Url = reader.result as string;
+        const compressed = await compressImage(base64Url);
+        onChange(compressed);
       };
       reader.readAsDataURL(file);
     }
@@ -41,8 +83,10 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const file = e.dataTransfer.files[0];
       const reader = new FileReader();
-      reader.onloadend = () => {
-        onChange(reader.result as string);
+      reader.onloadend = async () => {
+        const base64Url = reader.result as string;
+        const compressed = await compressImage(base64Url);
+        onChange(compressed);
       };
       reader.readAsDataURL(file);
     }
