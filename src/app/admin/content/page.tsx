@@ -23,6 +23,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useSearchParams } from "next/navigation";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 type Status = { type: "idle" | "saving" | "saved" | "error"; msg?: string };
@@ -56,8 +57,17 @@ const PAGES: Array<{
 ];
 
 /* ─── Main Component ─────────────────────────────────────────────────────── */
-export default function AdminContentPage() {
+function AdminContentPageInner() {
+  const searchParams = useSearchParams();
+  const pageParam = searchParams.get("page");
   const [selectedPage, setSelectedPage] = React.useState("home");
+
+  React.useEffect(() => {
+    if (pageParam && PAGES.some((p) => p.key === pageParam)) {
+      setSelectedPage(pageParam);
+    }
+  }, [pageParam]);
+
   const [changes, setChanges] = React.useState<Record<string, string>>({});
   const [status, setStatus] = React.useState<Status>({ type: "idle" });
   const [iframeReady, setIframeReady] = React.useState(false);
@@ -322,18 +332,6 @@ export default function AdminContentPage() {
             </span>
           )}
 
-          {/* Status */}
-          {status.type === "saved" && (
-            <span className="flex items-center gap-1.5 text-emerald-600 text-sm font-semibold">
-              <CheckCircle2 className="w-4 h-4" /> Αποθηκεύτηκε
-            </span>
-          )}
-          {status.type === "error" && (
-            <span className="flex items-center gap-1.5 text-red-500 text-sm font-semibold">
-              <AlertCircle className="w-4 h-4" /> {status.msg}
-            </span>
-          )}
-
           {/* Cancel button */}
           {changeCount > 0 && (
             <Button
@@ -378,6 +376,29 @@ export default function AdminContentPage() {
             Αποθήκευση
           </Button>
         </div>
+      </div>
+
+      {/* ── Toast notification (saved / error) ── */}
+      <div
+        className={cn(
+          "fixed top-6 left-1/2 -translate-x-1/2 z-[200] pointer-events-none flex items-center gap-3 transition-all duration-500 ease-out",
+          status.type === "saved" || status.type === "error"
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 -translate-y-4"
+        )}
+      >
+        {status.type === "saved" && (
+          <div className="flex items-center gap-3 bg-emerald-500 text-white px-6 py-3.5 rounded-2xl shadow-2xl shadow-emerald-500/30 border border-emerald-400">
+            <CheckCircle2 className="w-6 h-6 shrink-0" />
+            <span className="text-base font-bold">Αποθηκεύτηκε!</span>
+          </div>
+        )}
+        {status.type === "error" && (
+          <div className="flex items-center gap-3 bg-red-500 text-white px-6 py-3.5 rounded-2xl shadow-2xl shadow-red-500/30 border border-red-400">
+            <AlertCircle className="w-6 h-6 shrink-0" />
+            <span className="text-base font-bold">{status.msg}</span>
+          </div>
+        )}
       </div>
 
       {/* ── Mobile Page Selector ── */}
@@ -459,5 +480,13 @@ export default function AdminContentPage() {
         />
       </div>
     </div>
+  );
+}
+
+export default function AdminContentPage() {
+  return (
+    <React.Suspense fallback={null}>
+      <AdminContentPageInner />
+    </React.Suspense>
   );
 }

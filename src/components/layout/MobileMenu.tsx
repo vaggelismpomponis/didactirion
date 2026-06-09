@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Phone, ChevronDown, ChevronRight, X, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { defaultContactContent } from "@/app/(public)/contact/contact-content";
 
 interface NavigationChild {
   title: string;
@@ -23,9 +24,10 @@ interface MobileMenuProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   navigation: NavigationItem[];
+  contactContent?: typeof defaultContactContent;
 }
 
-export function MobileMenu({ isOpen, setIsOpen, navigation }: MobileMenuProps) {
+export function MobileMenu({ isOpen, setIsOpen, navigation, contactContent = defaultContactContent }: MobileMenuProps) {
   const [expandedSection, setExpandedSection] = React.useState<string | null>(null);
   const [mounted, setMounted] = React.useState(false);
 
@@ -238,7 +240,7 @@ export function MobileMenu({ isOpen, setIsOpen, navigation }: MobileMenuProps) {
               style={{ transitionDelay: isOpen ? "400ms" : "0ms" }}
             >
               <a
-                href="tel:2102448542"
+                href={`tel:${contactContent.phone_content.replace(/\s+/g, "")}`}
                 className="group flex items-center gap-3.5 p-3.5 rounded-2xl bg-slate-50 border border-slate-200/60 hover:border-slate-300 hover:bg-slate-100 transition-all duration-300"
               >
                 <div className="w-11 h-11 rounded-xl bg-white flex items-center justify-center text-slate-600 shadow-sm shrink-0 group-hover:shadow-md group-hover:scale-105 transition-all duration-300">
@@ -249,7 +251,7 @@ export function MobileMenu({ isOpen, setIsOpen, navigation }: MobileMenuProps) {
                     Καλέστε μας
                   </span>
                   <span className="text-base font-black text-slate-600 leading-none">
-                    210 2448542
+                    {contactContent.phone_content}
                   </span>
                 </div>
                 <ChevronRight className="w-4 h-4 text-slate-400 ml-auto group-hover:text-slate-600 group-hover:translate-x-0.5 transition-all duration-200" />

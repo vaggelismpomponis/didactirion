@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -51,6 +52,29 @@ export async function PUT(request: Request) {
       update: { content: cleaned, updatedBy: session.user.email ?? undefined },
       create: { pageKey, content: cleaned, updatedBy: session.user.email ?? undefined },
     });
+
+    try {
+      if (pageKey === "gallery") {
+        revalidatePath("/organization/gallery");
+      } else if (pageKey === "home") {
+        revalidatePath("/");
+      } else if (pageKey === "teachers-header") {
+        revalidatePath("/organization/teachers");
+      } else if (pageKey === "success-header") {
+        revalidatePath("/organization/success-stories");
+      } else if (pageKey === "announcements-header") {
+        revalidatePath("/announcements");
+      } else if (pageKey.startsWith("curricula/")) {
+        revalidatePath(`/curricula/${pageKey.split("/")[1]}`);
+      } else if (pageKey.startsWith("exams/")) {
+        revalidatePath(`/exams/${pageKey.split("/")[1]}`);
+      } else {
+        revalidatePath(`/${pageKey}`);
+      }
+    } catch (revalErr) {
+      console.warn("[content PUT] revalidation error", revalErr);
+    }
+
     return NextResponse.json({ ok: true, updatedAt: row.updatedAt });
   } catch (err) {
     console.error("[content PUT]", err);

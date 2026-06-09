@@ -626,17 +626,13 @@
 
 /* Modified indicator */
 .inline-edit-mode .editable-field.editable-modified {
-  outline: 2px solid rgba(245, 158, 11, 0.6);
+  outline: 2px solid rgba(16, 185, 129, 0.7);
   outline-offset: 4px;
-  background: rgba(245, 158, 11, 0.05);
+  background: rgba(16, 185, 129, 0.06);
 }
 
 .inline-edit-mode .editable-field.editable-modified::after {
-  content: '✓';
-  background: #f59e0b;
-  color: white;
-  font-size: 11px;
-  font-weight: bold;
+  display: none !important;
 }
 
 /* Disable pointer events on non-editable interactive elements */

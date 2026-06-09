@@ -15,6 +15,7 @@ import {
   BarChart3,
   CheckCircle2,
   Bell,
+  Phone,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -34,6 +35,7 @@ async function getDashboardData() {
 const quickActions = [
   { label: "Νέα Ανακοίνωση", href: "/admin/posts/new", icon: FileText, color: "bg-blue-600", shadow: "shadow-blue-200" },
   { label: "Προσθήκη Καθηγητή", href: "/admin/teachers/new", icon: Users, color: "bg-violet-600", shadow: "shadow-violet-200" },
+  { label: "Στοιχεία Επικοινωνίας & Ωράριο", href: "/admin/content?page=contact", icon: Phone, color: "bg-amber-600", shadow: "shadow-amber-200" },
   { label: "Νέο Popup", href: "/admin/gallery/popups/new", icon: Bell, color: "bg-sky-600", shadow: "shadow-sky-200" },
   { label: "Επιτυχόντας", href: "/admin/success-stories/new", icon: GraduationCap, color: "bg-emerald-600", shadow: "shadow-emerald-200" },
 ];

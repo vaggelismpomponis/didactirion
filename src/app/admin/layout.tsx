@@ -19,6 +19,7 @@ import {
   PenSquare,
   Sparkles,
   X,
+  Phone,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -47,6 +48,7 @@ const sidebarLinks = [
       { name: "Καθηγητές", href: "/admin/teachers", icon: Users },
       { name: "Επιτυχόντες", href: "/admin/success-stories", icon: GraduationCap },
       { name: "Popups", href: "/admin/gallery", icon: Bell },
+      { name: "Φωτογραφίες", href: "/admin/gallery-images", icon: ImageIcon },
     ],
   },
   {
@@ -59,6 +61,7 @@ const sidebarLinks = [
     group: "Ιστοσελίδα",
     items: [
       { name: "Διαχείριση Περιεχομένου", href: "/admin/content", icon: PenSquare },
+      { name: "Στοιχεία Επικοινωνίας & Ωράριο", href: "/admin/content?page=contact", icon: Phone },
     ],
   },
 ];
@@ -112,7 +115,7 @@ function SidebarContent({
                 const isActive =
                   link.href === "/admin"
                     ? pathname === "/admin"
-                    : pathname.startsWith(link.href);
+                    : pathname === link.href || pathname.startsWith(link.href + "/");
                 return (
                   <Link
                     key={link.name}
@@ -243,7 +246,9 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
     sidebarLinks
       .flatMap((g) => g.items)
       .find((l) =>
-        l.href === "/admin" ? pathname === "/admin" : pathname.startsWith(l.href)
+        l.href === "/admin"
+          ? pathname === "/admin"
+          : pathname === l.href || pathname.startsWith(l.href + "/")
       )?.name || "Dashboard";
 
   return (

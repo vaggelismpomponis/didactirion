@@ -106,6 +106,24 @@ export function Editable({
     }
   };
 
+  const handleInput = () => {
+    if (ref.current) {
+      const newText = ref.current.textContent || "";
+      const changed = newText !== originalText.current;
+      setIsModified(changed);
+      // Send change to admin parent immediately
+      window.parent.postMessage(
+        {
+          type: "INLINE_EDIT_CHANGE",
+          id,
+          value: newText,
+          changed,
+        },
+        "*"
+      );
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
       // Cancel editing — restore original
@@ -130,6 +148,7 @@ export function Editable({
       suppressContentEditableWarning
       onClick={handleClick}
       onBlur={handleBlur}
+      onInput={handleInput}
       onKeyDown={handleKeyDown}
       data-editable-id={id}
       style={{ outline: "none" }}

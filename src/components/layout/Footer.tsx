@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Mail, Phone, MapPin, Clock, ExternalLink, ChevronUp } from "lucide-react";
+import { defaultContactContent } from "@/app/(public)/contact/contact-content";
 
 const Facebook = (props: React.SVGProps<SVGSVGElement>) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
@@ -35,19 +36,40 @@ const tools = [
   { label: "StudyBot AI", href: "https://studybot.employ.edu.gr/login" },
 ];
 
-const schedule = [
-  { day: "Δευτέρα – Παρασκευή", hours: "15:00 – 22:00", active: true },
-  { day: "Σάββατο", hours: "09:00 – 16:00", active: true },
-  { day: "Κυριακή", hours: "Κλειστά", active: false },
-];
-
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-export function Footer() {
+export function Footer({ contactContent = defaultContactContent }: { contactContent?: typeof defaultContactContent }) {
   const [isVisible, setIsVisible] = React.useState(false);
   const [scrollProgress, setScrollProgress] = React.useState(0);
+
+  const schedule = [
+    { day: "Δευτέρα – Παρασκευή", hours: contactContent.hours_monday_friday, active: contactContent.hours_monday_friday !== "Κλειστά" },
+    { day: "Σάββατο", hours: contactContent.hours_saturday, active: contactContent.hours_saturday !== "Κλειστά" },
+    { day: "Κυριακή", hours: contactContent.hours_sunday, active: contactContent.hours_sunday !== "Κλειστά" },
+  ];
+
+  const contactDetails = [
+    {
+      icon: MapPin,
+      label: "Διεύθυνση",
+      content: `${contactContent.address_content}, ${contactContent.address_subContent}`,
+      href: `https://www.google.com/maps/search/?api=1&query=Φροντιστήριο+Διδακτήριον+${encodeURIComponent(contactContent.address_content)}+Αχαρναί`,
+    },
+    {
+      icon: Phone,
+      label: "Τηλέφωνο",
+      content: contactContent.phone_content,
+      href: `tel:${contactContent.phone_content.replace(/\s+/g, "")}`,
+    },
+    {
+      icon: Mail,
+      label: "Email",
+      content: contactContent.email_content,
+      href: `mailto:${contactContent.email_content}`,
+    },
+  ];
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -158,26 +180,7 @@ export function Footer() {
                 Επικοινωνία
               </h3>
               <div className="space-y-4">
-                {[
-                  {
-                    icon: MapPin,
-                    label: "Διεύθυνση",
-                    content: "Θρακομακεδόνων 97, Αχαρναί, 13672",
-                    href: "https://www.google.com/maps/search/?api=1&query=Φροντιστήριο+Διδακτήριον+Θρακομακεδόνων+97+Αχαρναί",
-                  },
-                  {
-                    icon: Phone,
-                    label: "Τηλέφωνο",
-                    content: "210 2448542",
-                    href: "tel:2102448542",
-                  },
-                  {
-                    icon: Mail,
-                    label: "Email",
-                    content: "didactirion@gmail.com",
-                    href: "mailto:didactirion@gmail.com",
-                  },
-                ].map(({ icon: Icon, label, content, href }) => (
+                {contactDetails.map(({ icon: Icon, label, content, href }) => (
                   <a
                     key={label}
                     href={href}

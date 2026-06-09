@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
+import { defaultContactContent } from "@/app/(public)/contact/contact-content";
 
 const MobileMenu = dynamic(
   () => import("./MobileMenu").then((m) => m.MobileMenu),
@@ -57,7 +58,7 @@ const navigation = [
   { title: "Επικοινωνία", href: "/contact" },
 ];
 
-export function Header() {
+export function Header({ contactContent = defaultContactContent }: { contactContent?: typeof defaultContactContent }) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
   const pathname = usePathname();
@@ -74,11 +75,11 @@ export function Header() {
       <div className="hero-gradient text-white py-1.5 px-4 hidden sm:block">
         <div className="container mx-auto px-6 sm:px-12 lg:px-16 max-w-7xl flex justify-between items-center text-xs font-heading font-medium">
           <div className="flex items-center gap-5">
-            <a href="tel:2102448542" className="flex items-center gap-1.5 hover:text-blue-200 transition-colors">
-              <Phone className="w-3 h-3" /> 210 2448542
+            <a href={`tel:${contactContent.phone_content.replace(/\s+/g, "")}`} className="flex items-center gap-1.5 hover:text-blue-200 transition-colors">
+              <Phone className="w-3 h-3" /> {contactContent.phone_content}
             </a>
             <span className="flex items-center gap-1.5 text-blue-200/80">
-              <MapPin className="w-3 h-3" /> Θρακομακεδόνων 97, Αχαρναί
+              <MapPin className="w-3 h-3" /> {contactContent.address_content}, {contactContent.address_subContent}
             </span>
           </div>
           <div className="flex items-center gap-4">
@@ -185,7 +186,7 @@ export function Header() {
 
           {/* Mobile Navigation */}
           <div className="flex lg:hidden">
-            <MobileMenu isOpen={isOpen} setIsOpen={setIsOpen} navigation={navigation} />
+            <MobileMenu isOpen={isOpen} setIsOpen={setIsOpen} navigation={navigation} contactContent={contactContent} />
           </div>
         </div>
       </div>
