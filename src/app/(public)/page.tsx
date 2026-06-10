@@ -79,7 +79,6 @@ export default async function Home() {
               <ScrollReveal key={i} delay={i * 0.1} className="h-full">
                 <Link href={item.href} className="group block h-full">
                   <div className="bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border border-slate-100/50 overflow-hidden h-full">
-                    <div className={`h-1.5 bg-gradient-to-r ${item.gradient}`} />
                     <div className="p-5 md:p-7 flex flex-col h-full">
                       <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${item.gradient} flex items-center justify-center text-white mb-5 shadow-lg group-hover:scale-110 transition-transform`}>
                         <item.icon className="w-6 h-6" />
