@@ -95,7 +95,7 @@ export default function LoginPage() {
         <div className="relative z-10 flex flex-col items-center justify-center w-full px-12 text-white text-center">
           <div className="mb-8">
             <Image
-              src="/logo-main.png"
+              src="/logo-main-v2.png"
               alt="Διδακτήριον"
               width={300}
               height={120}
@@ -141,7 +141,7 @@ export default function LoginPage() {
           <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-primary/20 blur-[80px] pointer-events-none" />
           <div className="absolute inset-0 flex items-center justify-center">
             <Image
-              src="/logo-main.png"
+              src="/logo-main-v2.png"
               alt="Διδακτήριον"
               width={220}
               height={88}

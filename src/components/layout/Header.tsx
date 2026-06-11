@@ -106,13 +106,13 @@ export function Header({ contactContent = defaultContactContent }: { contactCont
           {/* Logo */}
           <Link href="/" className="flex items-center group">
             <Image
-              src="/logo-main.png"
+              src="/logo-main-v2.png"
               alt="Διδακτήριον Logo"
               width={200}
               height={80}
               sizes="(max-width: 640px) 140px, 200px"
               priority
-              className="h-12 sm:h-14 w-auto object-contain transition-transform group-hover:scale-105"
+              className="h-14 sm:h-16 py-1.5 w-auto object-contain transition-transform group-hover:scale-105"
             />
           </Link>
 

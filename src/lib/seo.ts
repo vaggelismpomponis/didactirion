@@ -30,7 +30,7 @@ export function createPageMetadata({
       siteName: "Διδακτήριον",
       locale: "el_GR",
       type: "website",
-      images: [{ url: `${siteUrl}/logo-main.png` }],
+      images: [{ url: `${siteUrl}/logo-main-v2.png` }],
     },
     ...(noIndex ? { robots: { index: false, follow: false } } : {}),
   };

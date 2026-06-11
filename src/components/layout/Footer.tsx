@@ -120,12 +120,12 @@ export function Footer({ contactContent = defaultContactContent }: { contactCont
             <div className="lg:col-span-3 space-y-6">
               <Link href="/" className="inline-block transition-transform hover:scale-105">
                 <Image
-                  src="/logo-main.png"
+                  src="/logo-main-v2.png"
                   alt="Διδακτήριον Logo"
                   width={280}
                   height={112}
                   sizes="280px"
-                  className="h-16 w-auto object-contain"
+                  className="h-20 w-auto object-contain"
                 />
               </Link>
 

@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     siteName: "Διδακτήριον",
     locale: "el_GR",
     type: "website",
-    images: ["/logo-main.png"],
+    images: ["/logo-main-v2.png"],
   },
   robots: {
     index: true,

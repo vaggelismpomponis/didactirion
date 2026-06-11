@@ -84,7 +84,7 @@ function SidebarContent({
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-white flex items-center justify-center shadow-lg overflow-hidden p-1 shrink-0 ring-1 ring-white/20">
             <Image
-              src="/logo-main.png"
+              src="/logo-main-v2.png"
               alt="Διδακτήριον"
               width={36}
               height={36}
@@ -213,14 +213,14 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
 
     const saved = localStorage.getItem("admin_last_seen_activity");
     const lastSeen = saved ? parseInt(saved, 10) : 0;
-    
+
     const fetchLatest = async () => {
       try {
         const res = await fetch("/api/admin/activity/latest");
         if (res.ok) {
           const data = await res.json();
           const latest = data.latestTimestamp;
-          
+
           if (pathname === "/admin/activity") {
             localStorage.setItem("admin_last_seen_activity", latest.toString());
             setHasNewActivity(false);
@@ -246,27 +246,30 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
 
   if (status === "loading") {
     return (
-      <div className="h-screen w-full flex items-center justify-center bg-slate-950">
-        <div className="flex flex-col items-center gap-8">
-          <div className="relative">
-            <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center border border-white/10 backdrop-blur-sm">
-              <Image
-                src="/logo-main.png"
-                alt="Διδακτήριον"
-                width={40}
-                height={40}
-                className="w-10 h-10 object-contain"
-              />
-            </div>
-            <div className="absolute -inset-1 rounded-2xl bg-blue-500/20 blur-lg animate-pulse" />
-          </div>
-          <div className="flex flex-col items-center gap-3">
-            <p className="text-white/80 text-sm font-semibold tracking-widest uppercase">
-              Φόρτωση Dashboard
-            </p>
-            <div className="w-48 h-0.5 bg-white/10 rounded-full overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-blue-500 to-blue-300 animate-progress-fast w-1/2" />
-            </div>
+      <div
+        className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-6"
+        style={{ background: "linear-gradient(160deg, #f8f5f0 0%, #ede8e0 50%, #f8f5f0 100%)" }}
+      >
+        <div className="loading-screen-logo" style={{ width: "min(380px, 80vw)" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo-main-v2.png"
+            alt="Διδακτήριον"
+            width={380}
+            height={190}
+            style={{ width: "100%", height: "auto" }}
+          />
+        </div>
+
+        <div className="flex flex-col items-center gap-3 mt-2">
+          <p className="text-[#1d3461] text-xs font-bold tracking-widest uppercase">
+            Φόρτωση Dashboard
+          </p>
+          <div
+            className="h-0.5 rounded-full overflow-hidden"
+            style={{ width: "min(280px, 65vw)", background: "rgba(29, 52, 97, 0.12)" }}
+          >
+            <div className="h-full bg-gradient-to-r from-[#1d3461] to-[#8b1a2d] animate-progress-fast w-1/2" />
           </div>
         </div>
       </div>

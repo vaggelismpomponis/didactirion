@@ -94,11 +94,11 @@ export function MobileMenu({ isOpen, setIsOpen, navigation, contactContent = def
             <div className="relative shrink-0 px-5 pt-5 pb-4 border-b border-slate-100 bg-gradient-to-br from-slate-50 to-white">
               <div className="flex items-center justify-between">
                 <Image
-                  src="/logo-main.png"
+                  src="/logo-main-v2.png"
                   alt="Διδακτήριον Logo"
                   width={180}
                   height={70}
-                  className="h-10 w-auto object-contain"
+                  className="h-12 w-auto object-contain"
                 />
                 <button
                   onClick={() => setIsOpen(false)}

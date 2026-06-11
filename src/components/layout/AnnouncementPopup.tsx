@@ -69,12 +69,12 @@ export function AnnouncementPopup({ popup }: { popup: Popup | null }) {
         aria-hidden="true"
       />
 
-      {/* Popup panel - positioned at the TOP */}
+      {/* Popup panel - positioned at the center */}
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="announcement-popup-title"
-        className="fixed top-6 left-1/2 -translate-x-1/2 z-[9999] w-full max-w-[500px] mx-auto rounded-3xl overflow-hidden shadow-2xl bg-white border border-slate-100"
+        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[9999] w-full max-w-[500px] mx-auto rounded-3xl overflow-hidden shadow-2xl bg-white border border-slate-100 max-h-[calc(100vh-2rem)] overflow-y-auto"
         style={{ maxWidth: "min(500px, calc(100vw - 2rem))" }}
       >
         {/* Image */}

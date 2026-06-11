@@ -40,7 +40,7 @@ export function LoadingScreen() {
         {/* Plain <img> avoids pulling in the next/image client chunk */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/logo-main.png"
+          src="/logo-main-v2.png"
           alt=""
           width={380}
           height={190}
