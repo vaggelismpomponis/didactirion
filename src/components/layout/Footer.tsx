@@ -122,8 +122,8 @@ export function Footer({ contactContent = defaultContactContent }: { contactCont
                 <Image
                   src="/logo-main-v2.png"
                   alt="Διδακτήριον Logo"
-                  width={280}
-                  height={112}
+                  width={348}
+                  height={400}
                   sizes="280px"
                   className="h-20 w-auto object-contain"
                 />

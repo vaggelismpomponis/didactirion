@@ -97,8 +97,8 @@ export default function LoginPage() {
             <Image
               src="/logo-main-v2.png"
               alt="Διδακτήριον"
-              width={300}
-              height={120}
+              width={348}
+              height={400}
               className="h-20 w-auto object-contain drop-shadow-lg mx-auto"
               priority
             />
@@ -143,8 +143,8 @@ export default function LoginPage() {
             <Image
               src="/logo-main-v2.png"
               alt="Διδακτήριον"
-              width={220}
-              height={88}
+              width={348}
+              height={400}
               className="h-14 w-auto object-contain drop-shadow-lg"
               priority
             />

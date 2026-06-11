@@ -255,8 +255,8 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
           <img
             src="/logo-main-v2.png"
             alt="Διδακτήριον"
-            width={380}
-            height={190}
+            width={348}
+            height={400}
             style={{ width: "100%", height: "auto" }}
           />
         </div>

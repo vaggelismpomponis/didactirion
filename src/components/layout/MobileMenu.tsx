@@ -96,8 +96,8 @@ export function MobileMenu({ isOpen, setIsOpen, navigation, contactContent = def
                 <Image
                   src="/logo-main-v2.png"
                   alt="Διδακτήριον Logo"
-                  width={180}
-                  height={70}
+                  width={348}
+                  height={400}
                   className="h-12 w-auto object-contain"
                 />
                 <button

@@ -42,8 +42,8 @@ export function LoadingScreen() {
         <img
           src="/logo-main-v2.png"
           alt=""
-          width={380}
-          height={190}
+          width={348}
+          height={400}
           style={{ width: "100%", height: "auto" }}
           fetchPriority="low"
         />

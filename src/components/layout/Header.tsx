@@ -108,8 +108,8 @@ export function Header({ contactContent = defaultContactContent }: { contactCont
             <Image
               src="/logo-main-v2.png"
               alt="Διδακτήριον Logo"
-              width={200}
-              height={80}
+              width={348}
+              height={400}
               sizes="(max-width: 640px) 140px, 200px"
               priority
               className="h-14 sm:h-16 py-1.5 w-auto object-contain transition-transform group-hover:scale-105"
