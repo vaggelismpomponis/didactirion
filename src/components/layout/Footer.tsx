@@ -223,6 +223,13 @@ export function Footer({ contactContent = defaultContactContent }: { contactCont
                       </span>
                     </div>
                   ))}
+                  {/* Asterisk note */}
+                  <div className="mt-3 pt-2.5 border-t border-white/[0.06] flex items-start gap-1.5 text-[10px] text-slate-500 leading-normal">
+                    <span className="text-primary font-bold shrink-0">*</span>
+                    <p>
+                      Για απογευματινά ραντεβού παρακαλώ καλέστε μας!
+                    </p>
+                  </div>
                 </div>
               </div>
 

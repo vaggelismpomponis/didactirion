@@ -189,6 +189,14 @@ export function ContactPageClient({ initialContent }: { initialContent: typeof d
                       </div>
                     ))}
                   </div>
+
+                  {/* Asterisk note */}
+                  <div className="mt-5 pt-3 border-t border-white/10 flex items-start gap-1.5 text-xs text-blue-200/70">
+                    <span className="text-blue-300 font-bold shrink-0">*</span>
+                    <p className="leading-relaxed">
+                      Για απογευματινά ραντεβού παρακαλώ καλέστε μας!
+                    </p>
+                  </div>
                 </div>
               </div>
 

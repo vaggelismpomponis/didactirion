@@ -21,6 +21,14 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 type GalleryImage = {
   id?: string;
@@ -134,6 +142,8 @@ export function GalleryImagesClient({ initialContent }: { initialContent: Galler
   const [status, setStatus] = useState<{ type: "idle" | "saving" | "saved" | "error"; msg?: string }>({
     type: "idle",
   });
+
+  const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
 
   // Reorder list helper
   const reorder = (list: GalleryImage[], startIndex: number, endIndex: number) => {
@@ -603,7 +613,7 @@ export function GalleryImagesClient({ initialContent }: { initialContent: Galler
                           type="button"
                           variant="destructive"
                           size="icon"
-                          onClick={() => deleteImage(index)}
+                          onClick={() => setDeleteIndex(index)}
                           className="w-7 h-7 rounded-lg text-white hover:scale-105 active:scale-95 transition-all shadow-md bg-red-600 hover:bg-red-700"
                           title="Διαγραφή"
                         >
@@ -684,6 +694,56 @@ export function GalleryImagesClient({ initialContent }: { initialContent: Galler
           })}
         </div>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <Dialog
+        open={deleteIndex !== null}
+        onOpenChange={(open) => !open && setDeleteIndex(null)}
+      >
+        <DialogContent className="rounded-2xl">
+          <DialogHeader>
+            <DialogTitle>Διαγραφή Φωτογραφίας</DialogTitle>
+            <DialogDescription className="break-words">
+              Είστε σίγουροι ότι θέλετε να διαγράψετε τη φωτογραφία:
+              {deleteIndex !== null && images[deleteIndex] && (
+                <strong className="text-slate-900 break-all block my-2 p-2 bg-slate-50 border border-slate-100 rounded-lg text-xs font-mono select-all">
+                  {images[deleteIndex].title || `Εικόνα ${deleteIndex + 1}`}
+                </strong>
+              )}
+              Η ενέργεια αυτή θα διαγράψει μόνιμα την εικόνα από το σύστημα και δεν μπορεί να αναιρεθεί.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="mt-4 gap-2">
+            <Button
+              variant="outline"
+              onClick={() => setDeleteIndex(null)}
+              disabled={isLoading}
+              className="rounded-xl"
+            >
+              Ακύρωση
+            </Button>
+            <Button
+              className="text-white bg-red-600 hover:bg-red-700 transition-colors rounded-xl"
+              onClick={() => {
+                if (deleteIndex !== null) {
+                  deleteImage(deleteIndex);
+                  setDeleteIndex(null);
+                }
+              }}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Διαγραφή...
+                </>
+              ) : (
+                "Διαγραφή"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
