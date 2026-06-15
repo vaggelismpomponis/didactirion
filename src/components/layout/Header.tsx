@@ -29,7 +29,7 @@ const navigation = [
     title: "Το Φροντιστήριο",
     children: [
       { title: "Ιστορία & Φιλοσοφία", href: "/organization/history", desc: "Η αποστολή και το όραμά μας" },
-      { title: "Οι Καθηγητές μας", href: "/organization/teachers", desc: "Η έμπειρη εκπαιδευτική μας ομάδα" },
+      // { title: "Οι Καθηγητές μας", href: "/organization/teachers", desc: "Η έμπειρη εκπαιδευτική μας ομάδα" },
       { title: "Επιτυχόντες", href: "/organization/success-stories", desc: "Οι ιστορίες επιτυχίας μαθητών μας" },
       { title: "Φωτογραφικό Υλικό", href: "/organization/gallery", desc: "Στιγμές από τη ζωή μας" },
     ],
