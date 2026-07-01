@@ -22,7 +22,6 @@ const Instagram = (props: React.SVGProps<SVGSVGElement>) => (
 
 const quickLinks = [
   { label: "Ιστορία & Φιλοσοφία", href: "/organization/history" },
-  { label: "Οι Καθηγητές μας", href: "/organization/teachers" },
   { label: "Προγράμματα Λυκείου", href: "/curricula/high-school" },
   { label: "Προγράμματα Γυμνασίου", href: "/curricula/junior-high" },
   { label: "Επιτυχόντες", href: "/organization/success-stories" },
