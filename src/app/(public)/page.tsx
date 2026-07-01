@@ -237,7 +237,7 @@ export default async function Home() {
                     <Link href="/organization/history">Μάθετε για εμάς</Link>
                   </Button>
                   <Button asChild size="lg" variant="outline" className="border-white/60 text-white hover:text-white bg-white/10 hover:bg-white/20 font-bold px-8 h-12 w-full sm:w-auto">
-                    <Link href="/organization/teachers">Η ομάδα μας</Link>
+                    <Link href="#">Η ομάδα μας</Link>
                   </Button>
                 </div>
               </ScrollReveal>

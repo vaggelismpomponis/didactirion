@@ -145,7 +145,7 @@ export function HistoryPageClient({ initialContent }: { initialContent: HistoryC
               className="bg-white text-primary hover:bg-white/90 font-bold px-8 h-13 shadow-xl shadow-black/20 shrink-0"
               style={{ height: "3.25rem" }}
             >
-              <Link href="/organization/teachers" className="flex items-center gap-2">
+              <Link href="#" className="flex items-center gap-2">
                 Οι Καθηγητές μας <ArrowRight className="w-5 h-5" />
               </Link>
             </Button>
