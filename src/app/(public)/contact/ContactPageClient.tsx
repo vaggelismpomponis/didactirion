@@ -38,6 +38,16 @@ export function ContactPageClient({ initialContent }: { initialContent: typeof d
     setContent(mergeContent(defaultContactContent, override) as typeof defaultContactContent);
   }, []);
 
+  const isMonToFriSame = 
+    content.hours_monday === content.hours_tuesday &&
+    content.hours_tuesday === content.hours_wednesday &&
+    content.hours_wednesday === content.hours_thursday &&
+    content.hours_thursday === content.hours_friday;
+    
+  const computedPhoneSubContent = isMonToFriSame
+    ? `Δευ-Παρ ${content.hours_monday}${content.hours_saturday !== "Κλειστά" ? `, Σάβ ${content.hours_saturday}` : ""}`
+    : "Δείτε τις Ώρες Γραμματείας";
+
   const contactInfo = [
     {
       icon: MapPin,
@@ -53,7 +63,7 @@ export function ContactPageClient({ initialContent }: { initialContent: typeof d
       icon: Phone,
       title: content.phone_title,
       content: content.phone_content,
-      subContent: content.phone_subContent,
+      subContent: computedPhoneSubContent,
       accent: "from-emerald-500 to-emerald-600",
       bgLight: "bg-emerald-50",
       textColor: "text-emerald-600",
@@ -72,9 +82,13 @@ export function ContactPageClient({ initialContent }: { initialContent: typeof d
   ];
 
   const schedule = [
-    { day: "Δευτέρα - Παρασκευή", hours: content.hours_monday_friday },
-    { day: "Σάββατο", hours: content.hours_saturday },
-    { day: "Κυριακή", hours: content.hours_sunday },
+    { id: "hours_monday", day: "Δευτέρα", hours: content.hours_monday },
+    { id: "hours_tuesday", day: "Τρίτη", hours: content.hours_tuesday },
+    { id: "hours_wednesday", day: "Τετάρτη", hours: content.hours_wednesday },
+    { id: "hours_thursday", day: "Πέμπτη", hours: content.hours_thursday },
+    { id: "hours_friday", day: "Παρασκευή", hours: content.hours_friday },
+    { id: "hours_saturday", day: "Σάββατο", hours: content.hours_saturday },
+    { id: "hours_sunday", day: "Κυριακή", hours: content.hours_sunday },
   ];
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -150,7 +164,7 @@ export function ContactPageClient({ initialContent }: { initialContent: typeof d
                   <Editable id={idx === 0 ? "address_content" : idx === 1 ? "phone_content" : "email_content"}>{info.content}</Editable>
                 </p>
                 <p className="text-slate-500 text-sm mt-0.5 truncate">
-                  <Editable id={idx === 0 ? "address_subContent" : idx === 1 ? "phone_subContent" : "email_subContent"}>{info.subContent}</Editable>
+                  {idx === 1 ? info.subContent : <Editable id={idx === 0 ? "address_subContent" : "email_subContent"}>{info.subContent}</Editable>}
                 </p>
               </div>
             </a>
@@ -184,7 +198,7 @@ export function ContactPageClient({ initialContent }: { initialContent: typeof d
                       >
                         <span className="text-white/50 text-sm">{item.day}</span>
                         <span className={`text-sm font-bold ${item.hours === "Κλειστά" ? "text-slate-500" : "text-white"}`}>
-                          <Editable id={idx === 0 ? "hours_monday_friday" : idx === 1 ? "hours_saturday" : "hours_sunday"}>{item.hours}</Editable>
+                          <Editable id={item.id}>{item.hours}</Editable>
                         </span>
                       </div>
                     ))}

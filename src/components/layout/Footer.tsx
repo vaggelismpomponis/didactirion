@@ -44,7 +44,11 @@ export function Footer({ contactContent = defaultContactContent }: { contactCont
   const [scrollProgress, setScrollProgress] = React.useState(0);
 
   const schedule = [
-    { day: "Δευτέρα – Παρασκευή", hours: contactContent.hours_monday_friday, active: contactContent.hours_monday_friday !== "Κλειστά" },
+    { day: "Δευτέρα", hours: contactContent.hours_monday, active: contactContent.hours_monday !== "Κλειστά" },
+    { day: "Τρίτη", hours: contactContent.hours_tuesday, active: contactContent.hours_tuesday !== "Κλειστά" },
+    { day: "Τετάρτη", hours: contactContent.hours_wednesday, active: contactContent.hours_wednesday !== "Κλειστά" },
+    { day: "Πέμπτη", hours: contactContent.hours_thursday, active: contactContent.hours_thursday !== "Κλειστά" },
+    { day: "Παρασκευή", hours: contactContent.hours_friday, active: contactContent.hours_friday !== "Κλειστά" },
     { day: "Σάββατο", hours: contactContent.hours_saturday, active: contactContent.hours_saturday !== "Κλειστά" },
     { day: "Κυριακή", hours: contactContent.hours_sunday, active: contactContent.hours_sunday !== "Κλειστά" },
   ];

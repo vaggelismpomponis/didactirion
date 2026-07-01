@@ -8,14 +8,18 @@ export const defaultContactContent = {
 
   phone_title: "Τηλέφωνο",
   phone_content: "210 2448542",
-  phone_subContent: "Δευτέρα - Παρασκευή, 15:00 - 22:00",
+  phone_subContent: "Δευ-Παρ 15:00 - 22:00, Σάββατο 09:00 - 16:00",
 
   email_title: "Email",
   email_content: "didactirion@gmail.com",
   email_subContent: "Θα χαρούμε να σας εξυπηρετήσουμε",
 
   office_hours_title: "Ώρες Γραμματείας",
-  hours_monday_friday: "15:00 - 22:00",
+  hours_monday: "15:00 - 22:00",
+  hours_tuesday: "15:00 - 22:00",
+  hours_wednesday: "15:00 - 22:00",
+  hours_thursday: "15:00 - 22:00",
+  hours_friday: "15:00 - 22:00",
   hours_saturday: "09:00 - 16:00",
   hours_sunday: "Κλειστά",
 
