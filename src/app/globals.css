@@ -4,6 +4,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* All public sections are capped at 1280px (max-w-7xl) to match header/footer width */
 @utility container {
   margin-inline: auto;
   padding-inline: 1rem;
@@ -20,9 +21,6 @@
   }
   @media (width >= 1280px) {
     max-width: 1280px;
-  }
-  @media (width >= 1536px) {
-    max-width: 1536px;
   }
 }
 

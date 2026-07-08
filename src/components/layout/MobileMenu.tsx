@@ -159,7 +159,7 @@ export function MobileMenu({ isOpen, setIsOpen, navigation, contactContent = def
                           className={cn(
                             "overflow-hidden transition-all duration-300 ease-out",
                             expandedSection === item.title
-                              ? "max-h-[500px] opacity-100"
+                              ? "max-h-[2000px] opacity-100"
                               : "max-h-0 opacity-0"
                           )}
                         >
