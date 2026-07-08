@@ -2,7 +2,7 @@ export const revalidate = 3600;
 
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { CheckCircle2, GraduationCap, ArrowRight } from "lucide-react";
+import { CheckCircle2, GraduationCap, ArrowRight, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -13,8 +13,8 @@ import { ScrollReveal } from "@/components/providers/ScrollReveal";
 import { Editable } from "@/components/admin/Editable";
 
 export const curriculaDefaults: Record<string, any> = {
-  "junior-high": {
-    title: "Γυμνάσιο",
+  "junior-high-a": {
+    title: "Α' Γυμνασίου",
     description: "Θέτουμε τις βάσεις για μια επιτυχημένη πορεία στο Λύκειο.",
     image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=2070",
     features: [
@@ -24,15 +24,147 @@ export const curriculaDefaults: Record<string, any> = {
       "Ενισχυτική διδασκαλία",
     ],
     details:
-      "Το πρόγραμμα σπουδών για το Γυμνάσιο επικεντρώνεται στην εμπέδωση των βασικών εννοιών στα Μαθηματικά, τη Γλώσσα και τις Φυσικές Επιστήμες.",
-    subjects: [
-      { grade: "Α' Γυμνασίου", items: ["Νεοελληνική Γλώσσα (2 ώρες)", "Αρχαία Ελληνικά (2 ώρες)", "Μαθηματικά (2 ώρες)"] },
-      { grade: "Β' Γυμνασίου", items: ["Νεοελληνική Γλώσσα (2 ώρες)", "Αρχαία Ελληνικά (2 ώρες)", "Μαθηματικά (2 ώρες)", "Φυσική (1 ώρα)"] },
-      { grade: "Γ' Γυμνασίου", items: ["Νεοελληνική Γλώσσα (2 ώρες)", "Αρχαία Ελληνικά (2 ώρες)", "Μαθηματικά (2 ώρες)", "Φυσική (1 ώρα)", "Χημεία (1 ώρα)"] },
-    ],
+      "Στην Α' Γυμνασίου, το πρόγραμμα επικεντρώνεται στην εμπέδωση των βασικών εννοιών στα Μαθηματικά, τη Γλώσσα και τα Αρχαία Ελληνικά.",
+    schedule: {
+      title: "Ωρολόγιο Πρόγραμμα",
+      subjects: [
+        { name: "Νεοελληνική Γλώσσα", hours: "2" },
+        { name: "Αρχαία Ελληνικά", hours: "2" },
+        { name: "Μαθηματικά", hours: "2" },
+      ],
+      totalHours: "6",
+    },
   },
-  "high-school": {
-    title: "Λύκειο (Α, Β, Γ)",
+  "junior-high-b": {
+    title: "Β' Γυμνασίου",
+    description: "Εμβάθυνση στη γνώση με προσθήκη Φυσικών Επιστημών.",
+    image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=2070",
+    features: [
+      "Ολιγομελή τμήματα (4-5 άτομα)",
+      "Εξειδικευμένοι καθηγητές",
+      "Συνεχή διαγωνίσματα",
+      "Ενισχυτική διδασκαλία",
+    ],
+    details:
+      "Στη Β' Γυμνασίου, ενισχύεται το πρόγραμμα με τη Φυσική, ενώ παράλληλα εμβαθύνουμε στα βασικά μαθήματα.",
+    schedule: {
+      title: "Ωρολόγιο Πρόγραμμα",
+      subjects: [
+        { name: "Νεοελληνική Γλώσσα", hours: "2" },
+        { name: "Αρχαία Ελληνικά", hours: "2" },
+        { name: "Μαθηματικά", hours: "2" },
+        { name: "Φυσική", hours: "1" },
+      ],
+      totalHours: "7",
+    },
+  },
+  "junior-high-c": {
+    title: "Γ' Γυμνασίου",
+    description: "Ολοκληρωμένη προετοιμασία για τη μετάβαση στο Λύκειο.",
+    image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=2070",
+    features: [
+      "Ολιγομελή τμήματα (4-5 άτομα)",
+      "Εξειδικευμένοι καθηγητές",
+      "Συνεχή διαγωνίσματα",
+      "Ενισχυτική διδασκαλία",
+    ],
+    details:
+      "Στη Γ' Γυμνασίου, ο μαθητής ολοκληρώνει τη βασική εκπαίδευση με Φυσική και Χημεία, προετοιμαζόμενος κατάλληλα για το Λύκειο.",
+    schedule: {
+      title: "Ωρολόγιο Πρόγραμμα",
+      subjects: [
+        { name: "Νεοελληνική Γλώσσα", hours: "2" },
+        { name: "Αρχαία Ελληνικά", hours: "2" },
+        { name: "Μαθηματικά", hours: "2" },
+        { name: "Φυσική", hours: "1" },
+        { name: "Χημεία", hours: "1" },
+      ],
+      totalHours: "8",
+    },
+  },
+  "high-school-a": {
+    title: "Α' Λυκείου",
+    description: "Θέτουμε γερές βάσεις για την πορεία προς τις Πανελλαδικές.",
+    image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=2070",
+    features: [
+      "Ολιγομελή τμήματα (4-5 άτομα)",
+      "Πλήρης κάλυψη ύλης",
+      "Συνεχή διαγωνίσματα",
+      "Εξατομικευμένο πρόγραμμα μελέτης",
+    ],
+    details: "Στην Α' Λυκείου, η προετοιμασία γίνεται μεθοδικά και συστηματικά σε όλα τα βασικά μαθήματα, θέτοντας τις σωστές βάσεις για τη Β' και Γ' Λυκείου.",
+    schedule: {
+      title: "Χειμερινό Πρόγραμμα",
+      subjects: [
+        { name: "Άλγεβρα", hours: "3" },
+        { name: "Γεωμετρία", hours: "1" },
+        { name: "Φυσική", hours: "2" },
+        { name: "Χημεία", hours: "1" },
+        { name: "Έκθεση", hours: "1,5" },
+        { name: "Αρχαία", hours: "1,5" },
+      ],
+      totalHours: "10",
+    },
+  },
+  "high-school-b": {
+    title: "Β' Λυκείου",
+    description: "Εξειδίκευση στις κατευθύνσεις με το πρόγραμμα B' PLUS.",
+    image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=2070",
+    features: [
+      "Πρόγραμμα B' PLUS",
+      "Τεστ προσομοίωσης",
+      "Εξειδικευμένοι καθηγητές",
+      "Εξατομικευμένο πρόγραμμα μελέτης",
+    ],
+    details: "Στη Β' Λυκείου, οι μαθητές ξεκινούν την εξειδίκευση στην κατεύθυνση που τους ενδιαφέρει με το πρόγραμμα B' PLUS, προετοιμαζόμενοι κατάλληλα για τη Γ' Λυκείου.",
+    schedule: {
+      title: "B' PLUS",
+      directions: [
+        {
+          name: "Ανθρωπιστικές Σπουδές",
+          subjects: [
+            { name: "Έκθεση", hours: "2" },
+            { name: "Αρχαία", hours: "4" },
+            { name: "Ιστορία", hours: "1" },
+            { name: "Λατινικά", hours: "2" },
+          ],
+          totalHours: "9",
+        },
+        {
+          name: "Θετικές Σπουδές",
+          subjects: [
+            { name: "Έκθεση", hours: "2" },
+            { name: "Μαθηματικά", hours: "4" },
+            { name: "Φυσική", hours: "3" },
+            { name: "Χημεία", hours: "2" },
+          ],
+          totalHours: "11",
+        },
+        {
+          name: "Σπουδές Υγείας",
+          subjects: [
+            { name: "Έκθεση", hours: "2" },
+            { name: "Βιολογία", hours: "3" },
+            { name: "Φυσική", hours: "3" },
+            { name: "Χημεία", hours: "2" },
+          ],
+          totalHours: "10",
+        },
+        {
+          name: "Σπουδές Οικονομίας & Πληροφορικής",
+          subjects: [
+            { name: "Έκθεση", hours: "2" },
+            { name: "Μαθηματικά", hours: "4" },
+            { name: "Α.Ε.Π.Π.", hours: "1" },
+            { name: "Α.Ο.Θ.", hours: "3" },
+          ],
+          totalHours: "10",
+        },
+      ],
+    },
+  },
+  "high-school-c": {
+    title: "Γ' Λυκείου",
     description: "Εξειδικευμένη προετοιμασία για τις Πανελλαδικές Εξετάσεις.",
     image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=2070",
     features: [
@@ -41,12 +173,52 @@ export const curriculaDefaults: Record<string, any> = {
       "Συμβουλευτική σταδιοδρομίας",
       "Εξατομικευμένο πρόγραμμα μελέτης",
     ],
-    details: "Στο Λύκειο, η προετοιμασία γίνεται μεθοδικά και συστηματικά για όλες τις κατευθύνσεις.",
-    subjects: [
-      { grade: "Α' Λυκείου", items: ["Νεοελληνική Γλώσσα (3 ώρες)", "Αρχαία Ελληνικά (2 ώρες)", "Άλγεβρα (3 ώρες)", "Γεωμετρία (2 ώρες)", "Φυσική (2 ώρες)", "Χημεία (1 ώρα)"] },
-      { grade: "Β' Λυκείου (Γενική)", items: ["Νεοελληνική Γλώσσα (3 ώρες)", "Άλγεβρα (2 ώρες)", "Γεωμετρία (2 ώρες)", "Φυσική (2 ώρες)"] },
-      { grade: "Γ' Λυκείου (Προσανατολισμός)", items: ["Ανθρωπιστικές: Αρχαία (6), Ιστορία (4), Λατινικά (4)", "Θετικές: Μαθηματικά (6), Φυσική (4), Χημεία (4)", "Οικονομίας: Μαθηματικά (6), Πληροφορική (4), Οικονομία (4)"] },
-    ],
+    details: "Στη Γ' Λυκείου, η προετοιμασία εστιάζει αποκλειστικά στα μαθήματα του πεδίου επιλογής, με στόχο την άριστη επίδοση στις Πανελλαδικές Εξετάσεις.",
+    schedule: {
+      title: "Πρόγραμμα Προετοιμασίας",
+      directions: [
+        {
+          name: "1ο Πεδίο – Ανθρωπιστικές Σπουδές",
+          subjects: [
+            { name: "Ν. Γλώσσα & Λογοτεχνία", hours: "3" },
+            { name: "Αρχαία", hours: "4" },
+            { name: "Ιστορία", hours: "2" },
+            { name: "Λατινικά", hours: "3" },
+          ],
+          totalHours: "12",
+        },
+        {
+          name: "2ο Πεδίο – Θετικές Σπουδές",
+          subjects: [
+            { name: "Ν. Γλώσσα & Λογοτεχνία", hours: "3" },
+            { name: "Φυσική", hours: "3" },
+            { name: "Χημεία", hours: "2" },
+            { name: "Μαθηματικά", hours: "4" },
+          ],
+          totalHours: "12",
+        },
+        {
+          name: "3ο Πεδίο – Σπουδές Υγείας",
+          subjects: [
+            { name: "Ν. Γλώσσα & Λογοτεχνία", hours: "3" },
+            { name: "Φυσική", hours: "3" },
+            { name: "Χημεία", hours: "2" },
+            { name: "Βιολογία", hours: "3" },
+          ],
+          totalHours: "11",
+        },
+        {
+          name: "4ο Πεδίο – Σπουδές Οικονομίας & Πληροφορικής",
+          subjects: [
+            { name: "Ν. Γλώσσα & Λογοτεχνία", hours: "3" },
+            { name: "Α.Ο.Θ.", hours: "3" },
+            { name: "Α.Ε.Π.Π.", hours: "3" },
+            { name: "Μαθηματικά", hours: "4" },
+          ],
+          totalHours: "13",
+        },
+      ],
+    },
   },
   "epal": {
     title: "ΕΠΑΛ",
@@ -179,6 +351,44 @@ function CurriculumView({ data, slug }: { data: any; slug: string }) {
               </ScrollReveal>
             )}
 
+            {/* ── Schedule Tables ── */}
+            {data.schedule && (
+              <ScrollReveal>
+                <div className="mt-12 space-y-8">
+                  <div className="flex items-center gap-3 mb-2">
+                    <Clock className="w-6 h-6 text-primary" />
+                    <h3 className="text-2xl font-black text-slate-900">Ωρολόγιο Πρόγραμμα</h3>
+                  </div>
+                  {data.schedule.title && (
+                    <p className="text-lg font-bold text-primary">{data.schedule.title}</p>
+                  )}
+
+                  {/* Single table (e.g. Α' Λυκείου) */}
+                  {data.schedule.subjects && !data.schedule.directions && (
+                    <ScheduleTable subjects={data.schedule.subjects} totalHours={data.schedule.totalHours} />
+                  )}
+
+                  {/* Multiple direction tables (e.g. Β' & Γ' Λυκείου) */}
+                  {data.schedule.directions && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {data.schedule.directions.map((dir: any, i: number) => (
+                        <ScrollReveal key={i} delay={i * 0.08}>
+                          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden hover:shadow-lg hover:border-primary/20 transition-all duration-300">
+                            <div className="hero-gradient px-5 py-3">
+                              <h4 className="font-bold text-white text-sm uppercase tracking-wide">{dir.name}</h4>
+                            </div>
+                            <div className="p-1">
+                              <ScheduleTable subjects={dir.subjects} totalHours={dir.totalHours} compact />
+                            </div>
+                          </div>
+                        </ScrollReveal>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </ScrollReveal>
+            )}
+
             <ScrollReveal>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-8">
                 {(Array.isArray(data.features) ? data.features : []).map((feature: any, i: number) => {
@@ -265,5 +475,59 @@ function CurriculumView({ data, slug }: { data: any; slug: string }) {
         </ScrollReveal>
       </section>
     </>
+  );
+}
+
+function ScheduleTable({
+  subjects,
+  totalHours,
+  compact,
+}: {
+  subjects: { name: string; hours: string }[];
+  totalHours: string;
+  compact?: boolean;
+}) {
+  return (
+    <div className={`overflow-hidden ${compact ? "" : "rounded-2xl border border-slate-100 shadow-sm"}`}>
+      <table className="w-full text-left">
+        <thead>
+          <tr className={compact ? "bg-slate-50" : "hero-gradient"}>
+            <th className={`${compact ? "px-4 py-2.5 text-slate-700 text-xs" : "px-6 py-3.5 text-white text-sm"} font-bold uppercase tracking-wide`}>
+              Μαθήματα
+            </th>
+            <th className={`${compact ? "px-4 py-2.5 text-slate-700 text-xs" : "px-6 py-3.5 text-white text-sm"} font-bold uppercase tracking-wide text-center`}>
+              Ώρες
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {subjects.map((subject, i) => (
+            <tr
+              key={i}
+              className={`border-b border-slate-100 last:border-b-0 transition-colors hover:bg-primary/5 ${
+                i % 2 === 0 ? "bg-white" : "bg-slate-50/50"
+              }`}
+            >
+              <td className={`${compact ? "px-4 py-2.5 text-sm" : "px-6 py-3.5"} font-semibold text-slate-800`}>
+                {subject.name}
+              </td>
+              <td className={`${compact ? "px-4 py-2.5 text-sm" : "px-6 py-3.5"} text-center font-bold text-primary`}>
+                {subject.hours}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+        <tfoot>
+          <tr className={compact ? "bg-slate-100" : "bg-primary/5"}>
+            <td className={`${compact ? "px-4 py-2.5 text-sm" : "px-6 py-3.5"} font-black text-slate-900`}>
+              Ωριαίο Σύνολο
+            </td>
+            <td className={`${compact ? "px-4 py-2.5 text-sm" : "px-6 py-3.5"} text-center font-black text-primary`}>
+              {totalHours} ώρες
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
   );
 }

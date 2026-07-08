@@ -30,7 +30,7 @@ export function HeroFallback() {
             asChild
             className="bg-white text-primary hover:bg-white/90 font-bold px-8 h-14 text-base shadow-xl shadow-black/20 hover:shadow-2xl hover:shadow-black/30 transition-all"
           >
-            <Link href="/curricula/high-school">Προγράμματα Σπουδών</Link>
+            <Link href="/curricula/high-school-a">Προγράμματα Σπουδών</Link>
           </Button>
           <Button
             size="lg"

@@ -8,11 +8,18 @@ import { Phone, ChevronDown, ChevronRight, X, ExternalLink } from "lucide-react"
 import { cn } from "@/lib/utils";
 import { defaultContactContent } from "@/app/(public)/contact/contact-content";
 
-interface NavigationChild {
+interface NavigationChildItem {
   title: string;
   href: string;
   desc?: string;
 }
+
+interface NavigationChildGroup {
+  groupTitle: string;
+  items: NavigationChildItem[];
+}
+
+type NavigationChild = NavigationChildItem | NavigationChildGroup;
 
 interface NavigationItem {
   title: string;
@@ -157,24 +164,52 @@ export function MobileMenu({ isOpen, setIsOpen, navigation, contactContent = def
                           )}
                         >
                           <div className="ml-3 pl-3 border-l-2 border-slate-200 mt-1 mb-2 space-y-0.5">
-                            {item.children.map((child) => (
-                              <Link
-                                key={child.title}
-                                href={child.href}
-                                onClick={() => setIsOpen(false)}
-                                className="group flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-medium text-slate-600 hover:text-slate-700 hover:bg-slate-50 transition-all duration-200"
-                              >
-                                <span className="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover:bg-slate-400 group-hover:scale-125 transition-all duration-200 shrink-0" />
-                                <div className="min-w-0">
-                                  <div className="truncate">{child.title}</div>
-                                  {child.desc && (
-                                    <div className="text-[11px] text-slate-400 group-hover:text-slate-500 truncate mt-0.5 transition-colors">
-                                      {child.desc}
-                                    </div>
-                                  )}
+                            {item.children.map((child: any) =>
+                              child.groupTitle ? (
+                                /* ── Subgroup ── */
+                                <div key={child.groupTitle} className="py-1">
+                                  <p className="px-3 pt-2 pb-1 text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">
+                                    {child.groupTitle}
+                                  </p>
+                                  {child.items.map((sub: any) => (
+                                    <Link
+                                      key={sub.title}
+                                      href={sub.href}
+                                      onClick={() => setIsOpen(false)}
+                                      className="group flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-medium text-slate-600 hover:text-slate-700 hover:bg-slate-50 transition-all duration-200"
+                                    >
+                                      <span className="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover:bg-slate-400 group-hover:scale-125 transition-all duration-200 shrink-0" />
+                                      <div className="min-w-0">
+                                        <div className="truncate">{sub.title}</div>
+                                        {sub.desc && (
+                                          <div className="text-[11px] text-slate-400 group-hover:text-slate-500 truncate mt-0.5 transition-colors">
+                                            {sub.desc}
+                                          </div>
+                                        )}
+                                      </div>
+                                    </Link>
+                                  ))}
                                 </div>
-                              </Link>
-                            ))}
+                              ) : (
+                                /* ── Regular item ── */
+                                <Link
+                                  key={child.title}
+                                  href={child.href}
+                                  onClick={() => setIsOpen(false)}
+                                  className="group flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-medium text-slate-600 hover:text-slate-700 hover:bg-slate-50 transition-all duration-200"
+                                >
+                                  <span className="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover:bg-slate-400 group-hover:scale-125 transition-all duration-200 shrink-0" />
+                                  <div className="min-w-0">
+                                    <div className="truncate">{child.title}</div>
+                                    {child.desc && (
+                                      <div className="text-[11px] text-slate-400 group-hover:text-slate-500 truncate mt-0.5 transition-colors">
+                                        {child.desc}
+                                      </div>
+                                    )}
+                                  </div>
+                                </Link>
+                              )
+                            )}
                           </div>
                         </div>
                       </div>

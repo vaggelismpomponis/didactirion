@@ -340,8 +340,8 @@ export default async function Home() {
           </ScrollReveal>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
             {[
-              { title: "Γυμνάσιο", sub: "Α΄, Β΄, Γ΄", href: "/curricula/junior-high" },
-              { title: "Λύκειο", sub: "Α΄, Β΄, Γ΄ Λυκείου", href: "/curricula/high-school" },
+              { title: "Γυμνάσιο", sub: "Α΄, Β΄, Γ΄", href: "/curricula/junior-high-a" },
+              { title: "Λύκειο", sub: "Α΄, Β΄, Γ΄ Λυκείου", href: "/curricula/high-school-a" },
               { title: "ΕΠΑΛ", sub: "Επαγγελματικό Λύκειο", href: "/curricula/epal" },
               { title: "Πρότυπα", sub: "Πρότυπα Σχολεία", href: "/curricula/model-schools" },
             ].map((prog, i) => (

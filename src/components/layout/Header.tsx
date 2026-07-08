@@ -37,8 +37,22 @@ const navigation = [
   {
     title: "Προγράμματα Σπουδών",
     children: [
-      { title: "Γυμνάσιο (Α, Β, Γ)", href: "/curricula/junior-high", desc: "Α', Β', Γ' Γυμνασίου" },
-      { title: "Λύκειο (Α, Β, Γ)", href: "/curricula/high-school", desc: "Πλήρης προετοιμασία για Πανελλαδικές" },
+      {
+        groupTitle: "Γυμνάσιο",
+        items: [
+          { title: "Α' Γυμνασίου", href: "/curricula/junior-high-a", desc: "Βασικά μαθήματα" },
+          { title: "Β' Γυμνασίου", href: "/curricula/junior-high-b", desc: "Βασικά μαθήματα + Φυσική" },
+          { title: "Γ' Γυμνασίου", href: "/curricula/junior-high-c", desc: "Βασικά μαθήματα + Φυσική & Χημεία" },
+        ],
+      },
+      {
+        groupTitle: "Λύκειο",
+        items: [
+          { title: "Α' Λυκείου", href: "/curricula/high-school-a", desc: "Χειμερινό πρόγραμμα Α' τάξης" },
+          { title: "Β' Λυκείου", href: "/curricula/high-school-b", desc: "Πρόγραμμα B' PLUS" },
+          { title: "Γ' Λυκείου", href: "/curricula/high-school-c", desc: "Προετοιμασία Πανελλαδικών" },
+        ],
+      },
       { title: "ΕΠΑΛ", href: "/curricula/epal", desc: "Εκπαίδευση για Επαγγελματικό Λύκειο" },
       { title: "Απόφοιτοι", href: "/curricula/alumni", desc: "Επανάληψη για αποφοίτους" },
       { title: "Πρότυπα & Ωνάσεια Σχολεία", href: "/curricula/model-schools", desc: "Προετοιμασία για πρότυπα & πειραματικά" },
@@ -132,32 +146,72 @@ export function Header({ contactContent = defaultContactContent }: { contactCont
                           {item.title}
                         </NavigationMenuTrigger>
                         <NavigationMenuContent>
-                          <ul className="grid w-[420px] gap-2 p-4 md:w-[520px] md:grid-cols-2">
-                            {item.children.map((child) => (
-                              <li key={child.title}>
-                                <NavigationMenuLink
-                                  render={
-                                    <Link
-                                      href={child.href}
-                                      className={cn(
-                                        "group flex flex-col items-center text-center select-none rounded-xl p-3 no-underline outline-none transition-all",
-                                        "text-slate-700 hover:bg-slate-50 hover:text-slate-600"
-                                      )}
-                                    >
-                                      <div className="text-sm font-heading font-semibold leading-none mb-1">
-                                        {child.title}
-                                      </div>
-                                      {child.desc && (
-                                        <p className="text-xs text-slate-400 group-hover:text-slate-600/70 leading-relaxed transition-colors">
-                                          {child.desc}
-                                        </p>
-                                      )}
-                                    </Link>
-                                  }
-                                />
-                              </li>
-                            ))}
-                          </ul>
+                          <div className="w-[420px] p-4 md:w-[560px] space-y-1">
+                            {item.children.map((child: any, ci: number) =>
+                              child.groupTitle ? (
+                                /* ── Subgroup with label ── */
+                                <div key={child.groupTitle}>
+                                  {ci > 0 && <div className="border-t border-slate-100 my-2" />}
+                                  <p className="px-3 pt-2 pb-1 text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">
+                                    {child.groupTitle}
+                                  </p>
+                                  <ul className="grid md:grid-cols-3 gap-1">
+                                    {child.items.map((sub: any) => (
+                                      <li key={sub.title}>
+                                        <NavigationMenuLink
+                                          render={
+                                            <Link
+                                              href={sub.href}
+                                              className={cn(
+                                                "group flex flex-col items-center text-center select-none rounded-xl p-3 no-underline outline-none transition-all",
+                                                "text-slate-700 hover:bg-slate-50 hover:text-slate-600"
+                                              )}
+                                            >
+                                              <div className="text-sm font-heading font-semibold leading-none mb-1">
+                                                {sub.title}
+                                              </div>
+                                              {sub.desc && (
+                                                <p className="text-xs text-slate-400 group-hover:text-slate-600/70 leading-relaxed transition-colors">
+                                                  {sub.desc}
+                                                </p>
+                                              )}
+                                            </Link>
+                                          }
+                                        />
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              ) : (
+                                /* ── Regular item ── */
+                                <div key={child.title}>
+                                  {ci > 0 && item.children[ci - 1]?.groupTitle && (
+                                    <div className="border-t border-slate-100 my-2" />
+                                  )}
+                                  <NavigationMenuLink
+                                    render={
+                                      <Link
+                                        href={child.href}
+                                        className={cn(
+                                          "group flex flex-col items-center text-center select-none rounded-xl p-3 no-underline outline-none transition-all",
+                                          "text-slate-700 hover:bg-slate-50 hover:text-slate-600"
+                                        )}
+                                      >
+                                        <div className="text-sm font-heading font-semibold leading-none mb-1">
+                                          {child.title}
+                                        </div>
+                                        {child.desc && (
+                                          <p className="text-xs text-slate-400 group-hover:text-slate-600/70 leading-relaxed transition-colors">
+                                            {child.desc}
+                                          </p>
+                                        )}
+                                      </Link>
+                                    }
+                                  />
+                                </div>
+                              )
+                            )}
+                          </div>
                         </NavigationMenuContent>
                       </>
                     ) : (
