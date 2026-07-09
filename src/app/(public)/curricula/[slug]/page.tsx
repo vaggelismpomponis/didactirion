@@ -155,10 +155,10 @@ export const curriculaDefaults: Record<string, any> = {
           subjects: [
             { name: "Έκθεση", hours: "2" },
             { name: "Μαθηματικά", hours: "4" },
-            { name: "Α.Ε.Π.Π.", hours: "1" },
+            { name: "Α.Ε.Π.Π.", hours: "1,5" },
             { name: "Α.Ο.Θ.", hours: "3" },
           ],
-          totalHours: "10",
+          totalHours: "10,5",
         },
       ],
     },
@@ -504,9 +504,8 @@ function ScheduleTable({
           {subjects.map((subject, i) => (
             <tr
               key={i}
-              className={`border-b border-slate-100 last:border-b-0 transition-colors hover:bg-primary/5 ${
-                i % 2 === 0 ? "bg-white" : "bg-slate-50/50"
-              }`}
+              className={`border-b border-slate-100 last:border-b-0 transition-colors hover:bg-primary/5 ${i % 2 === 0 ? "bg-white" : "bg-slate-50/50"
+                }`}
             >
               <td className={`${compact ? "px-4 py-2.5 text-sm" : "px-6 py-3.5"} font-semibold text-slate-800`}>
                 {subject.name}
