@@ -28,11 +28,11 @@ export const curriculaDefaults: Record<string, any> = {
     schedule: {
       title: "Ωρολόγιο Πρόγραμμα",
       subjects: [
-        { name: "Νεοελληνική Γλώσσα", hours: "2" },
-        { name: "Αρχαία Ελληνικά", hours: "2" },
         { name: "Μαθηματικά", hours: "2" },
+        { name: "Έκθεση", hours: "1.30" },
+        { name: "Αρχαία", hours: "1.30" },
       ],
-      totalHours: "6",
+      totalHours: "5",
     },
   },
   "junior-high-b": {
@@ -46,14 +46,15 @@ export const curriculaDefaults: Record<string, any> = {
       "Ενισχυτική διδασκαλία",
     ],
     details:
-      "Στη Β' Γυμνασίου, ενισχύεται το πρόγραμμα με τη Φυσική, ενώ παράλληλα εμβαθύνουμε στα βασικά μαθήματα.",
+      "Στη Β' Γυμνασίου, ενισχύεται το πρόγραμμα με τη Φυσική και τη Χημεία, ενώ παράλληλα εμβαθύνουμε στα βασικά μαθήματα.",
     schedule: {
       title: "Ωρολόγιο Πρόγραμμα",
       subjects: [
-        { name: "Νεοελληνική Γλώσσα", hours: "2" },
-        { name: "Αρχαία Ελληνικά", hours: "2" },
         { name: "Μαθηματικά", hours: "2" },
+        { name: "Έκθεση", hours: "1.30" },
+        { name: "Αρχαία", hours: "1.30" },
         { name: "Φυσική", hours: "1" },
+        { name: "Χημεία", hours: "1" },
       ],
       totalHours: "7",
     },
@@ -73,13 +74,13 @@ export const curriculaDefaults: Record<string, any> = {
     schedule: {
       title: "Ωρολόγιο Πρόγραμμα",
       subjects: [
-        { name: "Νεοελληνική Γλώσσα", hours: "2" },
-        { name: "Αρχαία Ελληνικά", hours: "2" },
-        { name: "Μαθηματικά", hours: "2" },
-        { name: "Φυσική", hours: "1" },
+        { name: "Μαθηματικά", hours: "3" },
+        { name: "Έκθεση", hours: "1.30" },
+        { name: "Αρχαία", hours: "1.30" },
+        { name: "Φυσική", hours: "2" },
         { name: "Χημεία", hours: "1" },
       ],
-      totalHours: "8",
+      totalHours: "9",
     },
   },
   "high-school-a": {
@@ -100,8 +101,8 @@ export const curriculaDefaults: Record<string, any> = {
         { name: "Γεωμετρία", hours: "1" },
         { name: "Φυσική", hours: "2" },
         { name: "Χημεία", hours: "1" },
-        { name: "Έκθεση", hours: "1,5" },
-        { name: "Αρχαία", hours: "1,5" },
+        { name: "Έκθεση", hours: "1.5" },
+        { name: "Αρχαία", hours: "1.5" },
       ],
       totalHours: "10",
     },
@@ -155,10 +156,10 @@ export const curriculaDefaults: Record<string, any> = {
           subjects: [
             { name: "Έκθεση", hours: "2" },
             { name: "Μαθηματικά", hours: "4" },
-            { name: "Α.Ε.Π.Π.", hours: "1,5" },
+            { name: "Α.Ε.Π.Π.", hours: "1.5" },
             { name: "Α.Ο.Θ.", hours: "3" },
           ],
-          totalHours: "10,5",
+          totalHours: "10.5",
         },
       ],
     },

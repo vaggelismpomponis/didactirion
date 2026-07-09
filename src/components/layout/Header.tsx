@@ -41,7 +41,7 @@ const navigation = [
         groupTitle: "Γυμνάσιο",
         items: [
           { title: "Α' Γυμνασίου", href: "/curricula/junior-high-a", desc: "Βασικά μαθήματα" },
-          { title: "Β' Γυμνασίου", href: "/curricula/junior-high-b", desc: "Βασικά μαθήματα + Φυσική" },
+          { title: "Β' Γυμνασίου", href: "/curricula/junior-high-b", desc: "Βασικά μαθήματα + Φυσική & Χημεία" },
           { title: "Γ' Γυμνασίου", href: "/curricula/junior-high-c", desc: "Βασικά μαθήματα + Φυσική & Χημεία" },
         ],
       },
